@@ -1,0 +1,5 @@
+formulahendry.auto-rename-tag
+letrieu.expand-region
+pdconsec.vscode-print
+usernamehw.errorlens
+vscodevim.vim
