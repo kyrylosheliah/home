@@ -49,7 +49,7 @@ opt.number = true
 opt.relativenumber = true
 opt.cursorline = false
 opt.scrolloff = 10
-opt.signcolumn = "yes" -- "number"
+opt.signcolumn = "number" -- yes number
 
 opt.splitright = true
 opt.splitbelow = true

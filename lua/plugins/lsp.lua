@@ -91,6 +91,9 @@ return {
             capabilities = capabilities,
           })
         end,
+        --[[["pyright"] = function()
+          lspconfig["pyright"].setup({})
+        end,]]
         ["lua_ls"] = function()
           lspconfig["lua_ls"].setup({
             capabilities = capabilities,
@@ -148,12 +151,9 @@ return {
           "cssls",
           "tailwindcss",
           "unocss",
-          --"svelte",
           "lua_ls",
-          --"graphql",
           "emmet_ls",
-          --"prismals",
-          --"pyright",
+          "pyright",
         },
         automatic_installation = true,
       })
@@ -162,10 +162,8 @@ return {
         ensure_installed = {
           "prettier", -- prettier formatter
           "stylua",   -- lua formatter
-          --"isort", -- python formatter
-          --"black", -- python formatter
-          --"pylint",
-          --"eslint_d",
+          "black", -- python formatter
+          "flake8", -- python linter
         },
       })
     end
