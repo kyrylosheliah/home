@@ -35,7 +35,7 @@ local opt = vim.opt -- Set options (global/buffer/windows-scoped)
 
 --opt.shellslash = true
 
-opt.showmode = true -- Current Mode
+opt.showmode = true
 
 opt.mouse = "a" -- Enable mouse support
 
@@ -49,7 +49,7 @@ opt.number = true
 opt.relativenumber = true
 opt.cursorline = false
 opt.scrolloff = 10
-opt.signcolumn = "number"
+opt.signcolumn = "yes" -- "number"
 
 opt.splitright = true
 opt.splitbelow = true
@@ -59,14 +59,14 @@ opt.ignorecase = true
 opt.smartcase = true
 
 opt.linebreak = false -- Wrap on word boundary
-opt.breakindent = true
+opt.breakindent = false
 opt.showbreak = "+"
-opt.wrap = true
+opt.wrap = false--true
 opt.termguicolors = true -- Enable 24-bit RGB colors
-opt.laststatus = 3 -- Set global statusline
+opt.laststatus = 2 -- Set global statusline
 
 opt.hidden = true -- Enable background buffers
-opt.lazyredraw = true -- Faster scrolling
+--opt.lazyredraw = true -- Faster scrolling
 
 opt.swapfile = false
 opt.backup = false
@@ -104,13 +104,13 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 opt.list = true
 opt.listchars = {
   eol = "↲",
-  tab = "┊ ",
+  tab = "│ ",
   trail = "·",
   --space = '·',
-  multispace = "╎ ", -- ▏
+  multispace = "╎ ",
   nbsp = "␣",
-  extends = "▶",
-  precedes = "◀",
+  --extends = "▶",
+  --precedes = "◀",
 }
 
 opt.autoindent = true

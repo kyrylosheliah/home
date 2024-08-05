@@ -11,7 +11,7 @@ return {
     local c = require('vscode.colors').get_colors()
     local vscode = require('vscode')
     vscode.setup({
-      -- style = 'light' -- vim.o.background = 'dark' 'light'
+      --style = 'light',
       transparent = false,
       italic_comments = false,
       underline_links = false,
@@ -22,9 +22,12 @@ return {
         NormalFloat = {},
         WinSeparator = {},
         LineNr = {},
+        SignColumn = {},
         ModeMsg = {},
         MoreMsg = {},
-        StatusLine = {},
+        StatusLine = { --[[reverse=true]] },
+        StatusLineNC = { link='Whitespace' },
+        Directory = {},
       },
     })
     vscode.load()

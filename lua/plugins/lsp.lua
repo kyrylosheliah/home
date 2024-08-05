@@ -6,9 +6,11 @@ return {
       'hrsh7th/cmp-nvim-lsp',
     },
     config = function()
-      --[[vim.diagnostic.config({
-        virtual_text = true
-      })]]
+      vim.diagnostic.config({
+        virtual_text = true,
+        signs = false,
+        underline = true,
+      })
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("UserLspConfig", {}),
         callback = function(event)
@@ -24,7 +26,6 @@ return {
 
           opts.desc = "Go to declaration"
           keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
-          --keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts) -- show lsp type definitions
 
           opts.desc = "Show LSP implementations"
           keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
@@ -32,6 +33,7 @@ return {
 
           opts.desc = "Show LSP type definitions"
           keymap.set("n", "gt", vim.lsp.buf.type_definition, opts) -- was 'go'
+          --keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts) -- show lsp type definitions
 
           opts.desc = "Show LSP references"
           keymap.set("n", "gr", vim.lsp.buf.references, opts)
@@ -163,7 +165,7 @@ return {
           --"isort", -- python formatter
           --"black", -- python formatter
           --"pylint",
-          "eslint_d",
+          --"eslint_d",
         },
       })
     end
@@ -177,10 +179,12 @@ return {
       'hrsh7th/cmp-path',
       'L3MON4D3/LuaSnip',
       'saadparwaiz1/cmp_luasnip',
+      'rafamadriz/friendly-snippets',
     },
     config = function()
       local cmp = require('cmp')
       local cmp_select = { behavior = cmp.SelectBehavior.Select }
+      require('luasnip.loaders.from_vscode').lazy_load()
       cmp.setup({
         experimental = {
           ghost_text = { hl_group = "Whitespace" },
@@ -191,6 +195,7 @@ return {
         },
         sources = {
           --{ name = "codeium" },
+          { name = 'luasnip' },
           { name = 'nvim_lsp' },
           { name = "path" },
           { name = "buffer" },
