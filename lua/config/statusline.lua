@@ -108,15 +108,15 @@ M.statusline_table = table.concat({
   "%5L:%l|%c",
   --"[%{mode()}]",
   " %=",
-  "%{v:lua.require('config.statusline').key_memory}",
-  "%= ",
+  --"%{v:lua.require('config.statusline').key_memory}",
+  --"%= ",
   "%<",                                -- truncate
   "%{fnamemodify(expand('%'), ':.')}", -- file path inside never falls back to full path
   "%m%r%h",                            -- modified, ro, help flags
   --"%{strftime('%H:%M')}",
 })
 
-M.key_memory = ''
+--[[M.key_memory = ''
 function M.HandleKey(key)
   local b = key:byte()
   if b <= 126 and b >= 33 then
@@ -126,7 +126,7 @@ function M.HandleKey(key)
   end
   --vim.o.statusline = M.statusline_table
 end
-vim.on_key(M.HandleKey, M.namespace)
+vim.on_key(M.HandleKey, M.namespace)]]
 
 vim.o.statusline = M.statusline_table
 
