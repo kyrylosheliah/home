@@ -1,4 +1,8 @@
-vim.keymap.set('n', '<leader>-', '<CMD>e %:p:h<CR>', {})
+--vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
+vim.keymap.set('n', '<leader>-', '<cmd>e %:p:h<cr>', {})
+--vim.keymap.set("n", "<leader>vpp", "<cmd>e ~/.dotfiles/nvim/.config/nvim/lua/theprimeagen/packer.lua<CR>");
+vim.keymap.set("n", "<leader>vpp", "<cmd>e ~/Appdata/Local/nvim/<cr>");
+
 return {
   'stevearc/oil.nvim',
   opts = {
@@ -9,8 +13,8 @@ return {
     -- See :help oil-columns
     columns = {
       -- "icon",
-      "permissions",
-      "size",
+      --"permissions",
+      --"size",
       --"mtime",
     },
     -- Buffer-local options to use for oil buffers

@@ -1,5 +1,5 @@
 return {
-  enable = false,
+  enabled = false,
   -- NOTE: Yes, you can install new plugins here!
   'mfussenegger/nvim-dap',
   -- NOTE: And you can specify dependencies as well

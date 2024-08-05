@@ -1,7 +1,7 @@
-      -- Two important keymaps to use while in Telescope are:
-      --  - Insert mode: <c-/>
-      --  - Normal mode: ?
-      --
+-- Two important keymaps to use while in Telescope are:
+--  - Insert mode: <c-/>
+--  - Normal mode: ?
+--
 return {
   'nvim-telescope/telescope.nvim',
   --branch = '0.1.x',
@@ -40,13 +40,12 @@ return {
               ["<C-d>"] = "delete_buffer",
             },
           },
-          --ignore_current_buffer = true,
+          ignore_current_buffer = true,
           sort_mru = true,
         }
       },
     })
 
-    require("telescope").load_extension("lazygit")
     require('telescope').load_extension('fzf')
       local builtin = require('telescope.builtin')
           vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
@@ -59,7 +58,6 @@ return {
           vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
           vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
           vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
-          --vim.keymap.set('n', '<leader>pf', builtin.find_files, {})
           vim.keymap.set('n', '<leader>pg', builtin.git_files, { desc = '[P]roject [G]it Files'})
           -- Slightly advanced example of overriding default behavior and theme
           vim.keymap.set('n', '<leader>/', function()

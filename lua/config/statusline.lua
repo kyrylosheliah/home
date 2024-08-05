@@ -1,39 +1,36 @@
---function! GitGetCurrentBranch()
---    :let s:branch_name = system("git rev-parse --abbrev-ref HEAD")
---    :let s:notidx = match(s:branch_name, 'fatal: not a git repository')
---    :if s:notidx == -1
---        :let s:branch_name = strtrans(s:branch_name)
---        :let s:branch_name = s:branch_name[:-3]
---        :return '(' . s:branch_name . ') '
---    :endif
---    :return ''
---endfunction
-
 function StatusLineText()
   return table.concat(
-    { "%<" -- truncate
-      --, "%<%F" -- full path
-      --, "%{fnamemodify(getcwd(), ':~')} > " -- directory
-      , "%f " -- file path inside 
-      , "%m %r %h " -- modified, ro, help flags
-      , "%=" -- left/right separator
-      , "%c:%l/%L " -- column:line/length
-      --, "%P% " -- verbose position
-      --, "%bd " -- decimal byte
-      --, "x%02B " -- hexadecimal byte
-      --, "%{&fileencoding?&fileencoding:&encoding} "
-      --, "%{strftime('%H:%M:%S')}"
-      , "%{strftime('%H:%M')}"
+    { "%3L:%l|%c ", -- length:line|column
+      "%=", -- separate for equal space
+      "%<", -- truncate
+      --"%F", -- full path
+      --"%{getcwd()} > ", -- project directory
+      --"%{fnamemodify(getcwd(), ':~')} > ", -- project directory relative to home
+      --"%{@%} ", -- file path inside, falls back to full path by some reason
+      --"%f ", -- file path inside, falls back to full path by some reason
+      "%{fnamemodify(expand('%'), ':.')} ", -- file path inside never falls back to full
+      "%m %r %h", -- modified, ro, help flags
+      "%= ", -- separate for equal space
+      --"%P% ", -- verbose position
+      --"%bd ", -- decimal byte
+      --"x%02B ", -- hexadecimal byte
+      --"%{&fileencoding?&fileencoding:&encoding} ",
+      --"%{strftime('%H:%M:%S')}",
+      "%{strftime('%H:%M')}",
     })
 end
 
 function StatusLine()
-  --vim.api.nvim_create_autocmd("CursorMoved", {
-  --    callback = function()
-  --        --vim.o.statusline="%!v:lua.StatusLineText()"
-  --    end,
-  --})
+  --[[vim.api.nvim_create_autocmd("", {
+    group = vim.api.nvim_create_augroup("StatuslLineUpdate", { clear = true }),
+    callback = function()
+      vim.schedule(function()
+        vim.o.statusline="%!v:lua.StatusLineText()"
+      end)
+    end,
+  })]]
   vim.o.statusline="%!v:lua.StatusLineText()"
+  -- distinguish old timers in memory after :so by assigning a counter to them
   if vim.g.statusline_ver == nil then
     vim.g.statusline_ver = 0
   elseif vim.g.statusline_ver > 10000 then
@@ -42,12 +39,13 @@ function StatusLine()
   local ver = vim.g.statusline_ver + 1
   vim.g.statusline_ver = vim.g.statusline_ver + 1
   local timer = vim.loop.new_timer()
+  -- for statusline update every n ms purpose
   timer:start(0, 10000, function()
     if vim.g.statusline_ver == ver then
       vim.schedule(function()
         vim.o.statusline="%!v:lua.StatusLineText()"
       end)
-    else
+    else -- close when version doesn't match
       timer:close()
     end
   end)
