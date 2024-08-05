@@ -1,20 +1,21 @@
 function StatusLineText()
   return table.concat(
-    { "%3L:%l|%c ", -- length:line|column
-      "%=", -- separate for equal space
+    { "%4(%L%)%4(:%l%)%4(|%c%)", -- Length:line|column
+      "%= ", -- equal separator
       "%<", -- truncate
       --"%F", -- full path
-      --"%{getcwd()} > ", -- project directory
+      "%{getcwd()} > ", -- project directory
       --"%{fnamemodify(getcwd(), ':~')} > ", -- project directory relative to home
       --"%{@%} ", -- file path inside, falls back to full path by some reason
       --"%f ", -- file path inside, falls back to full path by some reason
       "%{fnamemodify(expand('%'), ':.')} ", -- file path inside never falls back to full
       "%m %r %h", -- modified, ro, help flags
-      "%= ", -- separate for equal space
+      "%= ", -- equal separator
       --"%P% ", -- verbose position
       --"%bd ", -- decimal byte
       --"x%02B ", -- hexadecimal byte
       --"%{&fileencoding?&fileencoding:&encoding} ",
+      --"%y ", -- y and Y are for filetypes
       --"%{strftime('%H:%M:%S')}",
       "%{strftime('%H:%M')}",
     })

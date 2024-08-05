@@ -1,3 +1,5 @@
+vim.cmd("language en_US")
+
 --vim.o.fileencoding = 'utf-8' -- written
 --vim.o.encoding = 'utf-8' -- shown
 
@@ -41,7 +43,7 @@ opt.mouse = "a" -- Enable mouse support
 -- unnamedplus, +, CLIPBOARD - copied with ^C and pasted with ^V
 opt.clipboard = "unnamedplus"
 
-opt.completeopt = "menu,menuone,noinsert" -- Autocomplete options
+--opt.completeopt = "menu,menuone,preview,noinsert" -- Autocomplete options
 
 opt.number = true
 opt.relativenumber = true
