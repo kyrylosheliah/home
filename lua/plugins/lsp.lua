@@ -1,5 +1,46 @@
 return {
   {
+    'williamboman/mason.nvim',
+    dependencies = {
+      'williamboman/mason-lspconfig.nvim',
+      "WhoIsSethDaniel/mason-tool-installer.nvim",
+    },
+    config = function()
+      require('mason').setup({
+        ui = {
+          icons = {
+            package_installed = 'i',
+            package_pending = 'p',
+            package_uninstalled = 'u',
+          },
+        },
+      })
+
+      require("mason-lspconfig").setup({
+        ensure_installed = {
+          "tsserver",
+          "html",
+          "cssls",
+          "unocss",
+          "lua_ls",
+          "pyright",
+          "omnisharp",
+        },
+        automatic_installation = true,
+      })
+
+      require("mason-tool-installer").setup({
+        ensure_installed = {
+          "prettier", -- prettier formatter
+          "stylua",   -- lua formatter
+          "black", -- python formatter
+          "flake8", -- python linter
+        },
+      })
+    end
+  },
+
+  {
     event = { 'BufReadPre', 'BufNewFile' },
     'neovim/nvim-lspconfig',
     dependencies = {
@@ -7,7 +48,7 @@ return {
     },
     config = function()
       vim.diagnostic.config({
-        virtual_text = true,
+        virtual_text = false,
         signs = false,
         underline = true,
       })
@@ -95,108 +136,128 @@ return {
           lspconfig["pyright"].setup({})
         end,]]
         ["lua_ls"] = function()
-          lspconfig["lua_ls"].setup({
+          lspconfig.lua_ls.setup({
             capabilities = capabilities,
+            on_init = function(client)
+              local path = client.workspace_folders[1].name
+              if vim.loop.fs_stat(path..'/.luarc.json') or vim.loop.fs_stat(path..'/.luarc.jsonc') then
+                return
+              end
+              client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+                runtime = {
+                  -- Tell the language server which version of Lua you're using
+                  -- (most likely LuaJIT in the case of Neovim)
+                  version = 'LuaJIT'
+                },
+                -- Make the server aware of Neovim runtime files
+                workspace = {
+                  checkThirdParty = false,
+                  library = {
+                    vim.env.VIMRUNTIME
+                    -- Depending on the usage, you might want to add additional paths here.
+                    -- "${3rd}/luv/library"
+                    -- "${3rd}/busted/library",
+                  }
+                  -- or pull in all of 'runtimepath'. NOTE: this is a lot slower
+                  -- library = vim.api.nvim_get_runtime_file("", true)
+                }
+              })
+            end,
             settings = {
               Lua = {
-                -- make the language server recognize "vim" global
-                diagnostics = {
-                  globals = { "vim" },
-                },
-                completion = {
-                  callSnippet = "Replace",
-                },
               },
             },
           })
         end,
-        ["emmet_ls"] = function()
-          lspconfig["emmet_ls"].setup({
-            capabilities = capabilities,
-            filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less" },
-          })
-        end,
         ['unocss'] = function()
-          lspconfig['unocss'].setup({
+          lspconfig.unocss.setup({
             filetypes = { "html", "javascriptreact", "javascript", "typescript", "typescriptreact", "vue", "svelte" },
             root_dir = lspconfig.util.root_pattern('unocss.config.js', 'unocss.config.ts', 'uno.config.js',
               'uno.config.ts'),
+          })
+        end,
+        --[[["pyright"] = function()
+          lspconfig.pyright.setup({})
+        end,]]
+        ["omnisharp"] = function()
+          lspconfig.omnisharp.setup({
+            cmd = { "dotnet", "/home/uiop/.local/share/nvim/mason/packages/omnisharp/libexec/OmniSharp.dll" },
+            settings = {
+              FormattingOptions = {
+                -- Enables support for reading code style, naming convention and analyzer
+                -- settings from .editorconfig.
+                EnableEditorConfigSupport = true,
+                -- Specifies whether 'using' directives should be grouped and sorted during
+                -- document formatting.
+                OrganizeImports = nil,
+              },
+              MsBuild = {
+                -- If true, MSBuild project system will only load projects for files that
+                -- were opened in the editor. This setting is useful for big C# codebases
+                -- and allows for faster initialization of code navigation features only
+                -- for projects that are relevant to code that is being edited. With this
+                -- setting enabled OmniSharp may load fewer projects and may thus display
+                -- incomplete reference lists for symbols.
+                LoadProjectsOnDemand = nil,
+              },
+              RoslynExtensionsOptions = {
+                -- Enables support for roslyn analyzers, code fixes and rulesets.
+                EnableAnalyzersSupport = nil,
+                -- Enables support for showing unimported types and unimported extension
+                -- methods in completion lists. When committed, the appropriate using
+                -- directive will be added at the top of the current file. This option can
+                -- have a negative impact on initial completion responsiveness,
+                -- particularly for the first few completion sessions after opening a
+                -- solution.
+                EnableImportCompletion = nil,
+                -- Only run analyzers against open files when 'enableRoslynAnalyzers' is
+                -- true
+                AnalyzeOpenDocumentsOnly = nil,
+              },
+              Sdk = {
+                -- Specifies whether to include preview versions of the .NET SDK when
+                -- determining which version to use for project loading.
+                IncludePrereleases = true,
+              },
+            },
           })
         end,
       })
     end,
   },
 
-  {
-    'williamboman/mason.nvim',
-    dependencies = {
-      'williamboman/mason-lspconfig.nvim',
-      "WhoIsSethDaniel/mason-tool-installer.nvim",
-    },
-    config = function()
-      require('mason').setup({
-        ui = {
-          icons = {
-            package_installed = 'i',
-            package_pending = 'p',
-            package_uninstalled = 'u',
-          },
-        },
-      })
 
-      require("mason-lspconfig").setup({
-        ensure_installed = {
-          "tsserver",
-          "html",
-          "cssls",
-          "tailwindcss",
-          "unocss",
-          "lua_ls",
-          "emmet_ls",
-          "pyright",
-        },
-        automatic_installation = true,
-      })
-
-      require("mason-tool-installer").setup({
-        ensure_installed = {
-          "prettier", -- prettier formatter
-          "stylua",   -- lua formatter
-          "black", -- python formatter
-          "flake8", -- python linter
-        },
-      })
-    end
-  },
 
   {
     event = 'InsertEnter',
     'hrsh7th/nvim-cmp',
     dependencies = {
-      'hrsh7th/cmp-buffer',
+      --'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-path',
-      'L3MON4D3/LuaSnip',
-      'saadparwaiz1/cmp_luasnip',
-      'rafamadriz/friendly-snippets',
+      --'L3MON4D3/LuaSnip',
+      --'saadparwaiz1/cmp_luasnip',
+      --'rafamadriz/friendly-snippets',
+      "hrsh7th/cmp-nvim-lsp-signature-help",
     },
     config = function()
       local cmp = require('cmp')
       local cmp_select = { behavior = cmp.SelectBehavior.Select }
-      require('luasnip.loaders.from_vscode').lazy_load()
+      --require('luasnip.loaders.from_vscode').lazy_load()
       cmp.setup({
-        experimental = {
+        --[[experimental = {
           ghost_text = { hl_group = "Whitespace" },
-        },
+        },]]
         window = {
           completion = cmp.config.window.bordered(),
           documentation = cmp.config.window.bordered(),
         },
         sources = {
           --{ name = "codeium" },
-          { name = 'luasnip' },
+          --{ name = 'luasnip' },
           { name = 'nvim_lsp' },
+          { name = 'nvim_lsp_signature_help' },
           { name = "path" },
-          { name = "buffer" },
+          --{ name = "buffer" },
         },
         mapping = cmp.mapping.preset.insert({
           ['<C-Space>'] = cmp.mapping.complete(),
@@ -210,11 +271,11 @@ return {
           ['<S-Tab>'] = nil,
           ['<S>'] = nil,
         }),
-        snippet = {
+        --[[snippet = {
           expand = function(args)
             require('luasnip').lsp_expand(args.body)
           end,
-        },
+        },]]
       })
     end,
   }

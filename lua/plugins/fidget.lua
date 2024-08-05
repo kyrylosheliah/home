@@ -1,7 +1,12 @@
 return {
-  enabled = true,
+  enabled = false,
   "j-hui/fidget.nvim",
-  config = function()
+  opts = {
+    notification = {
+      override_vim_notify = true,
+    }
+  }
+  --[[config = function()
     local fidget = require("fidget")
     fidget.setup()
     vim.notify = fidget.notify
@@ -13,5 +18,5 @@ return {
       end
       fidget.notify(table.concat(print_safe_args, ' '), "info")
     end
-  end,
+  end]],
 }

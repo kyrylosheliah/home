@@ -1,4 +1,7 @@
-require('config.general')
-require('config.keymap')
-require('config.statusline')
-require('config.packagemanager')
+
+
+require('config')
+
+if vim.g.vscode == nil then
+  require('packagemanager')
+end
