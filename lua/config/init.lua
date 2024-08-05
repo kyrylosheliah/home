@@ -1,6 +1,0 @@
-require("config.colors")
-require("config.keymap")
-require("config.options")
-require("config.statusline")
---require("config.pckr")
-require("config.lazy")

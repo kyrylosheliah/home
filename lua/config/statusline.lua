@@ -1,3 +1,14 @@
+--function! GitGetCurrentBranch()
+--    :let s:branch_name = system("git rev-parse --abbrev-ref HEAD")
+--    :let s:notidx = match(s:branch_name, 'fatal: not a git repository')
+--    :if s:notidx == -1
+--        :let s:branch_name = strtrans(s:branch_name)
+--        :let s:branch_name = s:branch_name[:-3]
+--        :return '(' . s:branch_name . ') '
+--    :endif
+--    :return ''
+--endfunction
+
 function StatusLineText()
   return table.concat(
     { "%<" -- truncate
