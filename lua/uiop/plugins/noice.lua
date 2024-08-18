@@ -1,5 +1,5 @@
 return {
-  --enabled = false,
+  enabled = false,
   "folke/noice.nvim",
   event = "VeryLazy",
   dependencies = {
@@ -37,7 +37,7 @@ return {
       desc = "commandline dismiss ... all",
     },
     {
-      "<leader>cf",
+      "<leader>cs",
       function() require("noice").cmd("pick") end,
       desc = "commandline search"
     },

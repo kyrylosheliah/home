@@ -9,18 +9,18 @@ return {
   },
   keys = {
     {
-      "<leader>e",
+      "<leader>ef",
       function()
         require("neo-tree.command").execute({ toggle = true, dir = vim.fn.fnamemodify(vim.fn.expand("%"), ":p:h") })
       end,
-      desc = "explorer (root dir)",
+      desc = "explore files (root dir)",
     },
     {
-      "<leader>E",
+      "<leader>eF",
       function()
         require("neo-tree.command").execute({ toggle = true, dir = vim.fn.getcwd() })
       end,
-      desc = "Explorer (cwd)",
+      desc = "Explore files (cwd)",
     },
     {
       "<leader>eg",

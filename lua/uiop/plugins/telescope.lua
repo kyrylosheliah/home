@@ -22,13 +22,15 @@ return {
       },
       pickers = {
         find_files = {
-          hidden = true,
-          ["no-heading"] = true,
-          ["with-filename"] = true,
-          ["line-number"] = true,
-          ["column"] = true,
-          ["smart-case"] = true,
-          disable_devicons = true,
+          repgrep_arguments = {
+            'rg',
+            --'--hidden',
+            '--no-heading',
+            '--with-filename',
+            '--line-number',
+            '--column',
+            '--smart-case'
+          },
         },
         buffers = {
           mappings = {
@@ -46,7 +48,7 @@ return {
     },
     keys = {
       { "<leader>s", "", desc = "+search" },
-      { "<leader>f", "", desc = "+find" },
+      --{ "<leader>f", "", desc = "+find" },
     },
     config = function(_, opts)
       local layout = require("telescope.actions.layout")
@@ -73,6 +75,7 @@ return {
       vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "search: resume" })
       vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = 'search ... recent files' })
       vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "... search existing buffers" })
+      vim.keymap.set("n", "<leader>sb", builtin.buffers, { desc = "... search existing buffers" })
       vim.keymap.set("n", "<leader>sg", builtin.git_files, { desc = "search git ... files" })
       --[[vim.keymap.set('n', '<leader>/', function()
             -- You can pass additional configuration to Telescope to change the theme, layout, etc.

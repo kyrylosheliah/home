@@ -5,14 +5,14 @@ return {
     --vim.o.timeout = true
     --vim.o.timeoutlen = 500
   end,
-  opts_extend = { "spec" },
-  opts = {
-    spec = {
-      { "<BS>", desc = "Decrement Selection", mode = "x" },
-      { "<c-space>", desc = "Increment Selection", mode = { "x", "n" } },
-    },
-    defaults = {},
-  },
+  --opts_extend = { "spec" },
+  --opts = {
+  --  spec = {
+  --    { "<BS>", desc = "Decrement Selection", mode = "x" },
+  --    { "<c-space>", desc = "Increment Selection", mode = { "x", "n" } },
+  --  },
+  --  defaults = {},
+  --},
   keys = {
     {
       "<leader>?",

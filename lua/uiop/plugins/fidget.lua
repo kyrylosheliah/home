@@ -1,5 +1,5 @@
 return {
-  --enabled = false,
+  enabled = false,
   "j-hui/fidget.nvim",
   opts = {
     notification = {

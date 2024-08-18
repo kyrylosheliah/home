@@ -6,20 +6,30 @@ return {
     "hrsh7th/cmp-nvim-lsp-signature-help",
     'hrsh7th/cmp-path',
     'hrsh7th/cmp-buffer',
+    'hrsh7th/cmp-calc',
+    'hrsh7th/cmp-emoji',
     'L3MON4D3/LuaSnip',
     'saadparwaiz1/cmp_luasnip',
     --'rafamadriz/friendly-snippets',
   },
   opts = {
-    experimental = {
-      ghost_text = { hl_group = "NonText" },
-    },
+    --experimental = {
+    --  ghost_text = { hl_group = "NonText" },
+    --},
     completion = { completeopt = "menu,menuone,noinsert" },
+    snippet = {
+      expand = function(args)
+        require'luasnip'.lsp_expand(args.body)
+      end
+    },
     sources = {
       { name = 'nvim_lsp' },
       { name = 'nvim_lsp_signature_help' },
       { name = "path" },
       { name = "buffer" },
+      { name = "calc" },
+      { name = "emoji" },
+      { name = "luasnip" },
     },
   },
   config = function(_, opts)

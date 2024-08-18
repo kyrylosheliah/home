@@ -3,8 +3,15 @@ return {
   dependencies = {
     "nvim-tree/nvim-web-devicons"
   },
-  opts = {},
+  opts = {
+    columns = {
+      "icon",
+      "permissions",
+      --"size",
+      "mtime",
+    },
+  },
   keys = {
-    { "-", vim.cmd.Oil, mode = "n", desc = "parent directory" },
+    { "<leader>-", vim.cmd.Oil, mode = "n", desc = "explore parent ... directory" },
   },
 }

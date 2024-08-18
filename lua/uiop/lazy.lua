@@ -13,8 +13,14 @@ vim.opt.rtp:prepend(lazypath)
 
 local username = vim.g.username
 
-require("lazy").setup({
-  { import = username .. ".plugins" },
-  { import = username .. ".lsp" },
-  { import = username .. ".lang" },
-})
+require("lazy").setup(
+  {
+    { import = username .. ".plugins" },
+    { import = username .. ".lsp" },
+    { import = username .. ".lang" },
+  },
+  {
+    change_detection = {
+      notify = false,
+    },
+  })

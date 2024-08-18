@@ -3,7 +3,7 @@ vim.g.maplocalleader = " "
 
 vim.keymap.set("n", "<leader>w", '<cmd>w<cr>', { desc = "Write" })
 vim.keymap.set("n", "<leader>q", '<cmd>q<cr>', { desc = "Quit" })
-vim.keymap.set("n", "<leader>x", '<cmd>x<cr>', { desc = "write or Exit" })
+--vim.keymap.set("n", "<leader>x", '<cmd>x<cr>', { desc = "write or Exit" })
 
 vim.keymap.set("n", "<Esc>", '<cmd>nohlsearch<cr>', { desc = "No search highlight" })
 

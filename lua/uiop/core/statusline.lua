@@ -16,7 +16,7 @@ end
 M.file_info = function()
   --local project_path = vim.fn.fnamemodify(vim.fn.expand("%"), ":.")
   local project_path = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(M.stbufnr()), ":.")
-  if project_path == "" then return "" end
+  --if project_path == "" then return "" end
   local bufnr = M.stbufnr()
   local buf = vim.bo[bufnr]
   local help = buf.buftype == "help" and "[Help]" or ""
@@ -159,7 +159,7 @@ M.list_concat = function(strings_list)
     strings[index] = table.concat(M.list_drop_strings(list), " ")
     index = index + 1
   end
-  return table.concat(M.list_drop_strings(strings), "%=")
+  return table.concat(M.list_drop_strings(strings), "%= %=")
 end
 
 M.render_active = function()
@@ -195,13 +195,27 @@ M.render_active = function()
 end
 
 M.render_inactive = function()
-  return table.concat(
-    M.list_drop_strings({
-      M.cursor_position(),
-      "%=",
-      M.file_info(),
-    }), " ")
+  local statusline_left = {
+    M.cursor_position()
+  }
+  local search_pagination = M.search_pagination()
+  local statusline_middle = {}
+  if search_pagination ~= "" then
+    statusline_middle = {
+      search_pagination
+    }
+  end
+  local statusline_right = {
+    --M.lsp_list(),
+    M.file_info(),
+  }
+  return M.list_concat({
+    statusline_left,
+    statusline_middle,
+    statusline_right
+  })
 end
+
 M.render = function()
   return M.is_activewin() and M.render_active() or M.render_inactive()
 end
