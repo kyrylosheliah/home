@@ -70,9 +70,8 @@ return {
       ensure_installed = {
         "omnisharp",
         "omnisharp_mono",
-        --"csharp_ls",
-        --"csharp-language-server",
         "csharpier",
+        --"coreclr",
         "netcoredbg",
       },
     },
@@ -83,21 +82,12 @@ return {
   },
 
   {
-    "jay-babu/mason-nvim-dap.nvim",
-    opts = {
-      ensure_installed = {
-        "coreclr",
-      },
-    },
-  },
-
-  {
     "williamboman/mason-lspconfig.nvim",
     dependencies = {
       "williamboman/mason.nvim",
       "neovim/nvim-lspconfig",
       "Hoffs/omnisharp-extended-lsp.nvim",
-      --"Decodetalkers/csharpls-extended-lsp.nvim",
+      'Issafalcon/lsp-overloads.nvim'
     },
     opts = {
       ensure_installed = {
@@ -173,44 +163,45 @@ return {
           local frameworkType = getFrameworkType()
           if frameworkType == "netframework" then
             print("Found a .NET Framework project, starting .NET Framework OmniSharp")
-            require("lspconfig")["omnisharp_mono"].setup({
-              -- enable_decompilation_support = true,
-              handlers = {
-                ["textDocument/definition"] = require('omnisharp_extended').handler,
-              },
-              -- organize_imports_on_format = true,
-              settings = settings,
-              on_attach = on_attach,
-            })
             vim.g.dotnetlsp = "omnisharp_mono"
-            vim.cmd('LspStart omnisharp_mono')
           elseif frameworkType == "netcore" then
             print("Found a .NET Core project, starting .NET Core OmniSharp")
-            require("lspconfig")["omnisharp"].setup({
-              -- enable_decompilation_support = true,
-              handlers = {
-                ["textDocument/definition"] = require('omnisharp_extended').handler,
-              },
-              -- organize_imports_on_format = true,
-              settings = settings,
-              on_attach = on_attach,
-            })
             vim.g.dotnetlsp = "omnisharp"
-            vim.cmd('LspStart omnisharp')
           else
             return
           end
 
-          --require("lspconfig")["csharp_ls"].setup({
-          --  capabilities = require("cmp_nvim_lsp").default_capabilities(),
-          --  handlers = {
-          --    ["textDocument/definition"] = require("csharpls_extended").handler,
-          --    ["textDocument/typeDefinition"] = require("csharpls_extended").handler,
-          --  },
-          --  cmd = { "csharpls" },
-          --})
+          require("lspconfig")[vim.g.dotnetlsp].setup({
+            -- enable_decompilation_support = true,
+            handlers = {
+              --["textDocument/definition"] = require('omnisharp_extended').handler,
+              ["textDocument/definition"] = require('omnisharp_extended').definition_handler,
+              ["textDocument/typeDefinition"] = require('omnisharp_extended').type_definition_handler,
+              ["textDocument/references"] = require('omnisharp_extended').references_handler,
+              ["textDocument/implementation"] = require('omnisharp_extended').implementation_handler,
+            },
+            -- organize_imports_on_format = true,
+            settings = settings,
+            on_attach = on_attach,
+          })
+          vim.cmd("LspStart " .. vim.g.dotnetlsp)
         end,
       },
+    },
+  },
+
+  {
+    "stevearc/conform.nvim",
+    opts = {
+      formatters_by_ft = {
+        cs = { "csharpier" },
+      },
+      --formatters = {
+      --  csharpier = {
+      --    command = "dotnet-csharpier",
+      --    args = { "--write-stdout" },
+      --  },
+      --},
     },
   },
 
@@ -252,17 +243,43 @@ return {
   },
 
   {
-    "stevearc/conform.nvim",
+    "jay-babu/mason-nvim-dap.nvim",
     opts = {
-      formatters_by_ft = {
-        cs = { "csharpier" },
+      ensure_installed = {
       },
-      --formatters = {
-      --  csharpier = {
-      --    command = "dotnet-csharpier",
-      --    args = { "--write-stdout" },
-      --  },
-      --},
+      handlers = {
+        netcoredbg = function(config)
+          config.adapters = {
+            type = "executable",
+            command = vim.fn.exepath("netcoredbg"),
+            args = { "--interpreter=vscode" },
+            options = {
+              detached = false,
+            },
+          }
+          require('mason-nvim-dap').default_setup(config) -- don't forget this!
+        end,
+      },
     },
   },
+
 }
+
+--[[
+for _, lang in ipairs({ "cs", "fsharp", "vb" }) do
+        if not dap.configurations[lang] then
+          dap.configurations[lang] = {
+            {
+              type = "netcoredbg",
+              name = "Launch file",
+              request = "launch",
+              ---@diagnostic disable-next-line: redundant-parameter
+              program = function()
+                return vim.fn.input("Path to dll: ", vim.fn.getcwd() .. "/", "file")
+              end,
+              cwd = "${workspaceFolder}",
+            },
+          }
+        end
+      end
+--]]

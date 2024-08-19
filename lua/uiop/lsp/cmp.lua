@@ -19,17 +19,17 @@ return {
     completion = { completeopt = "menu,menuone,noinsert" },
     snippet = {
       expand = function(args)
-        require'luasnip'.lsp_expand(args.body)
+        require('luasnip').lsp_expand(args.body)
       end
     },
     sources = {
+      { name = "luasnip" },
       { name = 'nvim_lsp' },
       { name = 'nvim_lsp_signature_help' },
       { name = "path" },
       { name = "buffer" },
       { name = "calc" },
       { name = "emoji" },
-      { name = "luasnip" },
     },
   },
   config = function(_, opts)
