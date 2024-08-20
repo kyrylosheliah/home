@@ -16,8 +16,8 @@ local username = vim.g.username
 require("lazy").setup(
   {
     { import = username .. ".plugins" },
-    { import = username .. ".lsp" },
-    { import = username .. ".lang" },
+    --{ import = username .. ".lsp" },
+    --{ import = username .. ".lang" },
   },
   {
     change_detection = {
