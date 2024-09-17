@@ -26,20 +26,14 @@
       }
     },*/
   "auto-rename-tag.activationOnLanguage": ["*"],
-  //"window.titleBarStyle": "native",
-  /*"apc.electron": {
-      "backgroundColor": "#000000ff",
-      "transparent": false
-    },
-    "apc.stylesheet": {
-      "*": {
-        "backgroundColor": "#000000ff"
-      }
-    },*/
-  "breadcrumbs.enabled": false,
   "editor.cursorSurroundingLines": 5,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "never",
+    "source.fixAll.eslint": "never",
+    "source.organizeImports": "never"
+  },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "editor.hover.enabled": true,
   "editor.largeFileOptimizations": true,
   "editor.lineNumbers": "relative",

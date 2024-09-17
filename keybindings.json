@@ -1,6 +1,6 @@
 // Place your key bindings in this file to override the defaults
 [
-  {
+  /*{
     "command": "expand_region",
     "key": "ctrl+=",
     "when": "editorTextFocus"
@@ -92,7 +92,7 @@
     "key": "d",
     "command": "deleteFile",
     "when": "filesExplorerFocus && !inputFocus"
-  }
+  }*/
   //######################
   /*{
     "key": "ctrl+shift+5",
