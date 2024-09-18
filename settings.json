@@ -36,7 +36,7 @@
   "editor.formatOnSave": false,
   "editor.hover.enabled": true,
   "editor.largeFileOptimizations": true,
-  "editor.lineNumbers": "relative",
+  "editor.lineNumbers": "on",
   "editor.linkedEditing": true,
   "editor.minimap.enabled": false,
   //"editor.quickSuggestionsDelay": 1000,
@@ -89,125 +89,6 @@
   "typescript.updateImportsOnFileMove.enabled": "always",
   "unocss.autocomplete.maxItems": 10,
   "update.showReleaseNotes": false,
-  "vim.foldfix": true,
-  "vim.highlightedyank.color": "rgba(95, 255, 95, 1.0)",
-  "vim.highlightedyank.enable": true,
-  "vim.highlightedyank.textColor": "rgba(0, 0, 0, 1.0)",
-  "vim.highlightedyank.duration": 500,
-  "vim.hlsearch": true,
-  "vim.leader": "<Space>",
-  "vim.normalModeKeyBindingsNonRecursive": [
-    {
-      "before": ["leader", "w"],
-      "commands": [":w"]
-    },
-    {
-      "before": ["leader", "q"],
-      "commands": [":q"]
-    },
-    {
-      "before": ["leader", "x"],
-      "commands": [":x"]
-    },
-    {
-      "after": ["g", "g", "V", "G"],
-      "before": ["<c-a>"]
-    },
-    {
-      "before": ["leader", "k"],
-      "commands": ["editor.action.showHover"]
-    },
-    {
-      "before": ["]", "d"],
-      "commands": ["editor.action.mark.next"]
-    },
-    {
-      "before": ["[", "d"],
-      "commands": ["editor.action.mark.prev"]
-    },
-    {
-      "before": ["leader", "c", "a"],
-      "commands": ["editor.action.quickFix"]
-    },
-    // ##################
-    {
-      "before": ["<S-h>"],
-      "commands": [":bprevious"]
-    },
-    {
-      "before": ["<S-l>"],
-      "commands": [":bnext"]
-    },
-    // ##################
-    {
-      "before": ["<C-w>", "h"],
-      "commands": ["workbench.action.focusLeftGroup"]
-    },
-    {
-      "before": ["<C-w>", "j"],
-      "commands": ["workbench.action.focusBelowGroup"]
-    },
-    {
-      "before": ["<C-w>", "k"],
-      "commands": ["workbench.action.focusAboveGroup"]
-    },
-    {
-      "before": ["<C-w>", "l"],
-      "commands": ["workbench.action.focusRightGroup"]
-    },
-    // ##################
-    {
-      "before": ["leader", "esc"],
-      "commands": [":noh"]
-    },
-    {
-      "before": ["leader", "leader"],
-      "commands": ["workbench.action.quickOpen"]
-    },
-    /*{
-      "before": ["leader", "p"],
-      "commands": ["editor.action.formatDocument"]
-    },*/
-    {
-      "before": ["g", "h"],
-      "commands": ["editor.action.showDefinitionPreviewHover"]
-    }
-  ],
-  "vim.useSystemClipboard": true,
-  "vim.visualModeKeyBindings": [
-    {
-      "before": ["g", "p"],
-      "commands": ["editor.action.moveSelectionToPreviousFindMatch"]
-    },
-    {
-      "before": ["g", "n"],
-      "commands": ["editor.action.moveSelectionToNextFindMatch"]
-    },
-    {
-      "before": ["<"],
-      "commands": ["editor.action.outdentLines"]
-    },
-    {
-      "before": [">"],
-      "commands": ["editor.action.indentLines"]
-    },
-    {
-      "before": ["J"],
-      "commands": ["editor.action.moveLinesDownAction"]
-    },
-    {
-      "before": ["K"],
-      "commands": ["editor.action.moveLinesUpAction"]
-    },
-    {
-      "before": ["leader", "c"],
-      "commands": ["editor.action.commentLine"]
-    },
-    {
-      "before": ["leader", "f"],
-      "commands": "editor.action.formatSelection"
-    }
-  ],
   "window.commandCenter": false,
   "window.menuBarVisibility": "compact",
   "window.restoreWindows": "none",
