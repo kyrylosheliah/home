@@ -1,6 +1,6 @@
 {
-  "[csharp]": {
-    "editor.defaultFormatter": "csharpier.csharpier-vscode"
+  "[cpp]": {
+    "editor.defaultFormatter": "ms-vscode.cpptools"
   },
   "[javascript]": {
     "editor.indentSize": 2
@@ -32,7 +32,8 @@
     "source.fixAll.eslint": "never",
     "source.organizeImports": "never"
   },
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  //"editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.defaultFormatter": "trunk.io",
   "editor.formatOnSave": false,
   "editor.hover.enabled": true,
   "editor.largeFileOptimizations": true,
