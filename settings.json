@@ -32,8 +32,7 @@
     "source.fixAll.eslint": "never",
     "source.organizeImports": "never"
   },
-  //"editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.defaultFormatter": "trunk.io",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": false,
   "editor.hover.enabled": true,
   "editor.largeFileOptimizations": true,
@@ -134,5 +133,19 @@
   "zenMode.hideLineNumbers": false,
   //"zenMode.hideStatusBar": true // unset in order to user-toggle
   "zenMode.restore": false,
-  "zenMode.showTabs": "none"
+  "zenMode.showTabs": "none",
+  "files.exclude": {
+    "**/.trunk/*actions/": true,
+    "**/.trunk/*logs/": true,
+    "**/.trunk/*notifications/": true,
+    "**/.trunk/*out/": true,
+    "**/.trunk/*plugins/": true
+  },
+  "files.watcherExclude": {
+    "**/.trunk/*actions/": true,
+    "**/.trunk/*logs/": true,
+    "**/.trunk/*notifications/": true,
+    "**/.trunk/*out/": true,
+    "**/.trunk/*plugins/": true
+  }
 }
