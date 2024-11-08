@@ -87,30 +87,40 @@ opt.colorcolumn = "80,120"
 -- Disable nvim intro
 opt.shortmess:append("sI")
 
--- ↲ ↵ ↴ ▏ ␣ · ╎ │
-opt.list = true
-opt.listchars = {
-  eol = "↲",
-  tab = "│ ",
-  trail = "·",
-  --space = '·',
-  multispace = "╎ ",
-  nbsp = "␣",
-  --extends = "▶",
-  --precedes = "◀",
-}
-
 local function augroup(name)
   return vim.api.nvim_create_augroup("config.general_" .. name, { clear = true })
 end
 
+local indent_group = augroup("filetype_indent")
+-- ↲ ↵ ↴ ▏ ␣ · ╎ │
+opt.list = true
+local eol = "↲"
+local tab = "│ "
+local trail = "·"
+local nbsp = "␣"
+local space = "·"
+  --multispace = "│···",
+  --extends = "▶",
+  --precedes = "◀",
+local two_space_listchars = {
+  eol=eol, tab=tab, trail=trail, nbsp=nbsp, space=space,
+  leadmultispace = "│·",
+}
+local four_space_listchars = {
+  eol=eol, tab=tab, trail=trail, nbsp=nbsp, space=space,
+  leadmultispace = "│···",
+}
+local tab_listchars = {
+  eol=eol, tab=tab, trail=trail, nbsp=nbsp, space=space,
+}
+opt.listchars = tab_listchars
+-- but automatic indent
 opt.autoindent = true
 opt.smartindent = true
 opt.expandtab = false
 opt.shiftwidth = 4
 opt.tabstop = 4
 opt.softtabstop = 4
-local indent_group = augroup("filetype_indent")
 vim.api.nvim_create_autocmd("FileType", {
   group = indent_group,
   pattern = {
@@ -125,6 +135,7 @@ vim.api.nvim_create_autocmd("FileType", {
     "lua",
   },
   callback = function()
+    opt.listchars = two_space_listchars
     vim.opt_local.autoindent = false
     vim.opt_local.smartindent = false
     vim.opt_local.expandtab = true
@@ -136,12 +147,29 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_create_autocmd("FileType", {
   group = indent_group,
   pattern = {
+    "rust",
+    "python",
+  },
+  callback = function()
+    opt.listchars = four_space_listchars
+    vim.opt_local.autoindent = false
+    vim.opt_local.smartindent = false
+    vim.opt_local.expandtab = true
+    vim.opt_local.shiftwidth = 4
+    vim.opt_local.tabstop = 4
+    vim.opt_local.softtabstop = 4
+  end,
+})
+vim.api.nvim_create_autocmd("FileType", {
+  group = indent_group,
+  pattern = {
     "Makefile",
     "c",
     "cpp",
     "cs",
   },
   callback = function()
+    opt.listchars = tab_listchars
     vim.opt_local.autoindent = false
     vim.opt_local.smartindent = false
     vim.opt_local.expandtab = false
@@ -276,6 +304,7 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   end,
 })
 
+vim.g.bigfile_size = 1000000 * 2
 vim.filetype.add({
   pattern = {
     [".*"] = {

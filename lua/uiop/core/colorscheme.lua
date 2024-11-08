@@ -35,7 +35,7 @@ end)]]
 end, { desc = "[I]nspect [H]igh[L]ight Group (by name)", nargs = 1 })]]
 
 -- Transparancy
-M.apply_transparency = function()
+--[[M.apply_transparency = function()
   vim.api.nvim_set_hl(0, "Normal", { bg="none" })
   vim.api.nvim_set_hl(0, "NormalFloat", { bg="none" })
   vim.api.nvim_set_hl(0, "LineNr", { bg="none" })
@@ -47,5 +47,4 @@ vim.api.nvim_create_autocmd("ColorScheme", {
   pattern = "*",
   callback = M.apply_transparency,
 })
-
-return M
+return M]]

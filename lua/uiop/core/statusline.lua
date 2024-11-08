@@ -97,7 +97,7 @@ end
 M.macros_recording_lambda = function()
   local recording_register = vim.fn.reg_recording()
   --local recording_content = vim.fn.getreg(recording_register)
-  --vim.cmd.redrawstatus() -- is not happening unfortunately
+  --vim.cmd.redrawstatus() -- unfortunately isn't happening
   local recording_message = '@' .. recording_register .. '<' --.. recording_content
   return "%#StatusLineNC#" .. recording_message .. "%#StatusLine#"
 end
@@ -168,21 +168,10 @@ M.render_active = function()
   }
   local search_pagination = M.search_pagination()
   local macros_recording = M.macros_recording()
-  local statusline_middle = nil
-  if macros_recording ~= "" then
-    statusline_middle = {
-      macros_recording
-    }
-  elseif search_pagination ~= "" then
-    statusline_middle = {
-      search_pagination
-    }
-  else
-    statusline_middle = {
-      M.git_info(),
-      M.lsp_diagnostics(),
-    }
-  end
+  local statusline_middle = (macros_recording ~= "") and ({ macros_recording }) or (
+    (search_pagination ~= "") and ({ search_pagination }) or (
+    ({ M.git_info(), M.lsp_diagnostics() })
+  ))
   local statusline_right = {
     --M.lsp_list(),
     M.file_info(),
@@ -199,12 +188,7 @@ M.render_inactive = function()
     M.cursor_position()
   }
   local search_pagination = M.search_pagination()
-  local statusline_middle = {}
-  if search_pagination ~= "" then
-    statusline_middle = {
-      search_pagination
-    }
-  end
+  local statusline_middle = (search_pagination ~= "") and ({ search_pagination }) or {}
   local statusline_right = {
     --M.lsp_list(),
     M.file_info(),
