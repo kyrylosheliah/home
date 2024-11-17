@@ -54,22 +54,12 @@ return {
       { "<leader>dw", function() require("dap.ui.widgets").hover() end, desc = "Widgets" },
     },
 
-    config = function()
+    config = function(_, opts)
       -- load mason-nvim-dap here, after all adapters have been setup
       --[[local mason_nvim_dap = require"mason-nvim-dap"
       if mason_nvim_dap ~= nil then
-        mason-nvim-dap.setup(LazyVim.opts("mason-nvim-dap.nvim"))
+        mason-nvim-dap.setup()
       end]]
-
-      vim.api.nvim_set_hl(0, "DapStoppedLine", { default = true, link = "Visual" })
-
-      for name, sign in pairs(dap_icons) do
-        sign = type(sign) == "table" and sign or { sign }
-        vim.fn.sign_define(
-          "Dap" .. name,
-          { text = sign[1], texthl = sign[2] or "DiagnosticInfo", linehl = sign[3], numhl = sign[3] }
-        )
-      end
 
       -- setup dap config by VsCode launch.json file
       local vscode = require("dap.ext.vscode")
@@ -77,7 +67,6 @@ return {
       vscode.json_decode = function(str)
         return vim.json.decode(json.json_strip_comments(str))
       end
-
       -- Extends dap.configurations with entries read from .vscode/launch.json
       if vim.fn.filereadable(".vscode/launch.json") then
         vscode.load_launchjs()
@@ -126,22 +115,15 @@ return {
     dependencies = "mason.nvim",
     cmd = { "DapInstall", "DapUninstall" },
     opts = {
-      -- Makes a best effort to setup the various debuggers with
-      -- reasonable debug configurations
       automatic_installation = true,
-
-      -- You can provide additional configuration to the handlers,
-      -- see mason-nvim-dap README for more information
       handlers = {},
-
-      -- You'll need to check that you have the required things installed
-      -- online, please don't ask me how to install them :)
       ensure_installed = {
-        -- Update this to ensure that you have the debuggers for the langs you want
       },
     },
     -- mason-nvim-dap is loaded when nvim-dap loads
-    config = function() end,
+    --[[config = function(_, opts)
+      require("mason-nvim-dap").setup(opts)
+    end,]]
   },
 }
 

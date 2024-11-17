@@ -1,9 +1,14 @@
-vim.opt.laststatus = 2 -- the last window will have a	status line ... 2: always
+vim.opt.laststatus = 2 -- the last window will have a status line ... 2: always
+
+--vim.opt.showtabline = 2
+--vim.opt.showcmdloc = "tabline"
+--vim.opt.showcmdloc = "statusline"
+--vim.opt.cmdheight = 0
 
 local M = {}
 
-M.namespace = vim.api.nvim_create_namespace("core.statusline")
-M.augroup = vim.api.nvim_create_augroup("core.statusline_group", { clear = true })
+M.namespace = vim.api.nvim_create_namespace("core.status")
+M.augroup = vim.api.nvim_create_augroup("core.status_group", { clear = true })
 
 M.stbufnr = function()
   return vim.api.nvim_win_get_buf(vim.g.statusline_winid or 0)
@@ -13,22 +18,73 @@ M.is_activewin = function()
   return vim.api.nvim_get_current_win() == vim.g.statusline_winid
 end
 
+M.mode = function()
+  local mode_code = vim.api.nvim_get_mode().mode
+  --local mode = mode_map[mode_code] or string.upper(mode_code)
+  local mode = string.upper(mode_code)
+  --return " -- " .. mode .. " -- "
+  return "[" .. mode .. "]"
+end
+
+M.file_path = function()
+  -- TODO: calculate all this via autocmd and not on each key press
+  local bufname = vim.api.nvim_buf_get_name(M.stbufnr())
+  local project_path = vim.fn.fnamemodify(bufname, ":.")
+  local cwd_path = bufname:gsub(vim.pesc(project_path) .. "$", "")
+  if cwd_path == "" then
+    cwd_path = vim.fn.getcwd()
+  end
+  project_path = project_path:gsub("^" .. vim.pesc(cwd_path), "")
+  if cwd_path ~= "" then
+   cwd_path = ("%<" .. cwd_path)
+  end
+  if project_path ~= "" then
+    project_path = "> " .. project_path
+  end
+  return table.concat(
+    M.list_drop_strings({
+      cwd_path,
+      project_path,
+    }), " ")
+end
+
 M.file_info = function()
-  --local project_path = vim.fn.fnamemodify(vim.fn.expand("%"), ":.")
-  local project_path = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(M.stbufnr()), ":.")
-  --if project_path == "" then return "" end
-  local bufnr = M.stbufnr()
-  local buf = vim.bo[bufnr]
+  local buf = vim.bo[M.stbufnr()]
   local help = buf.buftype == "help" and "[Help]" or ""
   local modified = not buf.modifiable and "[-]" or buf.modified and "[+]" or ""
   local readonly = buf.readonly and "[RO]" or ""
   return table.concat(
     M.list_drop_strings({
-      "%<" .. project_path,
       help,
       modified,
       readonly,
     }), " ")
+end 
+
+M.indentation = function()
+  return (vim.opt.expandtab and "SP" or "TAB").. ":" .. tostring(vim.opt.shiftwidth:get())
+end
+
+M.encoding = function()
+  return vim.bo.fileencoding == "" and "utf-8" or vim.bo.fileencoding
+end
+
+M.fileformat = function()
+  local fileformat = vim.bo.fileformat
+  --[[
+  local style = {
+    unix = "\\n",
+    dos = "\\r\\n",
+    mac = "\\r",
+  }
+  return fileformat .. ": " .. style[fileformat]
+  ]]
+  local style = {
+    unix = "LF",
+    dos = "CRLF",
+    mac = "CR",
+  }
+  return style[fileformat]
 end
 
 M.git_info = function()
@@ -44,7 +100,7 @@ M.git_info = function()
   return branch_name .. added .. changed .. removed
 end
 
-M.lsp_diagnostics = function()
+M.diagnostics = function()
   if not rawget(vim, "lsp") then return "" end
   local errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
   local warnings = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
@@ -99,7 +155,7 @@ M.macros_recording_lambda = function()
   --local recording_content = vim.fn.getreg(recording_register)
   --vim.cmd.redrawstatus() -- unfortunately isn't happening
   local recording_message = '@' .. recording_register .. '<' --.. recording_content
-  return "%#StatusLineNC#" .. recording_message .. "%#StatusLine#"
+  return recording_message
 end
 M.macros_hidden_lambda = function() return "" end
 M.macros_recorded_lambda = function()
@@ -107,7 +163,7 @@ M.macros_recorded_lambda = function()
   local recorded_content = vim.fn.getreg(recorded_register)
   local recorded_message = '@' .. recorded_register .. '>' .. recorded_content
   M.macros_recording = M.macros_hidden_lambda
-  return "%#StatusLineNC#" .. recorded_message .. "%#StatusLine#"
+  return recorded_message
 end
 M.macros_recording = M.macros_hidden_lambda
 vim.api.nvim_create_autocmd("RecordingEnter", {
@@ -162,59 +218,158 @@ M.list_concat = function(strings_list)
   return table.concat(M.list_drop_strings(strings), "%= %=")
 end
 
-M.render_active = function()
-  local statusline_left = {
-    M.cursor_position()
+M.render_active__file = function()
+  local left = {
+    M.cursor_position(),
   }
-  local search_pagination = M.search_pagination()
-  local macros_recording = M.macros_recording()
-  local statusline_middle = (macros_recording ~= "") and ({ macros_recording }) or (
-    (search_pagination ~= "") and ({ search_pagination }) or (
-    ({ M.git_info(), M.lsp_diagnostics() })
-  ))
-  local statusline_right = {
-    --M.lsp_list(),
+  local middle = {
     M.file_info(),
   }
+  local right = {
+    M.file_path(),
+  }
   return M.list_concat({
-    statusline_left,
-    statusline_middle,
-    statusline_right
+    left,
+    middle,
+    right,
+  })
+end
+
+M.render_active__diagnostics = function()
+  local left = {
+    M.cursor_position(),
+  }
+  local middle = {
+    M.file_info(),
+  }
+  local right = {
+    M.git_info(),
+    M.diagnostics(),
+    M.lsp_list(),
+  }
+  return M.list_concat({
+    left,
+    middle,
+    right
+  })
+end
+
+M.render_active__format = function()
+  local left = {
+    M.cursor_position(),
+    M.mode(),
+  }
+  local middle = {
+    M.file_info(),
+  }
+  local right = {
+    M.indentation(),
+    M.encoding(),
+    M.fileformat(),
+  }
+  return M.list_concat({
+    left,
+    middle,
+    right,
   })
 end
 
 M.render_inactive = function()
-  local statusline_left = {
+  local left = {
     M.cursor_position()
   }
-  local search_pagination = M.search_pagination()
-  local statusline_middle = (search_pagination ~= "") and ({ search_pagination }) or {}
-  local statusline_right = {
-    --M.lsp_list(),
-    M.file_info(),
+  local middle = {
+    M.file_info()
+  }
+  local right = {
+    M.file_path()
   }
   return M.list_concat({
-    statusline_left,
-    statusline_middle,
-    statusline_right
+    left,
+    middle,
+    right
   })
 end
 
-M.render = function()
-  return M.is_activewin() and M.render_active() or M.render_inactive()
+M.render_active_table = {
+  M.render_active__file,
+  M.render_active__diagnostics,
+  M.render_active__format,
+}
+M.status_count = #(M.render_active_table)
+M.status_mode = 1
+M.render_active_handle = M.render_active_table[M.status_mode]
+M.status_toggle = function()
+  if M.status_mode < M.status_count then
+    M.status_mode = M.status_mode + 1
+  else
+    M.status_mode = 1
+  end
+  M.render_active_handle = M.render_active_table[M.status_mode]
+  vim.cmd.redrawstatus()
 end
 
-vim.opt.statusline = "%!v:lua.require('"..vim.g.username..".core.statusline').render()"
+M.render_active = function()
+  local left = {
+    M.cursor_position(),
+  }
+  local right = {
+    " ",
+  }
+  local search_pagination = M.search_pagination()
+  local macros_recording = M.macros_recording()
+  local middle = nil
+  if macros_recording ~= "" then
+    middle = { macros_recording }
+  elseif search_pagination ~= "" then
+    middle = { search_pagination }
+  end
+  if middle ~= nil then
+    return M.list_concat({
+      left,
+      middle,
+      right,
+    })
+  else
+    return M.render_active_handle()
+  end
+end
 
-vim.api.nvim_create_autocmd("User", {
-  group = M.augroup,
-  pattern = "LspProgressUpdate",
-  callback = function()
-    vim.cmd.redrawstatus()
-  end,
-})
+M.render_statusline = function()
+  return M.is_activewin() and
+    M.render_active() or
+    M.render_inactive()
+end
+
+vim.opt.statusline = "%!v:lua.require('"..vim.g.username..".core.status').render_statusline()"
+
+--[[vim.api.nvim_create_user_command('StatusToggle', function()
+  --pcall(vim.fn.)
+  M.status_toggle()
+end,{})]]
+vim.keymap.set("n", "<leader>;", M.status_toggle, {desc="Toggle statusline content"})
 
 return M
+
+--[[
+  if count["errors"] ~= 0 then
+    errors = " %#LspDiagnosticsSignError# " .. count["errors"]
+  end
+  if count["warnings"] ~= 0 then
+    warnings = " %#LspDiagnosticsSignWarning# " .. count["warnings"]
+  end
+  if count["hints"] ~= 0 then
+    hints = " %#LspDiagnosticsSignHint# " .. count["hints"]
+  end
+  if count["info"] ~= 0 then
+    info = " %#LspDiagnosticsSignInformation# " .. count["info"]
+  end
+  return errors .. warnings .. hints .. info .. "%#Normal#"
+
+  local added = git_info.added and ("%#GitSignsAdd#+" .. git_info.added .. " ") or ""
+  local changed = git_info.changed and ("%#GitSignsChange#~" .. git_info.changed .. " ") or ""
+  local removed = git_info.removed and ("%#GitSignsDelete#-" .. git_info.removed .. " ") or ""
+--]]
 
 --[[ MEMO
 "%3L:%l|%c",

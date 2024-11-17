@@ -6,10 +6,10 @@ return {
     },
     opts = {
       columns = {
-        "icon",
-        "permissions",
+        --"icon",
+        --"permissions",
         --"size",
-        "mtime",
+        --"mtime",
       },
       git = {
         add = function(path) return true end,

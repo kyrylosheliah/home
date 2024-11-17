@@ -2,9 +2,9 @@ return {
   {
     "nvim-telescope/telescope.nvim",
     tag = "0.1.8",
-    event = "VimEnter",
     dependencies = {
       "nvim-lua/plenary.nvim",
+      "BurntSushi/ripgrep",
     },
     opts = {
       defaults = {
@@ -38,7 +38,7 @@ return {
               ["<C-d>"] = "delete_buffer",
             },
             n = {
-              ["d"] = "delete_buffer",
+              ["<C-d>"] = "delete_buffer",
             },
           },
           ignore_current_buffer = true,
