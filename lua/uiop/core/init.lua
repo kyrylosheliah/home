@@ -1,5 +1,5 @@
 local username = vim.g.username
-require(username .. ".core.opts")
-require(username .. ".core.keys")
-require(username .. ".core.colorscheme")
+require(username .. ".core.opt")
+require(username .. ".core.keymap")
+require(username .. ".core.highlight")
 require(username .. ".core.status")

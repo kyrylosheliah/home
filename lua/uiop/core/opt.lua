@@ -31,6 +31,10 @@ g.have_nerd_font = true
 
 local opt = vim.opt
 
+opt.cindent = false
+opt.cinkeys = ""
+opt.indentexpr = ""
+
 --opt.shellslash = true
 
 opt.showmode = true
@@ -66,7 +70,7 @@ opt.termguicolors = true -- Enable 24-bit RGB colors
 opt.laststatus = 2 -- Set global statusline
 
 opt.hidden = true -- Enable background buffers
-opt.lazyredraw = false -- Faster scrolling
+opt.lazyredraw = true -- Faster scrolling
 
 opt.swapfile = false
 opt.backup = false
@@ -116,7 +120,8 @@ local tab_listchars = {
 opt.listchars = tab_listchars
 -- but automatic indent
 opt.autoindent = true
-opt.smartindent = true
+opt.smartindent = false
+opt.smarttab = false
 opt.expandtab = false
 opt.shiftwidth = 4
 opt.tabstop = 4
@@ -137,7 +142,6 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = function()
     opt.listchars = two_space_listchars
     vim.opt_local.autoindent = false
-    vim.opt_local.smartindent = false
     vim.opt_local.expandtab = true
     vim.opt_local.shiftwidth = 2
     vim.opt_local.tabstop = 2
@@ -153,7 +157,6 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = function()
     opt.listchars = four_space_listchars
     vim.opt_local.autoindent = false
-    vim.opt_local.smartindent = false
     vim.opt_local.expandtab = true
     vim.opt_local.shiftwidth = 4
     vim.opt_local.tabstop = 4
@@ -171,7 +174,6 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = function()
     opt.listchars = tab_listchars
     vim.opt_local.autoindent = false
-    vim.opt_local.smartindent = false
     vim.opt_local.expandtab = false
     vim.opt_local.shiftwidth = 4
     vim.opt_local.tabstop = 4

@@ -1,3 +1,5 @@
+if True then return {} end
+
 return {
 
   {
