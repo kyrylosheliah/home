@@ -31,10 +31,6 @@ g.have_nerd_font = true
 
 local opt = vim.opt
 
-opt.cindent = false
-opt.cinkeys = ""
-opt.indentexpr = ""
-
 --opt.shellslash = true
 
 opt.showmode = true
@@ -70,7 +66,6 @@ opt.termguicolors = true -- Enable 24-bit RGB colors
 opt.laststatus = 2 -- Set global statusline
 
 opt.hidden = true -- Enable background buffers
-opt.lazyredraw = true -- Faster scrolling
 
 opt.swapfile = false
 opt.backup = false
