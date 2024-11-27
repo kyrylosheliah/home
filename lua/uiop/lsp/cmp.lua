@@ -10,6 +10,12 @@ return {
     "hrsh7th/cmp-nvim-lsp-signature-help",
     --'hrsh7th/cmp-calc',
     'hrsh7th/cmp-emoji',
+    {
+      enabled = false,
+      "Exafunction/codeium.vim",
+      event = "BufEnter",
+      dependencies = { "nvim-lua/plenary.nvim" },
+    },
   },
   config = function(_, opts)
     local cmp = require('cmp')
@@ -69,6 +75,7 @@ return {
         { name = "path", max_item_count = 5 },
         --{ name = "calc", max_item_count = 5 },
         { name = "emoji", max_item_count = 5 },
+        --{ name = 'codeium' },
       },
     }
     opts = vim.tbl_deep_extend('force', opts, more_opts)

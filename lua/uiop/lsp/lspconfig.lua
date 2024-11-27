@@ -1,3 +1,5 @@
+--'Issafalcon/lsp-overloads.nvim'
+
 return {
 
   {
@@ -21,8 +23,13 @@ return {
     },
     opts = {
       ensure_installed = {
+        "taplo", -- toml
         -- LUA
         "lua_ls",
+        -- PYTHON
+        "pyright",
+        -- RUST
+        "rust_analyzer", -- will use system installation if rustaceanvim is installed
       },
       handlers = {
         --[[function(server_name) -- default handler
@@ -46,13 +53,13 @@ return {
         "stylua",
         "selene",
         -- PYTHON
-        "pyright",
         "ruff",
         "debugpy",
         "black",
         "isort",
-        "taplo",
-        -- 
+        -- RUST
+        "codelldb",
+        --"rustfmt", -- deprecated, install via rustup
       },
     },
   },
@@ -232,9 +239,10 @@ return {
       return {
         formatters_by_ft = {
           lua = { "stylua" },
-          python = { "isort", "black" },
           --markdown = { "inject" }, -- makes format python codeblocks inside a markdown file
           javascript = { "prettierd", "prettier", stop_after_first = true },
+          python = { "isort", "black" },
+          rust = { "rustfmt" },
         },
         --[[format_on_save = {
           -- These options will be passed to conform.format()

@@ -17,7 +17,6 @@ require("lazy").setup(
   {
     { import = username .. ".plugins" },
     { import = username .. ".lsp" },
-    { import = username .. ".lang" },
   },
   {
     change_detection = {

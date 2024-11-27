@@ -1,6 +1,6 @@
 -- nvim --clean<CR>:redir file<CR>:highlightjjjjjjjjjjjjjjjjjjjj<CR>:redir END
 
-vim.g.apply_transparency = False
+vim.g.apply_transparency = false
 
 local highlight = {
   ["SpecialKey"] = { guifg = "NvimDarkGrey4" },

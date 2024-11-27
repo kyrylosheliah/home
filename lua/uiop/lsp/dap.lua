@@ -30,6 +30,7 @@ return {
         "theHamsta/nvim-dap-virtual-text",
         opts = {},
       },
+      "mfussenegger/nvim-dap-python",
     },
 
     -- stylua: ignore
@@ -55,11 +56,10 @@ return {
     },
 
     config = function(_, opts)
-      -- load mason-nvim-dap here, after all adapters have been setup
-      --[[local mason_nvim_dap = require"mason-nvim-dap"
+      local mason_nvim_dap = require("mason-nvim-dap")
       if mason_nvim_dap ~= nil then
-        mason-nvim-dap.setup()
-      end]]
+        mason_nvim_dap.setup()
+      end
 
       -- setup dap config by VsCode launch.json file
       local vscode = require("dap.ext.vscode")
@@ -71,6 +71,11 @@ return {
       if vim.fn.filereadable(".vscode/launch.json") then
         vscode.load_launchjs()
       end
+
+      --local dap, dapui = require("dap"), require("dapui")
+      --local debugpyPythinPath = require("mason-registry").get_package("debugpy"):get_install_path() .. "/venv/bin/python3"
+      --require("dap-python").setup(debugpyPythonPath, {}) ---@diagnostics disable-line: missing-fields
+      require("dap-python").setup("python")
     end,
   },
 
@@ -112,7 +117,10 @@ return {
   -- mason.nvim integration
   {
     "jay-babu/mason-nvim-dap.nvim",
-    dependencies = "mason.nvim",
+    dependencies = {
+      "mason.nvim",
+      "mfussenegger/nvim-dap",
+    },
     cmd = { "DapInstall", "DapUninstall" },
     opts = {
       automatic_installation = true,
@@ -120,10 +128,6 @@ return {
       ensure_installed = {
       },
     },
-    -- mason-nvim-dap is loaded when nvim-dap loads
-    --[[config = function(_, opts)
-      require("mason-nvim-dap").setup(opts)
-    end,]]
   },
 }
 

@@ -1,5 +1,6 @@
-if true then return {} end
+return {}
 
+--[[
 -- LOOK IN CURRENT DIRECTORY FOR csproj FILE using glob
 -- IF NO FILE IN CURRENT DIRECTORY, LOOK IN PARENT DIRECTORY recursively
 local function find_closest_csproj(directory)
@@ -266,6 +267,7 @@ return {
   },
 
 }
+]]
 
 --[[
 for _, lang in ipairs({ "cs", "fsharp", "vb" }) do
