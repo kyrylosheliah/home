@@ -21,7 +21,14 @@ return {
       --},
       completion = {
         keyword_length = 1,
-         completeopt = vim.o.completeopt,
+        completeopt = vim.o.completeopt,
+        --autocomplete = false,
+      },
+      --preselect = cmp.PreselectMode.None,
+      view = {
+        docs = {
+          auto_open = false,
+        },
       },
       window = {
         completion = cmp.config.window.bordered(),
@@ -37,7 +44,7 @@ return {
         ['<Esc>'] = cmp.mapping.close(),
         ['<C-y>'] = cmp.mapping.confirm({
           behavior = cmp.ConfirmBehavior.Insert,
-          select = true
+          select = true,
         }),
       },
       cmp.setup.cmdline({ "/", "?" }, {

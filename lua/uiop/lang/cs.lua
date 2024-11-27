@@ -1,3 +1,5 @@
+if true then return {} end
+
 -- LOOK IN CURRENT DIRECTORY FOR csproj FILE using glob
 -- IF NO FILE IN CURRENT DIRECTORY, LOOK IN PARENT DIRECTORY recursively
 local function find_closest_csproj(directory)

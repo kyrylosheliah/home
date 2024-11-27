@@ -24,7 +24,6 @@ return {
       "markdown",
       "markdown_inline",
       "printf",
-      "python",
       "query",
       "regex",
       "toml",
@@ -34,6 +33,15 @@ return {
       "vimdoc",
       "xml",
       "yaml",
+      -- LUA
+      "lua",
+      "luadoc",
+      "luap",
+      -- PYTHON
+      "python",
+      "rst",
+      "ninja",
+      -- 
     },
     --[[incremental_selection = {
       enable = true,

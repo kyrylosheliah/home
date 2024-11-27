@@ -17,12 +17,13 @@ end
 
 M.highlight_location = vim.g.username .. ".core.highlight_table"
 M.highlight_table = require(M.highlight_location)
+M.default_highlight_table = M.extract_highlight()
+
 vim.keymap.set("n", "<leader>`", function()
   package.loaded[M.highlight_location] = nil
   M.highlight_table = require(M.highlight_location)
   M.apply_highlight(M.highlight_table)
 end)
-M.default_highlight_table = M.extract_highlight()
 vim.keymap.set("n", "<leader>~", function()
   M.apply_highlight(M.default_highlight_table)
 end)

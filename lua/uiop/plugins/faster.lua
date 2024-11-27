@@ -1,5 +1,5 @@
 return {
-  enabled = false,
+  enabled = true,
   'pteroctopus/faster.nvim',
   opts = {}
 }

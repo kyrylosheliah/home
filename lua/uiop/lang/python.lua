@@ -1,3 +1,5 @@
+if true then return {} end
+
 return {
 
   {
@@ -44,16 +46,17 @@ return {
       ---},
       handlers = {
         ["pyright"] = function()
-          local lspCapabilities = vim.lsp.protocol.make_client_capabilities()
-          lspCapabilities.textDocument.completion.completionItem.snippetSupport = true
+          local capabilities = vim.lsp.protocol.make_client_capabilities()
+          --lspCapabilities.textDocument.completion.completionItem.snippetSupport = true
+          capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
           require("lspconfig").pyright.setup({
-            capabilities = lspCapabilities,
+            capabilities = capabilities,
           })
         end,
         --["taplo"] = function()
           -- same as pyright??
         --end,
-        ["ruff"] = function()
+        --[[["ruff"] = function()
           require("lspconfig").ruff.setup({
             settings = {
               organizeImports = false,
@@ -61,7 +64,7 @@ return {
             -- disable ruff as hover provider to avoid conflicts with pyright
             on_attach = function(client) client.server_capabilities.hoverProvider = false end,
           })
-        end,
+        end,]]
       },
     },
   },
