@@ -1,4 +1,4 @@
---vim.cmd("language en_US")
+--vim.cmd("language en_US") -- windows only
 
 --vim.o.fileencoding = 'utf-8' -- written
 --vim.o.encoding = 'utf-8' -- shown
@@ -7,18 +7,16 @@ local g = vim.g
 
 g.have_nerd_font = true
 
----- ##
----- g.loaded_matchit         = 0
----- g.loaded_matchparen      = 0
----- ##
+--g.loaded_matchit = 0
+--g.loaded_matchparen = 0
 --g.loaded_getscript = 0
 --g.loaded_getscriptPlugin = 0
 --g.loaded_gzip = 0
 --g.loaded_logiPat = 0
-----g.loaded_netrw = 0
-----g.loaded_netrwFileHandlers = 0
-----g.loaded_netrwPlugin = 0
-----g.loaded_netrwSettings = 0
+--g.loaded_netrw = 0
+--g.loaded_netrwFileHandlers = 0
+--g.loaded_netrwPlugin = 0
+--g.loaded_netrwSettings = 0
 --g.loaded_rrhelper = 0
 --g.loaded_tar = 0
 --g.loaded_tarPlugin = 0
@@ -27,7 +25,6 @@ g.have_nerd_font = true
 --g.loaded_vimballPlugin = 0
 --g.loaded_zip = 0
 --g.loaded_zipPlugin = 0
----- ##
 
 local opt = vim.opt
 
@@ -54,14 +51,14 @@ opt.signcolumn = "yes" -- yes, number
 opt.splitright = true
 opt.splitbelow = true
 
-opt.showmatch = true
+opt.showmatch = false
 opt.ignorecase = true
 opt.smartcase = true
 
-opt.linebreak = false -- Wrap on word boundary
+opt.linebreak = false
 opt.breakindent = false
-opt.showbreak = "+"
-opt.wrap = false--true
+opt.showbreak = "█"
+opt.wrap = true
 opt.termguicolors = true -- Enable 24-bit RGB colors
 opt.laststatus = 2 -- Set global statusline
 
@@ -81,10 +78,10 @@ opt.updatetime = 300
 -- Decrease mapped sequence wait time
 --opt.timeoutlen = 300
 
-opt.colorcolumn = "80,120"
+--opt.colorcolumn = "80,120"
 
 -- Disable nvim intro
-opt.shortmess:append("sI")
+--opt.shortmess:append("sI")
 
 local function augroup(name)
   return vim.api.nvim_create_augroup("config.general_" .. name, { clear = true })
@@ -113,10 +110,9 @@ local tab_listchars = {
   eol=eol, tab=tab, trail=trail, nbsp=nbsp, space=space,
 }
 opt.listchars = tab_listchars
--- but automatic indent
 opt.autoindent = true
-opt.smartindent = false
-opt.smarttab = false
+opt.smartindent = true
+opt.smarttab = true
 opt.expandtab = false
 opt.shiftwidth = 4
 opt.tabstop = 4
@@ -194,96 +190,32 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
--- resize splits if window got resized
-vim.api.nvim_create_autocmd({ "VimResized" }, {
-  group = augroup("resize_splits"),
-  callback = function()
-    local current_tab = vim.fn.tabpagenr()
-    vim.cmd("tabdo wincmd =")
-    vim.cmd("tabnext " .. current_tab)
-  end,
-})
-
--- go to last loc when opening a buffer
-vim.api.nvim_create_autocmd("BufReadPost", {
-  group = augroup("last_loc"),
-  callback = function(event)
-    local exclude = { "gitcommit" }
-    local buf = event.buf
-    if vim.tbl_contains(exclude, vim.bo[buf].filetype) or vim.b[buf].lazyvim_last_loc then
-      return
-    end
-    vim.b[buf].lazyvim_last_loc = true
-    local mark = vim.api.nvim_buf_get_mark(buf, '"')
-    local lcount = vim.api.nvim_buf_line_count(buf)
-    if mark[1] > 0 and mark[1] <= lcount then
-      pcall(vim.api.nvim_win_set_cursor, 0, mark)
-    end
-  end,
-})
-
--- close some filetypes with <q>
-vim.api.nvim_create_autocmd("FileType", {
-  group = augroup("close_with_q"),
-  pattern = {
-    "PlenaryTestPopup",
-    "grug-far",
-    "help",
-    "lspinfo",
-    "notify",
-    "qf",
-    "spectre_panel",
-    "startuptime",
-    "tsplayground",
-    "neotest-output",
-    "checkhealth",
-    "neotest-summary",
-    "neotest-output-panel",
-    "dbout",
-    "gitsigns.blame",
-  },
-  callback = function(event)
-    vim.bo[event.buf].buflisted = false
-    vim.keymap.set("n", "q", "<cmd>close<cr>", {
-      buffer = event.buf,
-      silent = true,
-      desc = "Quit buffer",
-    })
-  end,
-})
-
--- make it easier to close man-files when opened inline
-vim.api.nvim_create_autocmd("FileType", {
-  group = augroup("man_unlisted"),
-  pattern = { "man" },
-  callback = function(event)
-    vim.bo[event.buf].buflisted = false
-  end,
-})
-
 -- wrap and check for spell in text filetypes
 vim.api.nvim_create_autocmd("FileType", {
   group = augroup("wrap_spell"),
-  pattern = { "text", "plaintex", "typst", "gitcommit", "markdown" },
+  pattern = {
+    "text",
+    "plaintex",
+    "typst",
+    "gitcommit",
+    "markdown"
+  },
   callback = function()
     vim.opt_local.wrap = true
     vim.opt_local.spell = true
   end,
 })
 
--- Fix conceallevel for json files
 vim.api.nvim_create_autocmd({ "FileType" }, {
-  group = augroup("json_conceal"),
-  pattern = { "json", "jsonc", "json5" },
-  callback = function()
-    vim.opt_local.conceallevel = 0
-  end,
-})
-
+  group = augroup("conceal_enforce"),
+  pattern = {
 -- Remove conceal for oil file browser
-vim.api.nvim_create_autocmd({ "FileType" }, {
-  group = augroup("oil_conceal"),
-  pattern = { "oil" },
+    "oil",
+-- Fix conceallevel for json files
+    "json",
+    "jsonc",
+    "json5",
+  },
   callback = function()
     vim.opt_local.conceallevel = 0
   end,
@@ -319,24 +251,3 @@ vim.filetype.add({
     },
   },
 })
-
-vim.api.nvim_create_autocmd({ "FileType" }, {
-  group = augroup("bigfile"),
-  pattern = "bigfile",
-  callback = function(ev)
-    vim.b.minianimate_disable = true
-    vim.schedule(function()
-      vim.bo[ev.buf].syntax = vim.filetype.match({ buf = ev.buf }) or ""
-    end)
-  end,
-})
-
---[[
-
--- DETECT BUFFER FILE, PLUGIN, TYPE VIA FILETYPE
---local bufnr = vim.api.nvim_get_current_buf()
---local filetype = vim.api.nvim_buf_get_option(bufnr, 'filetype')
---vim.notify(filetype)
-
---
---]]
