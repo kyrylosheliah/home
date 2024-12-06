@@ -21,16 +21,16 @@ set({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and Clear hlsea
 set("n", "Q", "<nop>") -- unmap
 
 -- Move to window using the <ctrl> hjkl keys
-set("n", "<C-h>", "<C-w>h", { desc = "Go to Left Window", remap = true })
-set("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window", remap = true })
-set("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
-set("n", "<C-l>", "<C-w>l", { desc = "Go to Right Window", remap = true })
+set("n", "<C-Down>", "<C-w>j", { desc = "Go to Lower Window", remap = true })
+set("n", "<C-Up>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
+set("n", "<C-Left>", "<C-w>h", { desc = "Go to Left Window", remap = true })
+set("n", "<C-Right>", "<C-w>l", { desc = "Go to Right Window", remap = true })
 
 -- Resize window using <ctrl> arrow keys
-set("n", "<C-Up>", "<cmd>resize +1<cr>", { desc = "Increase Window Height" })
-set("n", "<C-Down>", "<cmd>resize -1<cr>", { desc = "Decrease Window Height" })
-set("n", "<C-Left>", "<cmd>vertical resize -1<cr>", { desc = "Decrease Window Width" })
-set("n", "<C-Right>", "<cmd>vertical resize +1<cr>", { desc = "Increase Window Width" })
+set("n", "<A-Up>", "<cmd>resize +1<cr>", { desc = "Increase Window Height" })
+set("n", "<A-Down>", "<cmd>resize -1<cr>", { desc = "Decrease Window Height" })
+set("n", "<A-Left>", "<cmd>vertical resize -1<cr>", { desc = "Decrease Window Width" })
+set("n", "<A-Right>", "<cmd>vertical resize +1<cr>", { desc = "Increase Window Width" })
 --[[
 
 -- Move Lines

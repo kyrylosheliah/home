@@ -8,25 +8,13 @@ return {
       },
       handlers = {
         ["lua_ls"] = function()
-          local capabilities = vim.lsp.protocol.make_client_capabilities()
-          capabilities.textDocument.completion.completionItem["snippetSupport"] = true
-          capabilities.textDocument.completion.completionItem["resolveSupport"] = {
-            properties = {
-              "documentation",
-              "detail",
-              "additionalTextEdits",
-            },
-          }
-          local cmp_nvim_lsp = require("cmp_nvim_lsp")
-          capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
-          capabilities.experimental = {
-            workspaceWillRename = true,
-          }
+          local common = require(vim.g.username .. ".base.lsp").common_lsp_options()
           require("lspconfig").lua_ls.setup({
+            capabilities = common.capabilities,
+            on_attach = common.on_attach,
             filetypes = {
               "lua",
             },
-            capabilities = capabilities,
             settings = {
               Lua = {
                 format = {
@@ -49,19 +37,8 @@ return {
                 },
                 diagnostics = {
                   globals = {
-                    --"bit",
-                    --"it",
-                    --"describe",
-                    --"before_each",
-                    --"after_each",
                     "vim",
-                    "use",
-                    "packer_plugins",
-                    "NOREF_NOERR_TRUNC",
                   },
-                },
-                telemetry = {
-                  enable = false,
                 },
               },
             },
@@ -99,6 +76,7 @@ return {
     },
   },
 
+  --[[
   {
     "jay-babu/mason-nvim-dap.nvim",
     opts = {
@@ -108,7 +86,6 @@ return {
     },
   },
 
--- local dap = require("dap")
   {
     "mfussenegger/nvim-dap",
     opts = {
@@ -143,5 +120,6 @@ return {
       },
     },
   },
+  ]]
 
 }

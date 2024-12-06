@@ -6,7 +6,6 @@ return {
       --[[formatters_by_ft = {
       --markdown = { "inject" }, -- makes format python codeblocks inside a markdown file
       javascript = { "prettierd", "prettier", stop_after_first = true },
-      python = { "isort", "black" },
       rust = { "rustfmt" },
     }]]
       --[[local more_opts = {

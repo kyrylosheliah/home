@@ -1,5 +1,3 @@
---'Issafalcon/lsp-overloads.nvim'
-
 return {
 
   {
@@ -41,18 +39,37 @@ return {
             cmp.complete()
           end
         end, { "i", "c" }),
-        ['<C-d>'] = cmp.mapping.scroll_docs(4),
-        ['<C-u>'] = cmp.mapping.scroll_docs(-4),
-        ['<C-e>'] = cmp.mapping(cmp.mapping.abort(), { "i", "c" }),
+        ['<C-d>'] = cmp.mapping(function()
+          if cmp.visible_docs() then
+            cmp.scroll_docs(1)
+          else
+            cmp.open_docs()
+          end
+        end, { "i", "c" }),
+        ['<C-u>'] = cmp.mapping(function()
+          if cmp.visible_docs() then
+            cmp.scroll_docs(-1)
+          else
+            cmp.open_docs()
+          end
+        end, { "i", "c" }),
+        ['<C-y>'] = cmp.mapping(cmp.mapping.confirm({ select = true }), { "i", "c" }),
         ['<Esc>'] = cmp.mapping(function()
           if cmp.visible() then
             cmp.close()
+          else -- restore keypress
+            local key = vim.api.nvim_replace_termcodes("<Esc>", true, false, true)
+            vim.api.nvim_feedkeys(key, 'n', false)
           end
-          -- restore keypress
-          local key = vim.api.nvim_replace_termcodes("<Esc>", true, false, true)
-          vim.api.nvim_feedkeys(key, 'n', false)
         end, { "i", "c" }),
-        ['<C-y>'] = cmp.mapping(cmp.mapping.confirm({ select = true }), { "i", "c" }),
+        --[[['<CR>'] = cmp.mapping(function()
+          if cmp.visible() then
+            cmp.confirm({ select = true })
+          else -- restore keypress
+            local key = vim.api.nvim_replace_termcodes("<CR>", true, false, true)
+            vim.api.nvim_feedkeys(key, 'n', false)
+          end
+        end, { "i", "c" }),]]
       }
       local more_opts = {
         experimental = {

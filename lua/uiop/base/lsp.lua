@@ -48,3 +48,69 @@ vim.api.nvim_create_autocmd("LspAttach", {
     keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", opts) -- show  diagnostics for file
   end,
 })
+
+-- ==============
+
+M = {}
+
+M.common_lsp_options = function()
+
+  local capabilities = vim.lsp.protocol.make_client_capabilities()
+  local cmp_nvim_lsp = require("cmp_nvim_lsp")
+  capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
+
+  local on_attach = function(client, bufnr)
+    -- Keymaps should be here
+    if client.server_capabilities.completionProvider then
+      vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+    end
+    if client.server_capabilities.definitionProvider then
+      vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
+    end
+    if client.server_capabilities.documentHighlightProvider then
+      local group = vim.api.nvim_create_augroup("base.lsp", { clear = true })
+      vim.api.nvim_create_autocmd("CursorHold", {
+        buffer = bufnr,
+        command = "lua vim.lsp.buf.document_highlight()",
+        group = group,
+      })
+      vim.api.nvim_create_autocmd("CursorMoved", {
+        buffer = bufnr,
+        command = "lua vim.lsp.buf.clear_references()",
+        group = group,
+      })
+    end
+    if client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint ~= nil then
+      -- vim.lsp.inlay_hint(bufnr, true)
+      -- vim.lsp.inlay_hint.enable(bufnr, true)
+      vim.lsp.inlay_hint.enable(true, { bufnr })
+    end
+    --[[if client.server_capabilities.documentSymbolProvider then
+      local navic = require("nvim-navic")
+      navic.attach(client, bufnr)
+    end]]
+    if client.server_capabilities.signatureHelpProvider then
+      require("lsp-overloads").setup(client, {
+        keymaps = {
+          next_signature = "<A-j>",
+          previous_signature = "<A-k>",
+          next_parameter = "<A-l>",
+          previous_parameter = "<A-h>",
+          close_signature = "<A-n>"
+        },
+      })
+    end
+  end
+
+  local root_dir = function(fname)
+    return require("lspconfig/util").find_git_ancestor(fname) or vim.fn.getcwd()
+  end
+
+  return {
+    capabilities = capabilities,
+    on_attach = on_attach,
+    root_dir = root_dir,
+  }
+end
+
+return M
