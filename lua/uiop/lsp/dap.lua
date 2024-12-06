@@ -1,3 +1,4 @@
+
 ---@param config {args?:string[]|fun():string[]?}
 local function get_args(config)
   local args = type(config.args) == "function" and (config.args() or {}) or config.args or {}
@@ -10,26 +11,33 @@ local function get_args(config)
   return config
 end
 
-local dap_icons = {
-  Stopped             = { "󰁕 ", "DiagnosticWarn", "DapStoppedLine" },
-  Breakpoint          = " ",
-  BreakpointCondition = " ",
-  BreakpointRejected  = { " ", "DiagnosticError" },
-  LogPoint            = ".>",
-}
-
 return {
+
+  {
+    "jay-babu/mason-nvim-dap.nvim",
+    dependencies = {
+      "williamboman/mason.nvim",
+      "mfussenegger/nvim-dap",
+    },
+    opts = {
+      ensure_installed = {},
+      handlers = {
+        --[[function(config) -- default handler
+          require("mason-nvim-dap").default_setup(config)
+        end,]]
+      },
+    },
+  },
+
   {
     "mfussenegger/nvim-dap",
-    recommended = true,
-    desc = "Debugging support. Requires language specific adapters to be configured. (see lang extras)",
-
     dependencies = {
       "rcarriga/nvim-dap-ui",
       {
         "theHamsta/nvim-dap-virtual-text",
         opts = {},
       },
+      "jay-babu/mason-nvim-dap.nvim",
       "mfussenegger/nvim-dap-python",
     },
 
@@ -56,6 +64,21 @@ return {
     },
 
     config = function(_, opts)
+
+      local dap, dapui = require("dap"), require("dapui")
+      dap.listeners.before.attach.dapui_config = function()
+        dapui.open()
+      end
+      dap.listeners.before.launch.dapui_config = function()
+        dapui.open()
+      end
+      dap.listeners.before.event_terminated.dapui_config = function()
+        dapui.close()
+      end
+      dap.listeners.before.event_exited.dapui_config = function()
+        dapui.close()
+      end
+
       local mason_nvim_dap = require("mason-nvim-dap")
       if mason_nvim_dap ~= nil then
         mason_nvim_dap.setup()
@@ -94,23 +117,7 @@ return {
     opts = {},
     config = function(_, opts)
       local dap = require("dap")
-      local dapui = require("dapui")
-      dapui.setup(opts)
-      dap.listeners.after.event_initialized.dapui_config = function()
-        dapui.open({})
-      end
-      dap.listeners.before.attach.dapui_config = function()
-        dapui.open({})
-      end
-      dap.listeners.before.launch.dapui_config = function()
-        dapui.open({})
-      end
-      dap.listeners.before.event_terminated.dapui_config = function()
-        dapui.close({})
-      end
-      dap.listeners.before.event_exited.dapui_config = function()
-        dapui.close({})
-      end
+      require("dapui").setup(opts)
     end,
   },
 
@@ -129,8 +136,8 @@ return {
       },
     },
   },
-}
 
+}
 --[[
 local p = "dap"; if (not require('killerrat.plugins._lazy-nvim').LazyHasPlugin(p)) then return end
 local dap, dapui = require(p), require("dapui")

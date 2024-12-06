@@ -1,5 +1,4 @@
 return {
-
   {
     "nvim-treesitter/nvim-treesitter",
     version = false, -- last release is way too old and doesn't work on Windows
@@ -44,7 +43,7 @@ return {
         "python",
         "rst",
         "ninja",
-        -- RUST
+        -- RUSTlsp
         "rust",
         "ron",
         "toml",

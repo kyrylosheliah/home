@@ -5,10 +5,16 @@ vim.opt.laststatus = 2 -- the last window will have a status line ... 2: always
 --vim.opt.showcmdloc = "statusline"
 --vim.opt.cmdheight = 0
 
+local sysname = vim.uv.os_uname().sysname
+local is_windows = sysname == "Windows_NT"
+local is_mac = sysname == "Darwin"
+local is_linux = not (is_windows or is_mac)
+local os_slash = is_windows and [[\]] or "/"
+
 local M = {}
 
-M.namespace = vim.api.nvim_create_namespace("core.status")
-M.augroup = vim.api.nvim_create_augroup("core.status_group", { clear = true })
+M.namespace = vim.api.nvim_create_namespace("base.status")
+M.augroup = vim.api.nvim_create_augroup("base.status_group", { clear = true })
 
 M.stbufnr = function()
   return vim.api.nvim_win_get_buf(vim.g.statusline_winid or 0)
@@ -29,23 +35,31 @@ end
 M.file_path = function()
   -- TODO: calculate all this via autocmd and not on each key press
   local bufname = vim.api.nvim_buf_get_name(M.stbufnr())
-  local project_path = vim.fn.fnamemodify(bufname, ":.")
-  local cwd_path = bufname:gsub(vim.pesc(project_path) .. "$", "")
-  if cwd_path == "" then
-    cwd_path = vim.fn.getcwd()
+  local cwd_path = vim.fn.getcwd()
+  if bufname == "" then
+    --[[if is_windows then
+      cwd_path = cwd_path:gsub("\\", "/")
+    end]]
+    return "%<" .. cwd_path
   end
-  project_path = project_path:gsub("^" .. vim.pesc(cwd_path), "")
-  if cwd_path ~= "" then
-   cwd_path = ("%<" .. cwd_path)
+  local file_path = vim.fn.fnamemodify(bufname, ":.")
+  local validation = cwd_path .. os_slash .. file_path
+  --[[if is_windows then
+    cwd_path = cwd_path:gsub("\\", "/")
+    file_path = file_path:gsub("\\", "/")
+  end]]
+  if is_linux then
+    validation = (validation == bufname)
+  else
+    validation = (string.lower(validation) == string.lower(bufname))
   end
-  if project_path ~= "" then
-    project_path = "> " .. project_path
+  if validation then
+    file_path = (os_slash .. "." .. os_slash) .. file_path
+  else
+    file_path = " | " .. file_path
   end
-  return table.concat(
-    M.list_drop_strings({
-      cwd_path,
-      project_path,
-    }), " ")
+  --return "%<" .. cwd_path .. " > " .. file_path
+  return "%<" .. cwd_path .. file_path
 end
 
 M.file_info = function()
@@ -59,10 +73,15 @@ M.file_info = function()
       modified,
       readonly,
     }), " ")
-end 
+end
 
 M.indentation = function()
-  return (vim.opt.expandtab and "SP" or "TAB").. ":" .. tostring(vim.opt.shiftwidth:get())
+  local spacewise = vim.opt.shiftwidth:get()
+  if vim.opt.expandtab:get() then
+    return "SP:" .. tostring(spacewise)
+  end
+  local tabwise = vim.opt.tabstop:get()
+  return "TAB:" .. tostring(tabwise / spacewise)
 end
 
 M.encoding = function()
@@ -221,6 +240,7 @@ end
 M.render_active__file = function()
   local left = {
     M.cursor_position(),
+    M.mode(),
   }
   local middle = {
     M.file_info(),
@@ -238,6 +258,7 @@ end
 M.render_active__diagnostics = function()
   local left = {
     M.cursor_position(),
+    M.mode(),
   }
   local middle = {
     M.file_info(),
@@ -341,7 +362,7 @@ M.render_statusline = function()
     M.render_inactive()
 end
 
-vim.opt.statusline = "%!v:lua.require('"..vim.g.username..".core.status').render_statusline()"
+vim.opt.statusline = "%!v:lua.require('"..vim.g.username..".base.status').render_statusline()"
 
 --[[vim.api.nvim_create_user_command('StatusToggle', function()
   --pcall(vim.fn.)

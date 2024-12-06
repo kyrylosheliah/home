@@ -1,9 +1,11 @@
---vim.cmd("language en_US") -- windows only
-
---vim.o.fileencoding = 'utf-8' -- written
---vim.o.encoding = 'utf-8' -- shown
+local opt = vim.opt
 
 local g = vim.g
+
+--vim.cmd("language en_US") -- windows only
+
+--o.fileencoding = 'utf-8' -- written
+--o.encoding = 'utf-8' -- shown
 
 g.have_nerd_font = true
 
@@ -26,8 +28,6 @@ g.have_nerd_font = true
 --g.loaded_zip = 0
 --g.loaded_zipPlugin = 0
 
-local opt = vim.opt
-
 --opt.shellslash = true
 
 opt.showmode = true
@@ -39,13 +39,14 @@ opt.mouse = "a" -- Enable mouse support
 -- "unnamed,unnamedplus"
 opt.clipboard = vim.env.SSH_TTY and "" or "unnamedplus"
 
-opt.completeopt = "menu,menuone,noinsert" -- Autocomplete options
+--opt.completeopt = "menu,menuone,noinsert"
+opt.completeopt = ""
 
 opt.number = true
 opt.relativenumber = true
 opt.cursorline = true
-opt.scrolloff = 8
-opt.sidescrolloff = 16
+opt.scrolloff = 4
+opt.sidescrolloff = 8
 opt.signcolumn = "yes" -- yes, number
 
 opt.splitright = true
@@ -57,7 +58,7 @@ opt.smartcase = true
 
 opt.linebreak = false
 opt.breakindent = false
-opt.showbreak = "█"
+opt.showbreak = "↳"
 opt.wrap = true
 opt.termguicolors = true -- Enable 24-bit RGB colors
 opt.laststatus = 2 -- Set global statusline
@@ -82,6 +83,13 @@ opt.updatetime = 300
 
 -- Disable nvim intro
 --opt.shortmess:append("sI")
+
+opt.fillchars = {
+  --stl = "█",
+  --stlnc = "█",
+  lastline = "█",
+  --lastline = "↳",
+}
 
 local function augroup(name)
   return vim.api.nvim_create_augroup("config.general_" .. name, { clear = true })
@@ -111,8 +119,8 @@ local tab_listchars = {
 }
 opt.listchars = tab_listchars
 opt.autoindent = true
-opt.smartindent = true
-opt.smarttab = true
+opt.smartindent = false
+opt.smarttab = false
 opt.expandtab = false
 opt.shiftwidth = 4
 opt.tabstop = 4
@@ -190,22 +198,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
--- wrap and check for spell in text filetypes
-vim.api.nvim_create_autocmd("FileType", {
-  group = augroup("wrap_spell"),
-  pattern = {
-    "text",
-    "plaintex",
-    "typst",
-    "gitcommit",
-    "markdown"
-  },
-  callback = function()
-    vim.opt_local.wrap = true
-    vim.opt_local.spell = true
-  end,
-})
-
 vim.api.nvim_create_autocmd({ "FileType" }, {
   group = augroup("conceal_enforce"),
   pattern = {
@@ -233,18 +225,18 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   end,
 })
 
-vim.g.bigfile_size = 1000000 * 2
+g.bigfile_size = 1000000 * 2
 vim.filetype.add({
   pattern = {
     [".*"] = {
       function(path, buf)
-	  if vim.g.bigfile_size == nil then
+	  if g.bigfile_size == nil then
 	  return nil
 	  end
         return vim.bo[buf]
             and vim.bo[buf].filetype ~= "bigfile"
             and path
-            and vim.fn.getfsize(path) > vim.g.bigfile_size
+            and vim.fn.getfsize(path) > g.bigfile_size
             and "bigfile"
           or nil
       end,

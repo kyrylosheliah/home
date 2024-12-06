@@ -15,7 +15,7 @@ M.extract_highlight = function()
   return tbl
 end
 
-M.highlight_location = vim.g.username .. ".core.highlight_table"
+M.highlight_location = vim.g.username .. ".base.highlight_table"
 M.highlight_table = require(M.highlight_location)
 M.default_highlight_table = M.extract_highlight()
 
@@ -66,7 +66,7 @@ end, { desc = "Inspect Highlight Group (by group name)", nargs = 1 })]]
 end
 M.apply_transparency()
 vim.api.nvim_create_autocmd("ColorScheme", {
-  group = vim.api.nvim_create_augroup("core.colorscheme", { clear = true }),
+  group = vim.api.nvim_create_augroup("base.highlight", { clear = true }),
   pattern = "*",
   callback = M.apply_transparency,
 })]]

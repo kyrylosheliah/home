@@ -1,5 +1,5 @@
 return {
-  enabled = false,
+  --enabled = false,
   "askfiy/visual_studio_code",
   opts = {
     -- `dark` or `light`
