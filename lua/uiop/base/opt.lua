@@ -44,7 +44,8 @@ opt.completeopt = ""
 
 opt.number = true
 opt.relativenumber = true
-opt.cursorline = true
+opt.cursorline = false
+--opt.colorcolumn = "80,120"
 opt.scrolloff = 4
 opt.sidescrolloff = 8
 opt.signcolumn = "yes" -- yes, number
@@ -79,16 +80,14 @@ opt.updatetime = 300
 -- Decrease mapped sequence wait time
 --opt.timeoutlen = 300
 
---opt.colorcolumn = "80,120"
-
 -- Disable nvim intro
 --opt.shortmess:append("sI")
 
 opt.fillchars = {
   --stl = "█",
   --stlnc = "█",
-  lastline = "█",
-  --lastline = "↳",
+  --lastline = "█",
+  lastline = "↳",
 }
 
 local function augroup(name)

@@ -4,7 +4,7 @@ return {
     tag = "0.1.8",
     dependencies = {
       "nvim-lua/plenary.nvim",
-      "BurntSushi/ripgrep",
+      --"BurntSushi/ripgrep",
     },
     opts = {
       defaults = {
@@ -117,6 +117,45 @@ return {
     config = function()
       require("telescope").load_extension("fzf")
     end,
+  },
+
+  -- TODO make trouble.nvim access fuzzy-findable
+  {
+    "folke/trouble.nvim",
+    cmd = { "Trouble" },
+    opts = function(_, opts)
+      local user_command = vim.api.nvim_create_user_command
+      user_command("TroubleWorkspaceDiagnosticToggle", function()
+        require("trouble").toggle()
+      end, {})
+      user_command("TroubleFileDiagnosticToggle", function()
+        require("trouble").toggle({ filter = { buf = 0 } })
+      end, {})
+      user_command("TroubleQuickfixToggle", function()
+        require("trouble").toggle()
+      end, {})
+      user_command("TroubleLoclistToggle", function()
+        require("trouble").toggle(opts)
+      end, {})
+      user_command("TroubleTodoToggle", function()
+        require("trouble").toggle(opts)
+      end, {})
+      return {
+        focus = true,
+        modes = {
+          lsp = {
+            win = { position = "right" },
+          },
+        },
+      }
+    end,
+    --[[  keys = {
+    { "<leader>xw", "<cmd>Trouble diagnostics toggle<CR>", desc = "Open trouble workspace diagnostics" },
+    { "<leader>xd", "<cmd>Trouble diagnostics toggle filter.buf=0<CR>", desc = "Open trouble document diagnostics" },
+    { "<leader>xq", "<cmd>Trouble quickfix toggle<CR>", desc = "Open trouble quickfix list" },
+    { "<leader>xl", "<cmd>Trouble loclist toggle<CR>", desc = "Open trouble location list" },
+    { "<leader>xt", "<cmd>Trouble todo toggle<CR>", desc = "Open todos in trouble" },
+  },]]
   },
 
 }

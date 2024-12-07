@@ -9,11 +9,11 @@ return {
       },
       handlers = {
         ["pyright"] = function()
-          local common = require(vim.g.username .. ".base.lsp").common_lsp_options()
+          local lsp = require(vim.g.username .. ".base.lsp")
           require("lspconfig").pyright.setup({
-            capabilities = common.capabilities,
-            on_attach = common.on_attach,
-            root_dir = common.root_dir,
+            capabilities = lsp.common_capabilities(),
+            on_attach = lsp.common_on_attach(),
+            root_dir = lsp.common_root_dir(),
             filetypes = {
               "python",
             },

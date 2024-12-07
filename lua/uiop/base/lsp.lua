@@ -53,13 +53,13 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 M = {}
 
-M.common_lsp_options = function()
+M.common_capabilities = function()
+  return require("cmp_nvim_lsp").default_capabilities(
+    vim.lsp.protocol.make_client_capabilities())
+end
 
-  local capabilities = vim.lsp.protocol.make_client_capabilities()
-  local cmp_nvim_lsp = require("cmp_nvim_lsp")
-  capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
-
-  local on_attach = function(client, bufnr)
+M.common_on_attach = function()
+  return function(client, bufnr)
     -- Keymaps should be here
     if client.server_capabilities.completionProvider then
       vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
@@ -101,16 +101,13 @@ M.common_lsp_options = function()
       })
     end
   end
+end
 
-  local root_dir = function(fname)
-    return require("lspconfig/util").find_git_ancestor(fname) or vim.fn.getcwd()
+M.common_root_dir = function()
+  return function(fname)
+    return require("lspconfig/util").find_git_ancestor(fname)
+      or vim.fn.getcwd()
   end
-
-  return {
-    capabilities = capabilities,
-    on_attach = on_attach,
-    root_dir = root_dir,
-  }
 end
 
 return M

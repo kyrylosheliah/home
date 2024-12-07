@@ -6,10 +6,6 @@ return {
     event = { "BufReadPost", "BufNewFile", "BufWritePre", "VeryLazy" },
     lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
     cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
-    --[[keys = {
-      { "<c-space>", desc = "Increment Selection" },
-      { "<bs>", desc = "Decrement Selection", mode = "x" },
-    },]]
     opts = {
       highlight = { enable = true },
       indent = { enable = true },
@@ -48,15 +44,15 @@ return {
         "ron",
         "toml",
       },
-      --[[incremental_selection = {
-      enable = true,
-      keymaps = {
-        init_selection = "<C-space>",
-        node_incremental = "<C-space>",
-        scope_incremental = false,
-        node_decremental = "<bs>",
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection = "<C-i>",
+          node_incremental = "<C-i>",
+          scope_incremental = false,
+          node_decremental = "<C-I>",
+        },
       },
-    },]]
     },
     config = function(_, opts)
       require("nvim-treesitter.configs").setup(opts)

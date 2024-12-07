@@ -8,10 +8,10 @@ return {
       },
       handlers = {
         ["lua_ls"] = function()
-          local common = require(vim.g.username .. ".base.lsp").common_lsp_options()
+          local lsp = require(vim.g.username .. ".base.lsp")
           require("lspconfig").lua_ls.setup({
-            capabilities = common.capabilities,
-            on_attach = common.on_attach,
+            capabilities = lsp.common_capabilities(),
+            on_attach = lsp.common_on_attach(),
             filetypes = {
               "lua",
             },
