@@ -44,8 +44,8 @@ opt.completeopt = ""
 
 opt.number = true
 opt.relativenumber = true
-opt.cursorline = false
---opt.colorcolumn = "80,120"
+opt.cursorline = true
+opt.colorcolumn = "80,120"
 opt.scrolloff = 4
 opt.sidescrolloff = 8
 opt.signcolumn = "yes" -- yes, number

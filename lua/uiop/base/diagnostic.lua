@@ -1,8 +1,8 @@
-local signs = { Error = "E", Warn = "W", Hint = "H", Info = "I" }
+--[[local signs = { Error = "E", Warn = "W", Hint = "H", Info = "I" }
 for type, icon in pairs(signs) do
   local hl = "DiagnosticSign" .. type
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
-end
+end]]
 
 local diagnostic = vim.diagnostic
 
@@ -13,14 +13,15 @@ diagnostic.config({
   update_in_insert = true,
   underline = true,
   severity_sort = true,
-  signs = {
+  signs = false,
+  --[[signs = {
     text = {
       [diagnostic.severity.ERROR] = signs.Error,
       [diagnostic.severity.WARN] = signs.Warn,
       [diagnostic.severity.HINT] = signs.Hint,
       [diagnostic.severity.INFO] = signs.Info,
     },
-  },
+  },]]
 })
 
 local command = vim.api.nvim_create_user_command
