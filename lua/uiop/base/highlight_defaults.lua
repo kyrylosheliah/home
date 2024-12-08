@@ -1,5 +1,51 @@
 M = {}
 
+-- hex_to_rgb (hex string) -> table (rgb) @params hex
+--[[local function hex_to_rgb(hex)
+  local hex_type = '[abcdef0-9][abcdef0-9]'
+  local pat = '^#(' .. hex_type .. ')(' .. hex_type .. ')(' .. hex_type .. ')$'
+  hex = string.lower(hex)
+  assert(string.find(hex, pat) ~= nil, 'hex_to_rgb: invalid hex: ' .. tostring(hex))
+  local red, green, blue = string.match(hex, pat)
+  return { tonumber(red, 16), tonumber(green, 16), tonumber(blue, 16) }
+end]]
+
+M.RGB_hex_to_number = function(value)
+  --assert(string.sub(value, 1, 1) == "#")
+  value = string.sub(value, 2)
+  local r = tonumber("0x" .. string.sub(value, 1, 2))
+  local g = tonumber("0x" .. string.sub(value, 3, 4))
+  local b = tonumber("0x" .. string.sub(value, 5, 6))
+  return { r, g, b }
+end
+
+M.RGB_number_to_hex = function(value)
+  local b = string.format("%x", (bit.band(value, tonumber("0xFF"))))
+  local g = string.format("%x", (bit.rshift(bit.band(value, tonumber("0xFF00")), 8)))
+  local r = string.format("%x", (bit.rshift(bit.band(value, tonumber("0xFF0000")), 16)))
+  while #(r) < 2 do
+    r = "0" .. r
+  end
+  while #(g) < 2 do
+    g = "0" .. g
+  end
+  while #(b) < 2 do
+    b = "0" .. b
+  end
+  --[[while #(a) < 2 do
+    a = "0" .. a
+  end]]
+  return '#' .. r .. g .. b
+end
+
+M.inspect_colors = function()
+  local tbl = vim.api.nvim_get_color_map()
+  for key, value in pairs(tbl) do
+    tbl[key] = M.RGB_number_to_hex(value)
+  end
+  print(vim.inspect(tbl))
+end
+
 -- nvim --clean<CR>:redir file<CR>:highlightjjjjjjjjjjjjjjjjjjjj<CR>:redir END<CR>
 
 M.hl = {
@@ -368,26 +414,6 @@ M.hl = {
   ["NvimInvalidSpacing"] = { link = "ErrorMsg" },
   ["NvimDoubleQuotedUnknownEscape"] = { link = "NvimInvalidValue" },
 }
-
-M.inspect_colors = function()
-  local tbl = vim.api.nvim_get_color_map()
-  --local tbl = vim.inspect(M.extract_highlight())
-  for key, num in pairs(tbl) do
-    local check = {
-      b = string.format("%x", (bit.band(num, tonumber("0xFF")))),
-      g = string.format("%x", (bit.rshift(bit.band(num, tonumber("0xFF00")), 8))),
-      r = string.format("%x", (bit.rshift(bit.band(num, tonumber("0xFF0000")), 16))),
-      --a = string.format("%x", ((bit.rshift(bit.band(num, tonumber("0xFF000000")), 24 ) / 255 ))),
-    }
-    for ckey, value in pairs(check) do
-      while #(check[ckey]) < 2 do
-        check[ckey] = "0" .. value
-      end
-    end
-    tbl[key] = '#' .. check.r .. check.g .. check.b --.. check.a
-  end
-  print(vim.inspect(tbl))
-end
 
 M.c = {
   AliceBlue = "#f0f8ff",

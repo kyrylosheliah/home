@@ -1,112 +1,103 @@
 
--- thanks to "mellow-theme/mellow.nvim" and "datsfilipe/nvim-colorscheme-template"
-
 vim.g.transparent = false
+vim.o.background = 'dark'
+
+-- thanks to "mellow-theme/mellow.nvim" and "datsfilipe/nvim-colorscheme-template"
 
 -- default hl table and colors
 local def = require(vim.g.username .. ".base.highlight_defaults")
 
 M = {}
 
--- shade color (hex string, number, base) -> string (hex) @params color, value, base
 local function shade(color, value, base)
-
-  -- mix color (hex string, hex string, number) -> string (hex) @params fg, bg, alpha
-  local function mix(fg, bg, alpha)
-
-    -- hex_to_rgb (hex string) -> table (rgb) @params hex
-    local function hex_to_rgb(hex)
-      local hex_type = '[abcdef0-9][abcdef0-9]'
-      local pat = '^#(' .. hex_type .. ')(' .. hex_type .. ')(' .. hex_type .. ')$'
-      hex = string.lower(hex)
-      assert(string.find(hex, pat) ~= nil, 'hex_to_rgb: invalid hex: ' .. tostring(hex))
-      local red, green, blue = string.match(hex, pat)
-      return { tonumber(red, 16), tonumber(green, 16), tonumber(blue, 16) }
-    end
-
-    bg = hex_to_rgb(bg)
-    fg = hex_to_rgb(fg)
+  local mix = function(fg, bg, alpha)
+    fg = def.RGB_hex_to_number(fg)
+    bg = def.RGB_hex_to_number(bg)
     local blendChannel = function(i)
       local ret = (alpha * fg[i] + ((1 - alpha) * bg[i]))
       return math.floor(math.min(math.max(0, ret), 255) + 0.5)
     end
-
-    return string.format('#%02X%02X%02X', blendChannel(1), blendChannel(2), blendChannel(3))
+    return string.format(
+      '#%02X%02X%02X',
+      blendChannel(1),
+      blendChannel(2),
+      blendChannel(3))
   end
-
-  if vim.o.background == 'light' then
-    if base == nil then
-      base = '#000000'
-    end
-    return mix(color, base, math.abs(value))
-  else
-    if base == nil then
-      base = '#ffffff'
-    end
-    return mix(color, base, math.abs(value))
+  if base == nil then
+    base = vim.o.background == 'light' and '#000000' or '#ffffff'
   end
+  return mix(color, base, math.abs(value))
 end
 
-
 local c = {}
+-- Tint
+c.tin = 0.1
+c.tint = def.c["Tan1"]
+-- Primary color saturation
+c.pri = 0.1
+c.primary = def.c["Magenta"]
 -- Saturation
-c.sat = 0.7
+c.sat = 1.0
 -- Subtleness
 c.sub = 0.25
--- Basic
-c.bg = shade(def.c.Magenta, 0.1, def.c.Gray5)
-c.fg = "LightYellow"
-c.bg_dark = "Gray5"
+-- Shades
+c.black = def.c["Gray5"]
+c.gray1 = def.c["Gray15"]
+c.gray2 = def.c["Gray20"]
+c.gray3 = def.c["Gray25"]
+c.gray4 = def.c["Gray30"]
+c.gray5 = def.c["Gray35"]
+c.gray6 = def.c["Gray40"]
+c.gray7 = def.c["Gray45"]
+c.gray8 = def.c["Gray50"]
+c.white = def.c["Gray95"]
+-- Primary color tint
+c.black = shade(c.primary, c.pri, c.black)
+-- Warmup
+c.gray1 = shade(c.tint, c.tin, c.gray1)
+c.gray2 = shade(c.tint, c.tin, c.gray2)
+c.gray3 = shade(c.tint, c.tin, c.gray3)
+c.gray4 = shade(c.tint, c.tin, c.gray4)
+c.gray5 = shade(c.tint, c.tin, c.gray5)
+c.gray6 = shade(c.tint, c.tin, c.gray6)
+c.gray7 = shade(c.tint, c.tin, c.gray7)
+c.gray8 = shade(c.tint, c.tin, c.gray8)
+c.white = shade(c.tint, c.tin, c.white)
 -- Normal
-c.black = "Black"
-c.red = "LightCoral"
-c.green = "LightGreen" --"SpringGreen" --"PaleGreen2"
-c.blue = "DeepSkyBlue" --"DodgerBlue" --"LightSkyBlue"
-c.yellow = "LightGoldenrod" --"Khaki" --"Wheat"
-c.purple = "Violet" --"LightMagenta"
-c.cyan = "Peru" --"Turquoise" --""
-c.white = c.fg
--- Bright
-c.bright_black = "Gray20"
-c.bright_red = "Red"
-c.bright_green = "X11Green"
-c.bright_blue = "Blue"
-c.bright_yellow = "Yellow"
-c.bright_purple = "Magenta"
-c.bright_cyan = "Cyan" -- "Aqua"
-c.bright_white = "White"
--- Subtle
-c.sub_black = "Gray5"
-c.sub_red = shade(def.c[c.red], c.sub, c.bg)
-c.sub_green = shade(def.c[c.green], c.sub, c.bg)
-c.sub_blue = shade(def.c[c.blue], c.sub, c.bg)
-c.sub_yellow = shade(def.c[c.yellow], c.sub, c.bg)
-c.sub_purple = shade(def.c[c.purple], c.sub, c.bg)
-c.sub_cyan = shade(def.c[c.cyan], c.sub, c.bg)
-c.sub_white = shade(def.c[c.white], c.sub, c.bg)
--- Override saturation
-c.black = "Gray5"
-c.red = shade(def.c[c.red], c.sat, def.c[c.fg])
-c.green = shade(def.c[c.green], c.sat, def.c[c.fg])
-c.blue = shade(def.c[c.blue], c.sat, def.c[c.fg])
-c.yellow = shade(def.c[c.yellow], c.sat, def.c[c.fg])
-c.purple = shade(def.c[c.purple], c.sat, def.c[c.fg])
-c.cyan = shade(def.c[c.cyan], c.sat, def.c[c.fg])
-c.white = shade(def.c[c.white], c.sat, def.c[c.fg])
--- Gray
-c.gray0 = "Gray15"
-c.gray1 = "Gray20"
-c.gray2 = "Gray25"
-c.gray3 = "Gray30"
-c.gray4 = "Gray35"
-c.gray5 = "Gray40"
-c.gray6 = "Gray45"
-c.gray7 = "Gray50"
+c.red = def.c["LightCoral"]
+c.green = def.c["LightGreen"] --"SpringGreen" --"PaleGreen2"
+c.blue = def.c["DeepSkyBlue"] --"DodgerBlue" --"LightSkyBlue"
+c.yellow = def.c["LightGoldenrod"] --"Khaki" --"Wheat"
+c.purple = def.c["Violet"] --"LightMagenta"
+c.cyan = def.c["Peru"] --"Turquoise" --""
+-- Apply saturation by multiplying with the maximum brightness
+c.red = shade(c.red, c.sat, c.white)
+c.green = shade(c.green, c.sat, c.white)
+c.blue = shade(c.blue, c.sat, c.white)
+c.yellow = shade(c.yellow, c.sat, c.white)
+c.purple = shade(c.purple, c.sat, c.white)
+c.cyan = shade(c.cyan, c.sat, c.white)
+-- Apply subtleness relative to the background brightness
+c.sub_red = shade(c.red, c.sub, c.black)
+c.sub_green = shade(c.green, c.sub, c.black)
+c.sub_blue = shade(c.blue, c.sub, c.black)
+c.sub_yellow = shade(c.yellow, c.sub, c.black)
+c.sub_purple = shade(c.purple, c.sub, c.black)
+c.sub_cyan = shade(c.cyan, c.sub, c.black)
 -- Special
 c.none = "NONE"
+-- Bright and pure
+c.pure_black = "#000000"
+c.pure_red = "#ff0000"
+c.pure_green = "#00ff00"
+c.pure_blue = "#0000ff"
+c.pure_yellow = "#ffff00"
+c.pure_purple = "#ff00ff"
+c.pure_cyan = "#00ffff"
+c.pure_white = "#ffffff"
 
 local highlight = {
-  ["Comment"] = { fg = c.gray7 }, -- any comment
+  ["Comment"] = { fg = c.gray8 }, -- any comment
   ["Constant"] = { fg = c.white }, -- any constant
   ["String"] = { fg = c.green }, -- a string constant: "this is a string"
   ["Character"] = { fg = c.green }, -- a character constant: 'c', '\n'
@@ -133,104 +124,104 @@ local highlight = {
   ["Typedef"] = { fg = c.blue }, -- A typedef
   ["Special"] = { fg = c.red }, -- any special symbol
   ["SpecialChar"] = { fg = c.red }, -- special character in a constant
-  ["Tag"] = { fg = c.bright_yellow }, -- you can use CTRL-] on this
-  ["SpecialComment"] = { fg = c.bright_yellow }, -- special things inside a comment
-  ["Debug"] = { fg = c.bright_green }, -- debugging statements
+  ["Tag"] = { fg = c.pure_yellow }, -- you can use CTRL-] on this
+  ["SpecialComment"] = { fg = c.pure_yellow }, -- special things inside a comment
+  ["Debug"] = { fg = c.pure_green }, -- debugging statements
   ["Underlined"] = { underline = true }, -- text that stands out, HTML links
-  ["Error"] = { fg = c.bright_red }, -- any erroneous construct
-  ["Todo"] = { fg = c.bright_yellow }, -- anything that needs extra attention; mostly the keywords TODO FIXME and XXX
+  ["Error"] = { fg = c.pure_red }, -- any erroneous construct
+  ["Todo"] = { fg = c.pure_yellow }, -- anything that needs extra attention; mostly the keywords TODO FIXME and XXX
 
   -- Highlighting Groups (descriptions and ordering from ` =h highlight-groups`) {{{
-  ["ColorColumn"] = { bg = c.gray0 }, -- used for the columns set with 'colorcolumn'
-  ["Conceal"] = { fg = c.gray4 }, -- placeholder characters substituted for concealed text (see 'conceallevel')
-  ["Cursor"] = { fg = c.black, bg = c.fg }, -- the character under the cursor
-  ["lCursor"] = { fg = c.black, bg = c.fg }, -- the character under the cursor
-  ["CursorIM"] = { fg = c.black, bg = c.fg }, -- the character under the cursor
-  ["CursorLine"] = { bg = c.gray0 }, -- the screen line that the cursor is in when 'cursorline' is set
+  ["ColorColumn"] = { bg = c.gray1 }, -- used for the columns set with 'colorcolumn'
+  ["Conceal"] = { fg = c.gray3 }, -- placeholder characters substituted for concealed text (see 'conceallevel')
+  ["Cursor"] = { fg = c.black, bg = c.white }, -- the character under the cursor
+  ["lCursor"] = { fg = c.black, bg = c.white }, -- the character under the cursor
+  ["CursorIM"] = { fg = c.black, bg = c.white }, -- the character under the cursor
+  ["CursorLine"] = { bg = c.gray1 }, -- the screen line that the cursor is in when 'cursorline' is set
   ["Directory"] = { fg = c.blue }, -- directory names (and other special names in listings)
   ["DiffAdd"] = { bg = c.green, fg = c.black }, -- diff mode: Added line
   ["DiffChange"] = { fg = c.yellow, underline = true }, -- diff mode: Changed line
   ["DiffDelete"] = { bg = c.red, fg = c.black }, -- diff mode: Deleted line
   ["DiffText"] = { bg = c.yellow, fg = c.black }, -- diff mode: Changed text within a changed line
-  ["EndOfBuffer"] = { fg = c.gray0 }, -- '~' and '@' at the end of the window
+  ["EndOfBuffer"] = { fg = c.gray1 }, -- '~' and '@' at the end of the window
   ["ErrorMsg"] = { fg = c.red }, -- error messages on the command line
-  ["VertSplit"] = { fg = c.gray2 }, -- the column separating vertically split windows
-  ["WinSeparator"] = { fg = c.gray2 }, -- the column separating vertically split windows
-  ["Folded"] = { fg = c.gray4 }, -- line used for closed folds
-  ["FoldColumn"] = { bg = vim.g.transparent and c.none or c.bg, fg = c.gray5 }, -- column where folds are displayed
-  ["SignColumn"] = { fg = c.gray5 }, -- column where signs are displayed
-  ["IncSearch"] = { fg = c.black, bg = c.bright_purple }, -- 'incsearch' highlighting; also used for the text replaced with ":s///c"
-  ["CurSearch"] = { fg = c.bg, bg = c.bright_green }, -- 'cursearch' highlighting; also used for the text replaced with ":s///c"
-  ["LineNr"] = { fg = c.gray2 }, -- Line number for " =number" and ":#" commands, and when 'number' or 'relativenumber' option is set.
-  ["CursorLineNr"] = { fg = c.gray7, bg = c.gray0 }, -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
-  ["MatchParen"] = { bg = c.bright_purple, fg = c.black, strikethrough = true }, -- The character under the cursor or just before it, if it is a paired bracket, and its match.
-  ["ModeMsg"] = { fg = c.gray3, bold = true }, --' showmode' message (e.g., "-- INSERT --")
-  ["MoreMsg"] = { fg = c.bright_purple }, -- more-prompt
+  ["VertSplit"] = { fg = c.gray3 }, -- the column separating vertically split windows
+  ["WinSeparator"] = { fg = c.gray3 }, -- the column separating vertically split windows
+  ["Folded"] = { fg = c.gray5 }, -- line used for closed folds
+  ["FoldColumn"] = { bg = vim.g.transparent and c.none or c.black, fg = c.gray6 }, -- column where folds are displayed
+  ["SignColumn"] = { fg = c.white }, -- column where signs are displayed
+  ["IncSearch"] = { fg = c.black, bg = c.pure_purple }, -- 'incsearch' highlighting; also used for the text replaced with ":s///c"
+  ["CurSearch"] = { fg = c.black, bg = c.pure_green }, -- 'cursearch' highlighting; also used for the text replaced with ":s///c"
+  ["LineNr"] = { fg = c.gray3 }, -- Line number for " =number" and ":#" commands, and when 'number' or 'relativenumber' option is set.
+  ["CursorLineNr"] = { fg = c.white, bg = c.gray1 }, -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
+  ["MatchParen"] = { bg = c.pure_purple, fg = c.black, strikethrough = true }, -- The character under the cursor or just before it, if it is a paired bracket, and its match.
+  ["ModeMsg"] = { fg = c.gray4, bold = true }, --' showmode' message (e.g., "-- INSERT --")
+  ["MoreMsg"] = { fg = c.pure_purple }, -- more-prompt
   ["NonText"] = { fg = c.gray3 }, -- characters from 'showbreak' and other characters that do not really exist in the text (e.g., ">" displayed when a double-wide character doesn't fit at the end of the line).
-  ["Normal"] = { fg = c.fg, bg = vim.g.transparent and c.none or c.bg }, -- normal text
-  ["NormalNC"] = { fg = c.fg, bg = vim.g.transparent and c.none or c.bg_dark }, -- normal text
-  ["NormalFloat"] = { fg = c.white, bg = c.gray0 }, -- Normal text in floating windows.
-  ["FloatBorder"] = { fg = c.gray3, bg = c.bg }, -- Border of floating windows.
+  ["Normal"] = { fg = c.white, bg = vim.g.transparent and c.none or c.black }, -- normal text
+  ["NormalNC"] = { fg = c.white, bg = vim.g.transparent and c.none or c.pure_black }, -- normal text
+  ["NormalFloat"] = { fg = c.white, bg = c.gray1 }, -- Normal text in floating windows.
+  ["FloatBorder"] = { fg = c.gray4, bg = c.black }, -- Border of floating windows.
   ["Pmenu"] = { fg = c.white, bg = c.black }, -- Popup menu: normal item.
-  ["PmenuSel"] = { fg = c.bright_white, bg = c.gray3 }, -- Popup menu: selected item.
-  ["PmenuSbar"] = { bg = c.gray2 }, -- Popup menu: scrollbar.
-  ["PmenuThumb"] = { bg = c.gray3 }, -- Popup menu: Thumb of the scrollbar.
+  ["PmenuSel"] = { fg = c.white, bg = c.gray4 }, -- Popup menu: selected item.
+  ["PmenuSbar"] = { bg = c.gray3 }, -- Popup menu: scrollbar.
+  ["PmenuThumb"] = { bg = c.gray4 }, -- Popup menu: Thumb of the scrollbar.
   ["Question"] = { fg = c.blue }, -- hit-enter prompt and yes/no questions
-  ["QuickFixLine"] = { fg = c.cyan, bg = c.gray2 }, -- Current quickfix item in the quickfix window.
-  ["Search"] = { fg = c.bg, bg = c.bright_purple}, -- Last search pattern highlighting (see 'hlsearch'). Also used for similar items that need to stand out.
+  ["QuickFixLine"] = { fg = c.cyan, bg = c.gray3 }, -- Current quickfix item in the quickfix window.
+  ["Search"] = { fg = c.black, bg = c.pure_purple}, -- Last search pattern highlighting (see 'hlsearch'). Also used for similar items that need to stand out.
   ["SpecialKey"] = { fg = c.special_grey }, -- Meta and special keys listed with " =map", also for text used to show unprintable characters in the text, 'listchars'. Generally: text that is displayed differently from what it really is.
   ["SpellBad"] = { fg = c.red, undercurl = true }, -- Word that is not recognized by the spellchecker. This will be combined with the highlighting used otherwise.
   ["SpellCap"] = { fg = c.yellow }, -- Word that should start with a capital. This will be combined with the highlighting used otherwise.
   ["SpellLocal"] = { fg = c.yellow }, -- Word that is recognized by the spellchecker as one that is used in another region. This will be combined with the highlighting used otherwise.
   ["SpellRare"] = { fg = c.yellow }, -- Word that is recognized by the spellchecker as one that is hardly ever used. spell This will be combined with the highlighting used otherwise.
-  ["StatusLine"] = { fg = c.bg, bg = c.fg }, -- status line of current window
-  ["StatusLineNC"] = { fg = c.fg, bg = c.gray0 }, -- status lines of not-current windows Note = if this is equal to "StatusLine" Vim will use "^^^" in the status line of the current window.
-  ["StatusLineTerm"] = { fg = c.blue, bg = c.gray2 }, -- status line of current :terminal window
-  ["StatusLineTermNC"] = { fg = c.black, bg = c.gray2 }, -- status line of non-current  =terminal window
-  ["TabLine"] = { fg = c.gray5 }, -- tab pages line, not active tab page label
+  ["StatusLine"] = { fg = c.black, bg = c.white }, -- status line of current window
+  ["StatusLineNC"] = { fg = c.white, bg = c.gray1 }, -- status lines of not-current windows Note = if this is equal to "StatusLine" Vim will use "^^^" in the status line of the current window.
+  ["StatusLineTerm"] = { fg = c.pure_blue, bg = c.white }, -- status line of current :terminal window
+  ["StatusLineTermNC"] = { fg = c.black, bg = c.gray3 }, -- status line of non-current  =terminal window
+  ["TabLine"] = { fg = c.gray6 }, -- tab pages line, not active tab page label
   ["TabLineFill"] = { bg = c.black }, -- tab pages line, where there are no labels
   ["TabLineSel"] = { fg = c.white }, -- tab pages line, active tab page label
-  ["Terminal"] = { fg = c.fg, bg = c.black }, -- terminal window (see terminal-size-color)
+  ["Terminal"] = { fg = c.white, bg = c.black }, -- terminal window (see terminal-size-color)
   ["Title"] = { fg = c.green }, -- titles for output from " =set all", ":autocmd" etc.
   ["Visual"] = { bg = c.sub_blue }, -- Visual mode selection
   ["VisualNOS"] = { bg = c.sub_blue }, -- Visual mode selection when vim is "Not Owning the Selection". Only X11 Gui's gui-x11 and xterm-clipboard supports this.
-  ["WarningMsg"] = { fg = c.bright_yellow }, -- warning messages
+  ["WarningMsg"] = { fg = c.pure_yellow }, -- warning messages
   ["WildMenu"] = { fg = c.black, bg = c.blue }, -- current match in 'wildmenu' completion
-  ["Winbar"] = { fg = c.white, bg = c.gray1 }, -- Winbar
-  ["WinbarNC"] = { fg = c.gray5, bg = c.bg_dark }, -- Winbar non-current windows.
+  ["Winbar"] = { fg = c.white, bg = c.gray2 }, -- Winbar
+  ["WinbarNC"] = { fg = c.gray6, bg = c.black }, -- Winbar non-current windows.
 
   -- HTML
-  ["htmlArg"] = { fg = c.bright_blue, italic = true }, -- attributes
-  ["htmlEndTag"] = { fg = c.gray6 }, -- end tag />
-  ["htmlTitle"] = { fg = c.gray7 }, -- title tag text
-  ["htmlTag"] = { fg = c.gray6 }, -- tag delimiters
-  ["htmlTagN"] = { fg = c.gray6 },
+  ["htmlArg"] = { fg = c.pure_blue, italic = true }, -- attributes
+  ["htmlEndTag"] = { fg = c.gray7 }, -- end tag />
+  ["htmlTitle"] = { fg = c.gray8 }, -- title tag text
+  ["htmlTag"] = { fg = c.gray7 }, -- tag delimiters
+  ["htmlTagN"] = { fg = c.gray7 },
   ["htmlTagName"] = { fg = c.cyan }, -- tag text
 
   -- Markdown
-  ["markdownH1"] = { fg = c.bright_blue, bold = true },
-  ["markdownH2"] = { fg = c.bright_blue, bold = true },
-  ["markdownH3"] = { fg = c.bright_blue, bold = true },
-  ["markdownH4"] = { fg = c.bright_blue, bold = true },
-  ["markdownH5"] = { fg = c.bright_blue, bold = true },
-  ["markdownH6"] = { fg = c.bright_blue, bold = true },
-  ["markdownHeadingDelimiter"] = { fg = c.gray5 },
-  ["markdownHeadingRule"] = { fg = c.gray5 },
+  ["markdownH1"] = { fg = c.pure_blue, bold = true },
+  ["markdownH2"] = { fg = c.pure_blue, bold = true },
+  ["markdownH3"] = { fg = c.pure_blue, bold = true },
+  ["markdownH4"] = { fg = c.pure_blue, bold = true },
+  ["markdownH5"] = { fg = c.pure_blue, bold = true },
+  ["markdownH6"] = { fg = c.pure_blue, bold = true },
+  ["markdownHeadingDelimiter"] = { fg = c.gray6 },
+  ["markdownHeadingRule"] = { fg = c.gray6 },
   ["markdownId"] = { fg = c.cyan },
   ["markdownIdDeclaration"] = { fg = c.blue },
   ["markdownIdDelimiter"] = { fg = c.cyan },
-  ["markdownLinkDelimiter"] = { fg = c.gray5 },
+  ["markdownLinkDelimiter"] = { fg = c.gray6 },
   ["markdownLinkText"] = { fg = c.blue, italic = true },
-  ["markdownListMarker"] = { fg = c.gray5 },
-  ["markdownOrderedListMarker"] = { fg = c.gray5 },
-  ["markdownRule"] = { fg = c.gray5 },
+  ["markdownListMarker"] = { fg = c.gray6 },
+  ["markdownOrderedListMarker"] = { fg = c.gray6 },
+  ["markdownRule"] = { fg = c.gray6 },
   ["markdownUrl"] = { fg = c.green, bg = c.none },
-  ["markdownBlockquote"] = { fg = c.gray7 },
-  ["markdownBold"] = { fg = c.fg, bg = c.none, bold = true },
-  ["markdownItalic"] = { fg = c.fg, bg = c.none, italic = true },
+  ["markdownBlockquote"] = { fg = c.gray8 },
+  ["markdownBold"] = { fg = c.white, bg = c.none, bold = true },
+  ["markdownItalic"] = { fg = c.white, bg = c.none, italic = true },
   ["markdownCode"] = { fg = c.yellow },
   ["markdownCodeBlock"] = { fg = c.yellow },
-  ["markdownCodeDelimiter"] = { fg = c.gray5 },
+  ["markdownCodeDelimiter"] = { fg = c.gray6 },
 
   -- Tree sitter
   ["@boolean"] = { fg = c.blue },
@@ -291,29 +282,29 @@ local highlight = {
   ["@lsp.typemod.variable.defaultLibrary"] = { link = "@variable.builtin" },
   ["@lsp.typemod.variable.injected"] = { link = "@variable" },
 
-  ["@markup.heading"] = { fg = c.gray6, bold = true },
-  ["@markup.heading.1"] = { fg = c.gray6, bold = true, italic = true },
+  ["@markup.heading"] = { fg = c.gray7, bold = true },
+  ["@markup.heading.1"] = { fg = c.gray7, bold = true, italic = true },
   ["@markup.heading.1.marker"] = { link = "@comment" },
-  ["@markup.heading.2"] = { fg = c.gray6, bold = true, italic = true },
+  ["@markup.heading.2"] = { fg = c.gray7, bold = true, italic = true },
   ["@markup.heading.2.marker"] = { link = "@comment" },
-  ["@markup.heading.3"] = { fg = c.gray6, bold = true, italic = true },
+  ["@markup.heading.3"] = { fg = c.gray7, bold = true, italic = true },
   ["@markup.heading.3.marker"] = { link = "@comment" },
-  ["@markup.heading.4"] = { fg = c.gray6, bold = true, italic = true },
+  ["@markup.heading.4"] = { fg = c.gray7, bold = true, italic = true },
   ["@markup.heading.4.marker"] = { link = "@comment" },
-  ["@markup.heading.5"] = { fg = c.gray6, bold = true, italic = true },
+  ["@markup.heading.5"] = { fg = c.gray7, bold = true, italic = true },
   ["@markup.heading.5.marker"] = { link = "@comment" },
-  ["@markup.heading.6"] = { fg = c.gray6, bold = true, italic = true },
+  ["@markup.heading.6"] = { fg = c.gray7, bold = true, italic = true },
   ["@markup.heading.6.marker"] = { link = "@comment" },
-  ["@markup.link"] = { fg = c.gray6 },
+  ["@markup.link"] = { fg = c.gray7 },
   ["@markup.link.label"] = { fg = c.cyan },
   ["@markup.link.url"] = { fg = c.blue },
-  ["@markup.list"] = { fg = c.gray5, bold = true },
-  ["@markup.list.checked"] = { fg = c.gray5 },
-  ["@markup.list.unchecked"] = { fg = c.gray5 },
-  ["@markup.raw.block"] = { fg = c.gray5 },
-  ["@markup.raw.delimiter"] = { fg = c.gray5 },
-  ["@markup.quote"] = { fg = c.gray6 },
-  ["@markup.strikethrough"] = { fg = c.gray4, strikethrough = true },
+  ["@markup.list"] = { fg = c.gray6, bold = true },
+  ["@markup.list.checked"] = { fg = c.gray6 },
+  ["@markup.list.unchecked"] = { fg = c.gray6 },
+  ["@markup.raw.block"] = { fg = c.gray6 },
+  ["@markup.raw.delimiter"] = { fg = c.gray6 },
+  ["@markup.quote"] = { fg = c.gray7 },
+  ["@markup.strikethrough"] = { fg = c.gray5, strikethrough = true },
 
   -- Diagnostics
   ["DiagnosticOk"] = { fg = c.green },
@@ -333,44 +324,44 @@ local highlight = {
   ["LspSignatureActiveParameter"] = { fg = c.blue, bold = true },
 
   -- GitSigns
-  ["GitSignsAdd"] = { fg = c.bright_green },
-  ["GitSignsChange"] = { fg = c.bright_yellow },
-  ["GitSignsDelete"] = { fg = c.bright_red },
+  ["GitSignsAdd"] = { fg = c.pure_green },
+  ["GitSignsChange"] = { fg = c.pure_yellow },
+  ["GitSignsDelete"] = { fg = c.pure_red },
 
   -- Diff
-  ["diffAdded"] = { fg = c.bright_green },
-  ["diffRemoved"] = { fg = c.bright_red },
-  ["diffChanged"] = { fg = c.bright_yellow },
-  ["diffOldFile"] = { fg = c.gray4 },
+  ["diffAdded"] = { fg = c.pure_green },
+  ["diffRemoved"] = { fg = c.pure_red },
+  ["diffChanged"] = { fg = c.pure_yellow },
+  ["diffOldFile"] = { fg = c.gray5 },
   ["diffNewFile"] = { fg = c.white },
-  ["diffFile"] = { fg = c.gray5 },
+  ["diffFile"] = { fg = c.gray6 },
   ["diffLine"] = { fg = c.cyan },
   ["diffIndexLine"] = { fg = c.purple },
 
   -- Hop
-  ["HopNextKey"] = { fg = c.bright_yellow },
-  ["HopNextKey1"] = { fg = c.bright_blue },
-  ["HopNextKey2"] = { fg = c.bright_cyan },
-  ["HopUnmatched"] = { fg = c.gray4 },
-  ["HopCursor"] = { fg = c.bright_cyan },
-  ["HopPreview"] = { fg = c.bright_blue },
+  ["HopNextKey"] = { fg = c.pure_yellow },
+  ["HopNextKey1"] = { fg = c.pure_blue },
+  ["HopNextKey2"] = { fg = c.pure_cyan },
+  ["HopUnmatched"] = { fg = c.gray5 },
+  ["HopCursor"] = { fg = c.pure_cyan },
+  ["HopPreview"] = { fg = c.pure_blue },
 
   -- Cmp
-  ["CmpItemAbbrDeprecated"] = { fg = c.gray7, strikethrough = true },
+  ["CmpItemAbbrDeprecated"] = { fg = c.gray5, strikethrough = true },
   ["CmpItemAbbrMatch"] = { fg = c.blue, bold = true },
   ["CmpItemAbbrMatchFuzzy"] = { fg = c.blue, bold = true },
-  ["CmpItemMenu"] = { fg = c.gray5 },
-  ["CmpItemKindText"] = { fg = c.bright_white },
+  ["CmpItemMenu"] = { fg = c.gray8 },
+  ["CmpItemKindText"] = { fg = c.white },
   ["CmpItemKindFunction"] = { fg = c.white },
   ["CmpItemKindVariable"] = { fg = c.white },
   ["CmpItemKindEnum"] = { fg = c.white },
   ["CmpItemKindSnippet"] = { fg = c.yellow },
 
   -- Navic
-  ["NavicIconsFile"] = { fg = c.fg, bg = c.none },
+  ["NavicIconsFile"] = { fg = c.white, bg = c.none },
   ["NavicIconsModule"] = { fg = c.yellow, bg = c.none },
-  ["NavicIconsNamespace"] = { fg = c.fg, bg = c.none },
-  ["NavicIconsPackage"] = { fg = c.fg, bg = c.none },
+  ["NavicIconsNamespace"] = { fg = c.white, bg = c.none },
+  ["NavicIconsPackage"] = { fg = c.white, bg = c.none },
   ["NavicIconsClass"] = { fg = c.cyan, bg = c.none },
   ["NavicIconsMethod"] = { fg = c.blue, bg = c.none },
   ["NavicIconsProperty"] = { fg = c.green, bg = c.none },
@@ -384,36 +375,36 @@ local highlight = {
   ["NavicIconsString"] = { fg = c.green, bg = c.none },
   ["NavicIconsNumber"] = { fg = c.cyan, bg = c.none },
   ["NavicIconsBoolean"] = { fg = c.yellow, bg = c.none },
-  ["NavicIconsArray"] = { fg = c.gray6, bg = c.none },
-  ["NavicIconsObject"] = { fg = c.gray6, bg = c.none },
+  ["NavicIconsArray"] = { fg = c.gray7, bg = c.none },
+  ["NavicIconsObject"] = { fg = c.gray7, bg = c.none },
   ["NavicIconsKey"] = { fg = c.blue, bg = c.none },
   ["NavicIconsKeyword"] = { fg = c.blue, bg = c.none },
   ["NavicIconsNull"] = { fg = c.cyan, bg = c.none },
   ["NavicIconsEnumMember"] = { fg = c.green, bg = c.none },
   ["NavicIconsStruct"] = { fg = c.cyan, bg = c.none },
   ["NavicIconsEvent"] = { fg = c.cyan, bg = c.none },
-  ["NavicIconsOperator"] = { fg = c.fg, bg = c.none },
+  ["NavicIconsOperator"] = { fg = c.white, bg = c.none },
   ["NavicIconsTypeParameter"] = { fg = c.green, bg = c.none },
   ["NavicText"] = { fg = c.white, bg = c.none },
-  ["NavicSeparator"] = { fg = c.gray6, bg = c.none },
+  ["NavicSeparator"] = { fg = c.gray7, bg = c.none },
 
   -- Notify
   ["NotifyBackground"] = { fg = c.white, bg = c.bg },
   ["NotifyERRORBorder"] = { fg = c.red, bg = vim.g.transparent and c.none or c.bg },
   ["NotifyWARNBorder"] = { fg = c.yellow, bg = vim.g.transparent and c.none or c.bg },
   ["NotifyINFOBorder"] = { fg = c.blue, bg = vim.g.transparent and c.none or c.bg },
-  ["NotifyDEBUGBorder"] = { fg = c.gray6, bg = vim.g.transparent and c.none or c.bg },
+  ["NotifyDEBUGBorder"] = { fg = c.gray7, bg = vim.g.transparent and c.none or c.bg },
   ["NotifyTRACEBorder"] = { fg = c.cyan, bg = vim.g.transparent and c.none or c.bg },
-  ["NotifyERRORIcon"] = { fg = c.bright_red },
-  ["NotifyWARNIcon"] = { fg = c.bright_yellow },
-  ["NotifyINFOIcon"] = { fg = c.bright_blue },
-  ["NotifyDEBUGIcon"] = { fg = c.gray5 },
-  ["NotifyTRACEIcon"] = { fg = c.bright_cyan },
-  ["NotifyERRORTitle"] = { fg = c.bright_red },
-  ["NotifyWARNTitle"] = { fg = c.bright_yellow },
-  ["NotifyINFOTitle"] = { fg = c.bright_blue },
-  ["NotifyDEBUGTitle"] = { fg = c.gray5 },
-  ["NotifyTRACETitle"] = { fg = c.bright_cyan },
+  ["NotifyERRORIcon"] = { fg = c.pure_red },
+  ["NotifyWARNIcon"] = { fg = c.pure_yellow },
+  ["NotifyINFOIcon"] = { fg = c.pure_blue },
+  ["NotifyDEBUGIcon"] = { fg = c.gray6 },
+  ["NotifyTRACEIcon"] = { fg = c.pure_cyan },
+  ["NotifyERRORTitle"] = { fg = c.pure_red },
+  ["NotifyWARNTitle"] = { fg = c.pure_yellow },
+  ["NotifyINFOTitle"] = { fg = c.pure_blue },
+  ["NotifyDEBUGTitle"] = { fg = c.gray6 },
+  ["NotifyTRACETitle"] = { fg = c.pure_cyan },
   ["NotifyERRORBody"] = { fg = c.white, bg = vim.g.transparent and c.none or c.bg },
   ["NotifyWARNBody"] = { fg = c.white, bg = vim.g.transparent and c.none or c.bg },
   ["NotifyINFOBody"] = { fg = c.white, bg = vim.g.transparent and c.none or c.bg },
@@ -421,19 +412,19 @@ local highlight = {
   ["NotifyTRACEBody"] = { fg = c.white, bg = vim.g.transparent and c.none or c.bg },
 
   -- NeoTree
-  ["NeoTreeFloatBorder"] = { fg = c.gray3, bg = c.bg },
-  ["NeoTreeFloatTitle"] = { fg = c.gray5, bg = c.gray7 },
-  ["NeoTreeTitleBar"] = { fg = c.gray5, bg = c.gray1 },
+  ["NeoTreeFloatBorder"] = { fg = c.gray4, bg = c.black },
+  ["NeoTreeFloatTitle"] = { fg = c.gray6, bg = c.gray8 },
+  ["NeoTreeTitleBar"] = { fg = c.gray6, bg = c.gray2 },
 
   -- Telescope
-  ["TelescopeBorder"] = { fg = c.bg, bg = c.bg },
-  ["TelescopeNormal"] = { fg = c.fg, bg = c.bg },
+  ["TelescopeBorder"] = { fg = c.black, bg = c.black },
+  ["TelescopeNormal"] = { fg = c.white, bg = c.black },
   ["TelescopePreviewTitle"] = { fg = c.black, bg = c.green, bold = true },
   ["TelescopeResultsTitle"] = { fg = c.black, bg = c.blue },
   ["TelescopePromptTitle"] = { fg = c.black, bg = c.red, bold = true },
-  ["TelescopePromptBorder"] = { fg = c.gray0, bg = c.gray0 },
-  ["TelescopePromptNormal"] = { fg = c.white, bg = c.gray0 },
-  ["TelescopePromptCounter"] = { fg = c.blue, bg = c.gray0 },
+  ["TelescopePromptBorder"] = { fg = c.gray1, bg = c.gray1 },
+  ["TelescopePromptNormal"] = { fg = c.white, bg = c.gray1 },
+  ["TelescopePromptCounter"] = { fg = c.blue, bg = c.gray1 },
   ["TelescopeMatching"] = { fg = c.blue },
 
   -- Dap UI
@@ -444,38 +435,38 @@ local highlight = {
   ["DapUIValue"] = { link = "Normal" },
   ["DapUIModifiedValue"] = { fg = c.blue, bold = true },
   ["DapUIDecoration"] = { fg = c.blue },
-  ["DapUIThread"] = { fg = c.bright_green },
+  ["DapUIThread"] = { fg = c.pure_green },
   ["DapUIStoppedThread"] = { fg = c.blue },
   ["DapUIFrameName"] = { link = "Normal" },
   ["DapUISource"] = { fg = c.purple },
   ["DapUILineNumber"] = { fg = c.blue },
   ["DapUIFloatNormal"] = { link = "NormalFloat" },
   ["DapUIFloatBorder"] = { fg = c.blue },
-  ["DapUIWatchesEmpty"] = { fg = c.bright_cyan },
-  ["DapUIWatchesValue"] = { fg = c.bright_green },
-  ["DapUIWatchesError"] = { fg = c.bright_cyan },
+  ["DapUIWatchesEmpty"] = { fg = c.pure_cyan },
+  ["DapUIWatchesValue"] = { fg = c.pure_green },
+  ["DapUIWatchesError"] = { fg = c.pure_cyan },
   ["DapUIBreakpointsPath"] = { fg = c.blue },
-  ["DapUIBreakpointsInfo"] = { fg = c.bright_green },
-  ["DapUIBreakpointsCurrentLine"] = { fg = c.bright_green, bold = true },
+  ["DapUIBreakpointsInfo"] = { fg = c.pure_green },
+  ["DapUIBreakpointsCurrentLine"] = { fg = c.pure_green, bold = true },
   ["DapUIBreakpointsLine"] = { link = "DapUILineNumber" },
-  ["DapUIBreakpointsDisabledLine"] = { fg = c.gray3 },
+  ["DapUIBreakpointsDisabledLine"] = { fg = c.gray4 },
   ["DapUICurrentFrameName"] = { link = "DapUIBreakpointsCurrentLine" },
   ["DapUIStepOver"] = { fg = c.blue },
   ["DapUIStepInto"] = { fg = c.blue },
   ["DapUIStepBack"] = { fg = c.blue },
   ["DapUIStepOut"] = { fg = c.blue },
-  ["DapUIStop"] = { fg = c.bright_cyan },
-  ["DapUIPlayPause"] = { fg = c.bright_green },
-  ["DapUIRestart"] = { fg = c.bright_green },
-  ["DapUIUnavailable"] = { fg = c.gray3 },
+  ["DapUIStop"] = { fg = c.pure_cyan },
+  ["DapUIPlayPause"] = { fg = c.pure_green },
+  ["DapUIRestart"] = { fg = c.pure_green },
+  ["DapUIUnavailable"] = { fg = c.gray4 },
   ["DapUIWinSelect"] = { fg = c.cyan, bold = true },
   ["DapUIEndofBuffer"] = { link = "EndofBuffer" },
 
   -- Flash
   ["FlashBackdrop"] = { link = "Comment" },
   ["FlashCurrent"] = { link = "IncSearch" },
-  ["FlashCursor"] = { bg = c.bright_blue, fg = c.bg_dark, bold = true },
-  ["FlashLabel"] = { bg = c.cyan, bold = true, fg = c.bg_dark },
+  ["FlashCursor"] = { bg = c.pure_blue, fg = c.black , bold = true },
+  ["FlashLabel"] = { bg = c.cyan, bold = true, fg = c.black },
   ["FlashMatch"] = { link = "Search" },
   ["FlashPrompt"] = { link = "MsgArea" },
   ["FlashPromptIcon"] = { link = "Special" },
