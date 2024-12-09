@@ -1,16 +1,4 @@
-M = {}
-
--- hex_to_rgb (hex string) -> table (rgb) @params hex
---[[local function hex_to_rgb(hex)
-  local hex_type = '[abcdef0-9][abcdef0-9]'
-  local pat = '^#(' .. hex_type .. ')(' .. hex_type .. ')(' .. hex_type .. ')$'
-  hex = string.lower(hex)
-  assert(string.find(hex, pat) ~= nil, 'hex_to_rgb: invalid hex: ' .. tostring(hex))
-  local red, green, blue = string.match(hex, pat)
-  return { tonumber(red, 16), tonumber(green, 16), tonumber(blue, 16) }
-end]]
-
-M.RGB_hex_to_number = function(value)
+local RGB_hex_to_number = function(value)
   --assert(string.sub(value, 1, 1) == "#")
   value = string.sub(value, 2)
   local r = tonumber("0x" .. string.sub(value, 1, 2))
@@ -19,7 +7,7 @@ M.RGB_hex_to_number = function(value)
   return { r, g, b }
 end
 
-M.RGB_number_to_hex = function(value)
+local RGB_number_to_hex = function(value)
   local b = string.format("%x", (bit.band(value, tonumber("0xFF"))))
   local g = string.format("%x", (bit.rshift(bit.band(value, tonumber("0xFF00")), 8)))
   local r = string.format("%x", (bit.rshift(bit.band(value, tonumber("0xFF0000")), 16)))
@@ -32,16 +20,32 @@ M.RGB_number_to_hex = function(value)
   while #(b) < 2 do
     b = "0" .. b
   end
-  --[[while #(a) < 2 do
-    a = "0" .. a
-  end]]
   return '#' .. r .. g .. b
+end
+
+M = {}
+
+M.shade = function(fg, alpha, bg)
+  if bg == nil then
+    bg = vim.o.background == 'light' and '#000000' or '#ffffff'
+  end
+  fg = RGB_hex_to_number(fg)
+  bg = RGB_hex_to_number(bg)
+  local blendChannel = function(i)
+    local ret = (alpha * fg[i] + ((1 - alpha) * bg[i]))
+    return math.floor(math.min(math.max(0, ret), 255) + 0.5)
+  end
+  return string.format(
+  '#%02X%02X%02X',
+  blendChannel(1),
+  blendChannel(2),
+  blendChannel(3))
 end
 
 M.inspect_colors = function()
   local tbl = vim.api.nvim_get_color_map()
   for key, value in pairs(tbl) do
-    tbl[key] = M.RGB_number_to_hex(value)
+    tbl[key] = RGB_number_to_hex(value)
   end
   print(vim.inspect(tbl))
 end

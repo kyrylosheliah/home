@@ -19,6 +19,7 @@ return {
         },
         layout_strategy = "vertical",
         sorting_strategy = "ascending",
+        borderchars = { " ", "", " ", "", "", "", "", "" },
       },
       pickers = {
         find_files = {

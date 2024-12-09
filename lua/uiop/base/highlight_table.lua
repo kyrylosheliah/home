@@ -1,33 +1,24 @@
-
 vim.g.transparent = false
 vim.o.background = 'dark'
 
--- thanks to "mellow-theme/mellow.nvim" and "datsfilipe/nvim-colorscheme-template"
-
--- default hl table and colors
 local def = require(vim.g.username .. ".base.highlight_defaults")
+local shade = def.shade
+
+-- colorscheme transparancy
+--[[M.apply_transparency = function()
+  vim.api.nvim_set_hl(0, "Normal", { bg="none" })
+  vim.api.nvim_set_hl(0, "NormalFloat", { bg="none" })
+  vim.api.nvim_set_hl(0, "LineNr", { bg="none" })
+  vim.api.nvim_set_hl(0, "SignColumn", { bg="none" })
+end
+M.apply_transparency()
+vim.api.nvim_create_autocmd("ColorScheme", {
+  group = vim.api.nvim_create_augroup("base.highlight", { clear = true }),
+  pattern = "*",
+  callback = M.apply_transparency,
+})]]
 
 M = {}
-
-local function shade(color, value, base)
-  local mix = function(fg, bg, alpha)
-    fg = def.RGB_hex_to_number(fg)
-    bg = def.RGB_hex_to_number(bg)
-    local blendChannel = function(i)
-      local ret = (alpha * fg[i] + ((1 - alpha) * bg[i]))
-      return math.floor(math.min(math.max(0, ret), 255) + 0.5)
-    end
-    return string.format(
-      '#%02X%02X%02X',
-      blendChannel(1),
-      blendChannel(2),
-      blendChannel(3))
-  end
-  if base == nil then
-    base = vim.o.background == 'light' and '#000000' or '#ffffff'
-  end
-  return mix(color, base, math.abs(value))
-end
 
 local c = {}
 -- Tint
@@ -67,9 +58,9 @@ c.white = shade(c.tint, c.tin, c.white)
 c.red = def.c["LightCoral"]
 c.green = def.c["LightGreen"] --"SpringGreen" --"PaleGreen2"
 c.blue = def.c["DeepSkyBlue"] --"DodgerBlue" --"LightSkyBlue"
-c.yellow = def.c["LightGoldenrod"] --"Khaki" --"Wheat"
+c.yellow = def.c["LightGoldenrod"] --"Peru" --"Khaki" --"Wheat"
 c.purple = def.c["Violet"] --"LightMagenta"
-c.cyan = def.c["Peru"] --"Turquoise" --""
+c.cyan = shade(def.c["Cyan"], 0.5, c.white)
 -- Apply saturation by multiplying with the maximum brightness
 c.red = shade(c.red, c.sat, c.white)
 c.green = shade(c.green, c.sat, c.white)
@@ -101,32 +92,32 @@ local highlight = {
   ["Constant"] = { fg = c.white }, -- any constant
   ["String"] = { fg = c.green }, -- a string constant: "this is a string"
   ["Character"] = { fg = c.green }, -- a character constant: 'c', '\n'
-  ["Number"] = { fg = c.blue }, -- a number constant: 234, 0xff
-  ["Boolean"] = { fg = c.blue }, -- a boolean constant: TRUE, false
-  ["Float"] = { fg = c.blue }, -- a floating point constant: 2.3e10
+  ["Number"] = { fg = c.green }, -- a number constant: 234, 0xff
+  ["Boolean"] = { fg = c.green }, -- a boolean constant: TRUE, false
+  ["Float"] = { fg = c.green }, -- a floating point constant: 2.3e10
   ["Identifier"] = { fg = c.white }, -- any variable name
   ["Function"] = { fg = c.white }, -- function name (also: methods for classes)
   ["Statement"] = { fg = c.white }, -- any statement
-  ["Conditional"] = { fg = c.red }, -- if, then, else, endif, switch, etc.
-  ["Repeat"] = { fg = c.red }, -- for, do, while, etc.
-  ["Label"] = { fg = c.red }, -- case, default, etc.
-  ["Operator"] = { fg = c.cyan }, -- sizeof", "+", "*", etc.
-  ["Keyword"] = { fg = c.red }, -- any other keyword
-  ["Exception"] = { fg = c.red }, -- try, catch, throw
-  ["PreProc"] = { fg = c.red }, -- generic Preprocessor
-  ["Include"] = { fg = c.red }, -- preprocessor #include
-  ["Define"] = { fg = c.red }, -- preprocessor #define
-  ["Macro"] = { fg = c.red }, -- same as Define
-  ["PreCondit"] = { fg = c.red }, -- preprocessor #if, #else, #endif, etc.
-  ["Type"] = { fg = c.blue }, -- int, long, char, etc.
-  ["StorageClass"] = { fg = c.red }, -- static, register, volatile, etc.
-  ["Structure"] = { fg = c.blue }, -- struct, union, enum, etc.
+  ["Conditional"] = { fg = c.blue }, -- if, then, else, endif, switch, etc.
+  ["Repeat"] = { fg = c.blue }, -- for, do, while, etc.
+  ["Label"] = { fg = c.blue }, -- case, default, etc.
+  ["Operator"] = { fg = c.red }, -- sizeof", "+", "*", etc.
+  ["Keyword"] = { fg = c.blue }, -- any other keyword
+  ["Exception"] = { fg = c.blue }, -- try, catch, throw
+  ["PreProc"] = { fg = c.blue }, -- generic Preprocessor
+  ["Include"] = { fg = c.blue }, -- preprocessor #include
+  ["Define"] = { fg = c.blue  }, -- preprocessor #define
+  ["Macro"] = { fg = c.blue }, -- same as Define
+  ["PreCondit"] = { fg = c.blue }, -- preprocessor #if, #else, #endif, etc.
+  ["Type"] = { fg = c.green }, -- int, long, char, etc.
+  ["StorageClass"] = { fg = c.blue }, -- static, register, volatile, etc.
+  ["Structure"] = { fg = c.green }, -- struct, union, enum, etc.
   ["Typedef"] = { fg = c.blue }, -- A typedef
   ["Special"] = { fg = c.red }, -- any special symbol
   ["SpecialChar"] = { fg = c.red }, -- special character in a constant
   ["Tag"] = { fg = c.pure_yellow }, -- you can use CTRL-] on this
   ["SpecialComment"] = { fg = c.pure_yellow }, -- special things inside a comment
-  ["Debug"] = { fg = c.pure_green }, -- debugging statements
+  ["Debug"] = { fg = c.pure_blue }, -- debugging statements
   ["Underlined"] = { underline = true }, -- text that stands out, HTML links
   ["Error"] = { fg = c.pure_red }, -- any erroneous construct
   ["Todo"] = { fg = c.pure_yellow }, -- anything that needs extra attention; mostly the keywords TODO FIXME and XXX
@@ -191,7 +182,7 @@ local highlight = {
   ["WinbarNC"] = { fg = c.gray6, bg = c.black }, -- Winbar non-current windows.
 
   -- HTML
-  ["htmlArg"] = { fg = c.pure_blue, italic = true }, -- attributes
+  ["htmlArg"] = { fg = c.green, italic = true }, -- attributes
   ["htmlEndTag"] = { fg = c.gray7 }, -- end tag />
   ["htmlTitle"] = { fg = c.gray8 }, -- title tag text
   ["htmlTag"] = { fg = c.gray7 }, -- tag delimiters
@@ -224,30 +215,30 @@ local highlight = {
   ["markdownCodeDelimiter"] = { fg = c.gray6 },
 
   -- Tree sitter
-  ["@boolean"] = { fg = c.blue },
-  ["@constructor"] = { fg = c.blue },
-  ["@constant.builtin"] = { fg = c.blue },
-  ["@keyword.function"] = { fg = c.red },
+  ["@boolean"] = { fg = c.green },
+  ["@constructor"] = { fg = c.green },
+  ["@constant.builtin"] = { fg = c.green },
+  ["@keyword.function"] = { fg = c.blue },
   ["@namespace"] = { fg = c.white },
   ["@parameter"] = { fg = c.white },
   ["@property"] = { fg = c.white },
-  ["@punctuation"] = { fg = c.yellow },
-  ["@punctuation.delimiter"] = { fg = c.yellow },
-  ["@punctuation.bracket"] = { fg = c.yellow },
-  ["@punctuation.special"] = { fg = c.yellow },
+  ["@punctuation"] = { fg = c.red },
+  ["@punctuation.delimiter"] = { fg = c.red },
+  ["@punctuation.bracket"] = { fg = c.red },
+  ["@punctuation.special"] = { fg = c.red },
   ["@string.documentation"] = { fg = c.green },
-  ["@string.regex"] = { fg = c.blue },
-  ["@string.escape"] = { fg = c.red },
+  ["@string.regex"] = { fg = c.yellow },
+  ["@string.escape"] = { fg = c.blue },
   ["@symbol"] = { fg = c.white },
   ["@tag"] = { fg = c.white },
   ["@tag.attribute"] = { fg = c.white },
   ["@tag.delimiter"] = { fg = c.yellow },
-  ["@type.builtin"] = { fg = c.blue },
+  ["@type.builtin"] = { fg = c.green },
   ["@variable"] = { fg = c.white },
   ["@variable.builtin"] = { fg = c.white },
   ["@variable.parameter"] = { fg = c.white },
   -- Tree sitter language specific overrides
-  ["@constructor.javascript"] = { fg = c.blue },
+  ["@constructor.javascript"] = { fg = c.green },
   ["@keyword.clojure"] = { fg = c.red },
 
   -- LSP Semantic Token Groups
@@ -258,7 +249,7 @@ local highlight = {
   ["@lsp.type.enumMember"] = { link = "@constant" },
   ["@lsp.type.escapeSequence"] = { link = "@string.escape" },
   ["@lsp.type.formatSpecifier"] = { link = "@punctuation.special" },
-  ["@lsp.type.interface"] = { fg = c.blue },
+  ["@lsp.type.interface"] = { fg = c.white },
   ["@lsp.type.keyword"] = { link = "@keyword" },
   ["@lsp.type.namespace"] = { link = "@namespace" },
   ["@lsp.type.number"] = { link = "@number" },
@@ -417,7 +408,7 @@ local highlight = {
   ["NeoTreeTitleBar"] = { fg = c.gray6, bg = c.gray2 },
 
   -- Telescope
-  ["TelescopeBorder"] = { fg = c.black, bg = c.black },
+  ["TelescopeBorder"] = { fg = c.white, bg = c.black },
   ["TelescopeNormal"] = { fg = c.white, bg = c.black },
   ["TelescopePreviewTitle"] = { fg = c.black, bg = c.green, bold = true },
   ["TelescopeResultsTitle"] = { fg = c.black, bg = c.blue },

@@ -44,8 +44,8 @@ opt.completeopt = ""
 
 opt.number = true
 opt.relativenumber = true
-opt.cursorline = true
-opt.colorcolumn = "80,120"
+opt.cursorline = false 
+opt.colorcolumn = "" --"80,120"
 opt.scrolloff = 4
 opt.sidescrolloff = 8
 opt.signcolumn = "yes" -- yes, number
@@ -91,7 +91,7 @@ opt.fillchars = {
 }
 
 local function augroup(name)
-  return vim.api.nvim_create_augroup("config.general_" .. name, { clear = true })
+  return vim.api.nvim_create_augroup(name, { clear = true })
 end
 
 local indent_group = augroup("filetype_indent")
@@ -213,7 +213,7 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 })
 
 -- Auto create dir when saving a file, in case some intermediate directory does not exist
-vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+--[[vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   group = augroup("auto_create_dir"),
   callback = function(event)
     if event.match:match("^%w%w+:[\\/][\\/]") then
@@ -222,23 +222,4 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
     local file = vim.uv.fs_realpath(event.match) or event.match
     vim.fn.mkdir(vim.fn.fnamemodify(file, ":p:h"), "p")
   end,
-})
-
-g.bigfile_size = 1000000 * 2
-vim.filetype.add({
-  pattern = {
-    [".*"] = {
-      function(path, buf)
-	  if g.bigfile_size == nil then
-	  return nil
-	  end
-        return vim.bo[buf]
-            and vim.bo[buf].filetype ~= "bigfile"
-            and path
-            and vim.fn.getfsize(path) > g.bigfile_size
-            and "bigfile"
-          or nil
-      end,
-    },
-  },
-})
+})]]

@@ -27,9 +27,18 @@ return {
         --markdown = { "markdownlint" },
       },
     },]]
+    opts = {
+      events = {
+        "BufEnter",
+        --"BufReadPost",
+        "BufWritePost",
+        "InsertLeave",
+      },
+    },
     config = function(_, opts)
+      local lint = require("lint")
       --require("lint").setup(opts)
-      require("lint").linters_by_ft = opts.linters_by_ft or {}
+      lint.linters_by_ft = opts.linters_by_ft or {}
       local debounce = function(ms, fn)
         local timer = vim.uv.new_timer()
         return function(...)
@@ -40,12 +49,11 @@ return {
           end)
         end
       end
-      local lint_events = { "BufEnter", "BufReadPost", "BufWritePost", "InsertLeave" }
       local lint_augroup = vim.api.nvim_create_augroup("nvim-lint", { clear = true })
-      vim.api.nvim_create_autocmd(lint_events, {
+      vim.api.nvim_create_autocmd(opts.events, {
         group = lint_augroup,
         callback = debounce(1000, function()
-          require("lint").try_lint()
+          lint.try_lint()
         end),
       })
     end,

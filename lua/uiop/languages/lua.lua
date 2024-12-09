@@ -10,15 +10,16 @@ return {
         ["lua_ls"] = function()
           local lsp = require(vim.g.username .. ".base.lsp")
           require("lspconfig").lua_ls.setup({
-            capabilities = lsp.common_capabilities(),
-            on_attach = lsp.common_on_attach(),
+            capabilities = lsp.spawn_common_capabilities(),
+            on_attach = lsp.common_on_attach,
+            root_dir = lsp.common_root_dir,
             filetypes = {
               "lua",
             },
             settings = {
               Lua = {
                 format = {
-                  enable = false,
+                  enable = true,
                 },
                 hint = {
                   enable = true,

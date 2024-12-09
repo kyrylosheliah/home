@@ -11,9 +11,9 @@ return {
         ["pyright"] = function()
           local lsp = require(vim.g.username .. ".base.lsp")
           require("lspconfig").pyright.setup({
-            capabilities = lsp.common_capabilities(),
-            on_attach = lsp.common_on_attach(),
-            root_dir = lsp.common_root_dir(),
+            capabilities = lsp.spawn_common_capabilities(),
+            on_attach = lsp.common_on_attach,
+            root_dir = lsp.common_root_dir,
             filetypes = {
               "python",
             },

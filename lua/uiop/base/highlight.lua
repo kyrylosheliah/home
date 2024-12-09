@@ -35,18 +35,6 @@ else
   M.apply_highlight(M.highlight_table)
 end
 
--- colorscheme transparancy
---[[M.apply_transparency = function()
-  vim.api.nvim_set_hl(0, "Normal", { bg="none" })
-  vim.api.nvim_set_hl(0, "NormalFloat", { bg="none" })
-  vim.api.nvim_set_hl(0, "LineNr", { bg="none" })
-  vim.api.nvim_set_hl(0, "SignColumn", { bg="none" })
-end
-M.apply_transparency()
-vim.api.nvim_create_autocmd("ColorScheme", {
-  group = vim.api.nvim_create_augroup("base.highlight", { clear = true }),
-  pattern = "*",
-  callback = M.apply_transparency,
-})]]
-
 return M
+
+-- thanks to "mellow-theme/mellow.nvim" and "datsfilipe/nvim-colorscheme-template"
