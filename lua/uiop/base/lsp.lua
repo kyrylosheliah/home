@@ -112,6 +112,9 @@ local apply_default_keymaps = function(event)
   vim.keymap.set("n", "[w", goto_prev("WARN"), { buffer = bufnr, desc = "Prev Warning" })
   command(bufnr, "DiagnosticsSetloclist", vim.diagnostic.setloclist, {})
   command(bufnr, "DiagnosticsQuickfixlist", vim.diagnostic.setqflist, {})
+  vim.keymap.set("n", "<leader>th", function()
+    vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr }))
+  end, { buffer = bufnr, desc = "Toggle Inlay Hints" })
 end
 
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -124,8 +127,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
 M = {}
 
 M.spawn_common_capabilities = function()
-  return require("cmp_nvim_lsp").default_capabilities(
-    vim.lsp.protocol.make_client_capabilities())
+  local capabilities = vim.lsp.protocol.make_client_capabilities()
+  capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
+  return capabilities
 end
 
 M.common_on_attach = function(client, bufnr)
@@ -142,16 +146,24 @@ M.common_on_attach = function(client, bufnr)
     vim.api.nvim_set_option_value("formatexpr", 'v:lua.require("conform").formatexpr()', { buf = bufnr })
   end
   if client.server_capabilities.documentHighlightProvider then
-    local group = vim.api.nvim_create_augroup("base.lsp", { clear = true })
+    local group = vim.api.nvim_create_augroup("lsp-highlight", { clear = false })
     vim.api.nvim_create_autocmd("CursorHold", {
       buffer = bufnr,
-      command = "lua vim.lsp.buf.document_highlight()",
       group = group,
+      callback = vim.lsp.buf.document_highlight,
     })
     vim.api.nvim_create_autocmd({ "CursorMoved", "BufLeave", "InsertEnter" }, {
       buffer = bufnr,
-      command = "lua vim.lsp.buf.clear_references()",
       group = group,
+      callback = vim.lsp.buf.clear_references,
+    })
+    vim.api.nvim_create_autocmd("LspDetach", {
+      buffer = bufnr,
+      group = group,
+      callback = function(event)
+        vim.lsp.buf.clear_references()
+        vim.api.nvim_clear_autocmds({ group = "lsp-highlight", buffer = event.buf })
+      end,
     })
   end
   if client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint ~= nil then

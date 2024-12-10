@@ -4,9 +4,7 @@ return {
     "nvim-treesitter/nvim-treesitter",
     opts = {
       ensure_installed = {
-        "lua",
-        "luadoc",
-        "luap",
+        "zig",
       },
     },
   },
@@ -15,60 +13,29 @@ return {
     "williamboman/mason-lspconfig.nvim",
     opts = {
       ensure_installed = {
-        "lua_ls",
+        "zls",
       },
       handlers = {
-        ["lua_ls"] = function()
+        ["zls"] = function()
+          vim.g.zig_fmt_autosave = 0
           local lsp = require(vim.g.username .. ".base.lsp")
-          require("lspconfig").lua_ls.setup({
+          require("lspconfig").zls.setup({
             capabilities = lsp.spawn_common_capabilities(),
             on_attach = lsp.common_on_attach,
             root_dir = lsp.common_root_dir,
             filetypes = {
-              "lua",
+              "zig",
+              "zir",
             },
-            settings = {
-              Lua = {
-                format = {
-                  enable = true,
-                },
-                hint = {
-                  enable = true,
-                  arrayIndex = "All",
-                  await = true,
-                  paramName = "All",
-                  paramType = true,
-                  semicolon = "Disable",
-                  setType = true,
-                },
-                runtime = {
-                  version = "LuaJIT",
-                  special = {
-                    reload = "require",
-                  },
-                },
-                workspace = {
-                  checkThirdParty = false,
-                  library = {
-                    vim.env.VIMRUNTIME
-                    -- "${3rd}/luv/library"
-                    -- "${3rd}/busted/library",
-                  },
-                },
-                diagnostics = {
-                  globals = {
-                    "vim",
-                  },
-                },
-              },
-            },
+            --[[settings = {
+            },]]
           })
         end,
       },
     },
   },
 
-  {
+  --[[{
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     opts = {
       ensure_installed = {
@@ -76,7 +43,7 @@ return {
         --"selene",
       },
     },
-  },
+  },]]
 
   --[[{
     "mfussenegger/nvim-lint",
@@ -91,7 +58,7 @@ return {
     "stevearc/conform.nvim",
     opts = {
       formatters_by_ft = {
-        lua = { "stylua" },
+        zig = { "zig fmt" },
       },
     },
   },
@@ -141,5 +108,4 @@ return {
     },
   },
   ]]
-
 }

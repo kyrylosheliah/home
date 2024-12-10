@@ -1,5 +1,17 @@
 return {
 
+
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = {
+      ensure_installed = {
+        "python",
+        "rst",
+        "ninja",
+      },
+    },
+  },
+
   {
     "williamboman/mason-lspconfig.nvim",
     opts = {

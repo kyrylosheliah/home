@@ -53,7 +53,6 @@ return {
             cmp.open_docs()
           end
         end, { "i", "c" }),
-        ['<C-y>'] = cmp.mapping(cmp.mapping.confirm({ select = true }), { "i", "c" }),
         ['<Esc>'] = cmp.mapping(function()
           if cmp.visible() then
             cmp.close()
@@ -62,6 +61,7 @@ return {
             vim.api.nvim_feedkeys(key, 'n', false)
           end
         end, { "i", "c" }),
+        ['<C-y>'] = cmp.mapping(cmp.mapping.confirm({ select = true }), { "i", "c" }),
         --[[['<CR>'] = cmp.mapping(function()
           if cmp.visible() then
             cmp.confirm({ select = true })
@@ -78,6 +78,7 @@ return {
         completion = {
           autocomplete = false,
           --completeopt = vim.o.completeopt,
+          completeopt = "menu,menuone,noisert",
           --keyword_length = 1,
         },
         view = {
