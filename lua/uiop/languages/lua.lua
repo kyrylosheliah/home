@@ -22,7 +22,7 @@ return {
           local lsp = require(vim.g.username .. ".base.lsp")
           require("lspconfig").lua_ls.setup({
             capabilities = lsp.spawn_common_capabilities(),
-            on_attach = lsp.common_on_attach,
+            on_attach = lsp.spawn_on_attach(),
             root_dir = lsp.common_root_dir,
             filetypes = {
               "lua",

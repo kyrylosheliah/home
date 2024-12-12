@@ -1,3 +1,4 @@
+
 local RGB_hex_to_number = function(value)
   --assert(string.sub(value, 1, 1) == "#")
   value = string.sub(value, 2)
@@ -5,22 +6,6 @@ local RGB_hex_to_number = function(value)
   local g = tonumber("0x" .. string.sub(value, 3, 4))
   local b = tonumber("0x" .. string.sub(value, 5, 6))
   return { r, g, b }
-end
-
-local RGB_number_to_hex = function(value)
-  local b = string.format("%x", (bit.band(value, tonumber("0xFF"))))
-  local g = string.format("%x", (bit.rshift(bit.band(value, tonumber("0xFF00")), 8)))
-  local r = string.format("%x", (bit.rshift(bit.band(value, tonumber("0xFF0000")), 16)))
-  while #(r) < 2 do
-    r = "0" .. r
-  end
-  while #(g) < 2 do
-    g = "0" .. g
-  end
-  while #(b) < 2 do
-    b = "0" .. b
-  end
-  return '#' .. r .. g .. b
 end
 
 M = {}
@@ -36,18 +21,42 @@ M.shade = function(fg, alpha, bg)
     return math.floor(math.min(math.max(0, ret), 255) + 0.5)
   end
   return string.format(
-  '#%02X%02X%02X',
-  blendChannel(1),
-  blendChannel(2),
-  blendChannel(3))
+    '#%02X%02X%02X',
+    blendChannel(1),
+    blendChannel(2),
+    blendChannel(3))
 end
 
-M.inspect_colors = function()
-  local tbl = vim.api.nvim_get_color_map()
-  for key, value in pairs(tbl) do
-    tbl[key] = RGB_number_to_hex(value)
+M.combo = function(fg, alpha, bg)
+  if bg == nil then
+    bg = vim.o.background == 'light' and '#000000' or '#ffffff'
   end
-  print(vim.inspect(tbl))
+  fg = RGB_hex_to_number(fg)
+  bg = RGB_hex_to_number(bg)
+  local max_diff = 0
+  local diff = { 0, 0, 0 }
+  local get_max = function(i)
+    diff[i] = fg[i] - bg[i]
+    if diff[i] > max_diff then
+      max_diff = diff[i]
+    end
+  end
+  get_max(1)
+  get_max(2)
+  get_max(3)
+  local addChannel = function(i)
+    local washout = bg[i] * (1 - diff[i] / max_diff)
+    if bg[i] > 127 then
+      washout = washout * (-1)
+    end
+    local ret = (alpha * fg[i]) + ((1 - alpha) * bg[i]) + washout
+    return math.floor(math.min(math.max(0, ret), 255) + 0.5)
+  end
+  return string.format(
+    '#%02X%02X%02X',
+    addChannel(1),
+    addChannel(2),
+    addChannel(3))
 end
 
 -- nvim --clean<CR>:redir file<CR>:highlightjjjjjjjjjjjjjjjjjjjj<CR>:redir END<CR>

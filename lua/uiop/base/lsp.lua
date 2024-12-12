@@ -17,7 +17,7 @@ vim.diagnostic.config({
   float = {
     focusable = false,
     style = "minimal",
-    source = "always",
+    --source = "always",
     --header = "",
     --prefix = "",
   },
@@ -132,65 +132,71 @@ M.spawn_common_capabilities = function()
   return capabilities
 end
 
-M.common_on_attach = function(client, bufnr)
-  if client.server_capabilities.definitionProvider then
-    -- Enables "go to definition", <C-]> and other tag commands
-    vim.api.nvim_set_option_value("tagfunc", "v:lua.vim.lsp.tagfunc", { buf = bufnr })
-  end
-  --[[if client.server_capabilities.completionProvider then
+M.spawn_on_attach = function(config)
+  local disable = config and (config.disable == nil and {} or config.disable) or {}
+  return function(client, bufnr)
+    if disable.hover and not client.server_capabilities.hoverProvider then
+      client.server_capabilities.hoverProvider = false
+    end
+    if not disable.definition and client.server_capabilities.definitionProvider then
+      -- Enables "go to definition", <C-]> and other tag commands
+      vim.api.nvim_set_option_value("tagfunc", "v:lua.vim.lsp.tagfunc", { buf = bufnr })
+    end
+    --[[if not disable.completion and client.server_capabilities.completionProvider then
       -- Enables (manual) omni mode competion with <C-X><C-O> in Insert mode. For autocompletion, an autocompletion plugin is required
       vim.api.nvim_set_option_value("omnifunc", "v:lua.vim.lsp.omnifunc", { buf = bufnr })
     end]]
-  if client.server_capabilities.documentFormattingProvider then
-    -- Enables LSP formatting with gq
-    vim.api.nvim_set_option_value("formatexpr", 'v:lua.require("conform").formatexpr()', { buf = bufnr })
-  end
-  if client.server_capabilities.documentHighlightProvider then
-    local group = vim.api.nvim_create_augroup("lsp-highlight", { clear = false })
-    vim.api.nvim_create_autocmd("CursorHold", {
-      buffer = bufnr,
-      group = group,
-      callback = vim.lsp.buf.document_highlight,
-    })
-    vim.api.nvim_create_autocmd({ "CursorMoved", "BufLeave", "InsertEnter" }, {
-      buffer = bufnr,
-      group = group,
-      callback = vim.lsp.buf.clear_references,
-    })
-    vim.api.nvim_create_autocmd("LspDetach", {
-      buffer = bufnr,
-      group = group,
-      callback = function(event)
-        vim.lsp.buf.clear_references()
-        vim.api.nvim_clear_autocmds({ group = "lsp-highlight", buffer = event.buf })
-      end,
-    })
-  end
-  if client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint ~= nil then
-    -- vim.lsp.inlay_hint(bufnr, true)
-    -- vim.lsp.inlay_hint.enable(bufnr, true)
-    vim.lsp.inlay_hint.enable(true, { bufnr })
-  end
-  --[[if client.server_capabilities.documentSymbolProvider then
+    if not disable.formatting and client.server_capabilities.documentFormattingProvider then
+      -- Enables LSP formatting with gq
+      vim.api.nvim_set_option_value("formatexpr", 'v:lua.require("conform").formatexpr()', { buf = bufnr })
+    end
+    if not disable.highlight and client.server_capabilities.documentHighlightProvider then
+      local group = vim.api.nvim_create_augroup("lsp-highlight", { clear = false })
+      vim.api.nvim_create_autocmd("CursorHold", {
+        buffer = bufnr,
+        group = group,
+        callback = vim.lsp.buf.document_highlight,
+      })
+      vim.api.nvim_create_autocmd({ "CursorMoved", "BufLeave", "InsertEnter" }, {
+        buffer = bufnr,
+        group = group,
+        callback = vim.lsp.buf.clear_references,
+      })
+      vim.api.nvim_create_autocmd("LspDetach", {
+        buffer = bufnr,
+        group = group,
+        callback = function(event)
+          vim.lsp.buf.clear_references()
+          vim.api.nvim_clear_autocmds({ group = group, buffer = event.buf })
+        end,
+      })
+    end
+    if not disable.inlay_hints and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint ~= nil then
+      -- vim.lsp.inlay_hint(bufnr, true)
+      -- vim.lsp.inlay_hint.enable(bufnr, true)
+      vim.lsp.inlay_hint.enable(true, { bufnr })
+    end
+    --[[if not disable.symbols and client.server_capabilities.documentSymbolProvider then
       local navic = require("nvim-navic")
       navic.attach(client, bufnr)
     end]]
-  if client.server_capabilities.signatureHelpProvider then
-    require("lsp-overloads").setup(client, {
-      keymaps = {
-        next_signature = "<A-j>",
-        previous_signature = "<A-k>",
-        next_parameter = "<A-l>",
-        previous_parameter = "<A-h>",
-        close_signature = "<A-n>"
-      },
-    })
+    if not disable.signature_help and client.server_capabilities.signatureHelpProvider then
+      require("lsp-overloads").setup(client, {
+        keymaps = {
+          next_signature = "<A-j>",
+          previous_signature = "<A-k>",
+          next_parameter = "<A-l>",
+          previous_parameter = "<A-h>",
+          close_signature = "<A-n>"
+        },
+      })
+    end
   end
 end
 
 M.common_root_dir = function(fname)
   return require("lspconfig/util").find_git_ancestor(fname)
-    or vim.fn.getcwd()
+      or vim.fn.getcwd()
 end
 
 return M

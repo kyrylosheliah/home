@@ -53,14 +53,8 @@ return {
             cmp.open_docs()
           end
         end, { "i", "c" }),
-        ['<Esc>'] = cmp.mapping(function()
-          if cmp.visible() then
-            cmp.close()
-          else -- restore keypress
-            local key = vim.api.nvim_replace_termcodes("<Esc>", true, false, true)
-            vim.api.nvim_feedkeys(key, 'n', false)
-          end
-        end, { "i", "c" }),
+        ['<C-e>'] = cmp.mapping(cmp.close, { "i", "c" }),
+        ['<A-e>'] = cmp.mapping(cmp.abort, { "i", "c" }),
         ['<C-y>'] = cmp.mapping(cmp.mapping.confirm({ select = true }), { "i", "c" }),
         --[[['<CR>'] = cmp.mapping(function()
           if cmp.visible() then

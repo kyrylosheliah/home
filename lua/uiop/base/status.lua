@@ -169,17 +169,24 @@ M.search_pagination = function()
   return ""
 end
 
+M.getreg = function(register)
+  local content = vim.fn.getreg(register)
+  content = vim.fn.keytrans(content)
+  content = vim.api.nvim_replace_termcodes(content, true, true, false)
+  return content
+end
+
 M.macros_recording_lambda = function()
-  local recording_register = vim.fn.reg_recording()
-  --local recording_content = vim.fn.getreg(recording_register)
+  local reg = vim.fn.reg_recording()
+  --local content = M.getreg(reg)
   --vim.cmd.redrawstatus() -- unfortunately isn't happening
-  local recording_message = '@' .. recording_register .. '<' --.. recording_content
-  return recording_message
+  --The memory buffer in which your keystrokes go during a recording is not exposed at runtime so no, it is not possible. As an alternative to recording, you can use :normal iNowImRecording. – romainl
+  return '@' .. reg .. '<'
 end
 M.macros_hidden_lambda = function() return "" end
 M.macros_recorded_lambda = function()
   local recorded_register = vim.fn.reg_recorded()
-  local recorded_content = vim.fn.getreg(recorded_register)
+  local recorded_content = M.getreg(recorded_register)
   local recorded_message = '@' .. recorded_register .. '>' .. recorded_content
   M.macros_recording = M.macros_hidden_lambda
   return recorded_message

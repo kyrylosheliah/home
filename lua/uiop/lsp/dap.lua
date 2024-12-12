@@ -1,16 +1,3 @@
-
----@param config {args?:string[]|fun():string[]?}
-local function get_args(config)
-  local args = type(config.args) == "function" and (config.args() or {}) or config.args or {}
-  config = vim.deepcopy(config)
-  ---@cast args string[]
-  config.args = function()
-    local new_args = vim.fn.input("Run with args: ", table.concat(args, " ")) --[[@as string]]
-    return vim.split(vim.fn.expand(new_args) --[[@as string]], " ")
-  end
-  return config
-end
-
 return {
 
   {
@@ -20,11 +7,10 @@ return {
       "mfussenegger/nvim-dap",
     },
     opts = {
-      ensure_installed = {},
       handlers = {
-        --[[function(config) -- default handler
+        function(config) -- default handler
           require("mason-nvim-dap").default_setup(config)
-        end,]]
+        end,
       },
     },
   },
@@ -47,7 +33,7 @@ return {
       { "<leader>dB", function() require("dap").set_breakpoint(vim.fn.input('Breakpoint condition: ')) end, desc = "Breakpoint Condition" },
       { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint" },
       { "<leader>dc", function() require("dap").continue() end, desc = "Continue" },
-      { "<leader>da", function() require("dap").continue({ before = get_args }) end, desc = "Run with Args" },
+      --{ "<leader>da", function() require("dap").continue({ before = get_args }) end, desc = "Run with Args" },
       { "<leader>dC", function() require("dap").run_to_cursor() end, desc = "Run to Cursor" },
       { "<leader>dg", function() require("dap").goto_() end, desc = "Go to Line (No Execute)" },
       { "<leader>di", function() require("dap").step_into() end, desc = "Step Into" },
@@ -94,15 +80,9 @@ return {
       if vim.fn.filereadable(".vscode/launch.json") then
         vscode.load_launchjs()
       end
-
-      --local dap, dapui = require("dap"), require("dapui")
-      --local debugpyPythinPath = require("mason-registry").get_package("debugpy"):get_install_path() .. "/venv/bin/python3"
-      --require("dap-python").setup(debugpyPythonPath, {}) ---@diagnostics disable-line: missing-fields
-      require("dap-python").setup("python")
     end,
   },
 
-  -- fancy UI for the debugger
   {
     "rcarriga/nvim-dap-ui",
     dependencies = {
@@ -114,14 +94,8 @@ return {
       { "<leader>du", function() require("dapui").toggle({ }) end, desc = "Dap UI" },
       { "<leader>de", function() require("dapui").eval() end, desc = "Eval", mode = {"n", "v"} },
     },
-    opts = {},
-    config = function(_, opts)
-      local dap = require("dap")
-      require("dapui").setup(opts)
-    end,
   },
 
-  -- mason.nvim integration
   {
     "jay-babu/mason-nvim-dap.nvim",
     dependencies = {
@@ -131,51 +105,11 @@ return {
     cmd = { "DapInstall", "DapUninstall" },
     opts = {
       automatic_installation = true,
-      handlers = {},
-      ensure_installed = {
-      },
     },
   },
 
 }
 --[[
-local p = "dap"; if (not require('killerrat.plugins._lazy-nvim').LazyHasPlugin(p)) then return end
-local dap, dapui = require(p), require("dapui")
-
-dap.adapters.coreclr = {
-	type = 'executable',
-	-- command = vim.fn.stdpath("data") .. '/netcoredbg/netcoredbg',
-	command = '/usr/bin/netcoredbg',
-	args = {'--interpreter=vscode'}
-}
-
-dap.configurations.cs = {
-	{
-		type = "coreclr",
-		name = "launch - netcoredbg",
-		request = "launch",
-		console = "integratedTerminal",
-		program = function()
-			return vim.fn.input('Path to dll', vim.fn.getcwd() .. '/bin/Debug/', 'file')
-			-- return vim.fn.input('Path to dll: ', vim.fn.getcwd() .. '', 'file')
-		end,
-	},
-}
-
-
-require("nvim-dap-virtual-text").setup()
--- require('dap-go').setup()
-require("dapui").setup()
-
-dap.listeners.after.event_initialized["dapui_config"] = function()
-	dapui.open()
-end
-dap.listeners.before.event_terminated["dapui_config"] = function()
-	dapui.close()
-end
-dap.listeners.before.event_exited["dapui_config"] = function()
-	dapui.close()
-end
 
 -- vim.keymap.set("n", "<F1>", ":lua require'dap'.continue()<CR>")
 vim.keymap.set("n", "<leader>uc", ":lua require'dap'.continue()<CR>")

@@ -21,7 +21,7 @@ return {
           local lsp = require(vim.g.username .. ".base.lsp")
           require("lspconfig").zls.setup({
             capabilities = lsp.spawn_common_capabilities(),
-            on_attach = lsp.common_on_attach,
+            on_attach = lsp.spawn_on_attach(),
             root_dir = lsp.common_root_dir,
             filetypes = {
               "zig",
@@ -34,25 +34,6 @@ return {
       },
     },
   },
-
-  --[[{
-    "WhoIsSethDaniel/mason-tool-installer.nvim",
-    opts = {
-      ensure_installed = {
-        "stylua",
-        --"selene",
-      },
-    },
-  },]]
-
-  --[[{
-    "mfussenegger/nvim-lint",
-    opts = {
-      linters_by_ft = {
-        lua = { "selene" },
-      },
-    },
-  },]]
 
   {
     "stevearc/conform.nvim",
