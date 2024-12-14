@@ -5,6 +5,7 @@ return {
     dependencies = {
       "williamboman/mason.nvim",
       "mfussenegger/nvim-dap",
+      "nvim-lua/plenary.nvim",
     },
     opts = {
       handlers = {

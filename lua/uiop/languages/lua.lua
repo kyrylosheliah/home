@@ -48,7 +48,6 @@ return {
                   },
                 },
                 workspace = {
-                  checkThirdParty = false,
                   library = {
                     vim.env.VIMRUNTIME
                     -- "${3rd}/luv/library"
@@ -74,6 +73,7 @@ return {
       ensure_installed = {
         "stylua",
         --"selene",
+        --"luacheck",
       },
     },
   },
@@ -82,7 +82,8 @@ return {
     "mfussenegger/nvim-lint",
     opts = {
       linters_by_ft = {
-        lua = { "selene" },
+        --lua = { "selene" },
+        lua = { "luacheck" },
       },
     },
   },]]

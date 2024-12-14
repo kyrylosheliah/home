@@ -6,7 +6,7 @@ return {
     lazy = false,
     cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
     opts = {
-      highlight = { enable = true },
+      --highlight = { enable = true },
       indent = { enable = true },
       ensure_installed = {
         "bash",
@@ -18,7 +18,6 @@ return {
         "printf",
         "query",
         "regex",
-        "toml",
         "vim",
         "vimdoc",
         "xml",

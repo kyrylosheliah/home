@@ -7,7 +7,7 @@ return {
 
       local function map(mode, l, r, opts)
         opts = opts or {}
-        opts.buffer = bufnr
+        opts.buffer = vim.api.nvim_win_get_buf(vim.g.statusline_winid or 0)
         vim.keymap.set(mode, l, r, opts)
       end
 

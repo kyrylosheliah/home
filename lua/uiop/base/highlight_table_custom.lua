@@ -16,7 +16,7 @@ c.sat = 1.0
 c.sub = 0.25
 -- Shades
 c.black = def.c["Gray5"]
-c.gray = def.c["Gray50"]
+c.gray = def.c["Gray40"]
 c.white = def.c["Gray95"]
 -- Primary color
 c.black = shade(c.primary, c.pri, c.black)
@@ -27,6 +27,10 @@ c.white = shade(c.tint, c.tin, c.white)
 c.sub_black = shade(c.gray, c.sub, c.black)
 c.sub_gray = shade(c.white, c.sub, c.black)
 c.sub_white = shade(c.white, c.sub, c.gray)
+-- Pure shades
+c.pure_black = "#000000"
+c.pure_gray = def.c["Gray60"]
+c.pure_white = "#ffffff"
 
 local palette = {
   red = def.c["LightCoral"],
@@ -35,7 +39,7 @@ local palette = {
   yellow = def.c["LightGoldenrod"], --"Peru" --"Khaki" --"Wheat"
   purple = def.c["LightMagenta"],
   cyan = shade(def.c["Cyan"], 0.5, c.white),
-  --brown = def.c["Peru"],
+  brown = def.c["Peru"],
 }
 for key, value in pairs(palette) do
   --c[key] = value
@@ -48,9 +52,6 @@ end
 -- Special
 c.none = "NONE"
 -- Bright and pure
-c.pure_black = "#000000"
-c.pure_gray = def.c["Gray60"]
-c.pure_white = "#ffffff"
 c.pure_red = "#ff0000"
 c.pure_green = "#00ff00"
 c.pure_blue = "#0000ff"
@@ -59,7 +60,7 @@ c.pure_purple = "#ff00ff"
 c.pure_cyan = "#00ffff"
 
 local highlight = {
-  ["Comment"] = { fg = c.pure_gray }, -- any comment
+  ["Comment"] = { fg = c.gray }, -- any comment
   ["Constant"] = { fg = c.white }, -- any constant
   ["String"] = { fg = c.green }, -- a string constant: "this is a string"
   ["Character"] = { fg = c.green }, -- a character constant: 'c', '\n'
@@ -116,7 +117,7 @@ local highlight = {
   ["CurSearch"] = { fg = c.black, bg = c.pure_green }, -- 'cursearch' highlighting; also used for the text replaced with ":s///c"
   ["LineNr"] = { fg = c.sub_gray, bg = vim.g.transparent and c.none or nil }, -- Line number for " =number" and ":#" commands, and when 'number' or 'relativenumber' option is set.
   ["CursorLineNr"] = { fg = c.white, bg = c.sub_gray }, -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
-  ["MatchParen"] = { fg = c.pure_red, bg = c.sub_blue }, -- The character under the cursor or just before it, if it is a paired bracket, and its match.
+  ["MatchParen"] = { fg = c.pure_black, bg = c.pure_purple }, -- The character under the cursor or just before it, if it is a paired bracket, and its match.
   ["ModeMsg"] = { fg = c.gray, bold = true }, --' showmode' message (e.g., "-- INSERT --")
   ["MoreMsg"] = { fg = c.pure_purple }, -- more-prompt
   ["NonText"] = { fg = c.sub_gray }, -- characters from 'showbreak' and other characters that do not really exist in the text (e.g., ">" displayed when a double-wide character doesn't fit at the end of the line).

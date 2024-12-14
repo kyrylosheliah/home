@@ -41,6 +41,7 @@ opt.clipboard = vim.env.SSH_TTY and "" or "unnamedplus"
 
 --opt.completeopt = "menu,menuone,noinsert"
 opt.completeopt = ""
+opt.spell = false
 
 opt.number = true
 opt.relativenumber = true
