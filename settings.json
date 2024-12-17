@@ -2,6 +2,9 @@
   "[cpp]": {
     "editor.defaultFormatter": "ms-vscode.cpptools"
   },
+  "[csharp]": {
+    "editor.defaultFormatter": "ms-dotnettools.csharp"
+  },
   "[javascript]": {
     "editor.indentSize": 2
   },
@@ -17,31 +20,34 @@
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter"
   },
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer"
+  },
   "[typescript]": {
     "editor.indentSize": 2
   },
-  "auto-rename-tag.activationOnLanguage": ["*"],
+  "auto-rename-tag.activationOnLanguage": [
+    "*"
+  ],
   "breadcrumbs.enabled": false,
-  "editor.cursorSurroundingLines": 5,
   "editor.codeActionsOnSave": {
     "source.fixAll": "never",
     "source.fixAll.eslint": "never",
     "source.organizeImports": "never"
   },
+  //"editor.cursorSurroundingLines": 5,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.folding": false,
   "editor.formatOnSave": false,
+  "editor.glyphMargin": true,
+  "editor.guides.indentation": true,
+  //"editor.hover.delay": 700,
   "editor.hover.enabled": true,
-  "editor.hover.delay": 700,
   "editor.largeFileOptimizations": true,
   "editor.lineNumbers": "on",
   "editor.linkedEditing": true,
-  "editor.folding": false,
-  "editor.glyphMargin": true,
   "editor.minimap.enabled": false,
-  "editor.quickSuggestionsDelay": 1000,
-  "editor.renderLineHighlight": "gutter",
-  "editor.renderWhitespace": "none",
-  "editor.guides.indentation": true,
+  //"editor.quickSuggestionsDelay": 1000,
   "editor.rulers": [
     {
       "color": "#3f3f3f",
@@ -53,7 +59,7 @@
     }
   ],
   "editor.stickyScroll.enabled": false,
-  "editor.suggest.insertMode": "replace",
+  "editor.suggest.insertMode": "insert",
   "emmet.includeLanguages": {
     "django-html": "html",
     "javascript": "javascriptreact",
@@ -71,13 +77,29 @@
   "explorer.confirmDelete": true,
   "extensions.autoUpdate": "onlyEnabledExtensions",
   "files.eol": "\n",
+  "files.exclude": {
+    "**/.trunk/*actions/": true,
+    "**/.trunk/*logs/": true,
+    "**/.trunk/*notifications/": true,
+    "**/.trunk/*out/": true,
+    "**/.trunk/*plugins/": true
+  },
+  "files.watcherExclude": {
+    "**/.trunk/*actions/": true,
+    "**/.trunk/*logs/": true,
+    "**/.trunk/*notifications/": true,
+    "**/.trunk/*out/": true,
+    "**/.trunk/*plugins/": true
+  },
   "javascript.updateImportsOnFileMove.enabled": "always",
   "prettier.useEditorConfig": false,
   "print.alternateBrowser": false,
   "print.colourScheme": "Visual Studio",
   "print.lineNumbers": "off",
   "print.renderMarkdown": true,
-  "python.analysis.extraPaths": ["D:/programs/anaconda3/Lib/site-packages/"],
+  "python.analysis.extraPaths": [
+    "D:/programs/anaconda3/Lib/site-packages/"
+  ],
   "telemetry.telemetryLevel": "off",
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "typescript.updateImportsOnFileMove.enabled": "always",
@@ -85,7 +107,7 @@
   "update.showReleaseNotes": false,
   "window.commandCenter": false,
   "window.menuBarVisibility": "compact",
-  "window.restoreWindows": "none",
+  //"window.restoreWindows": "none",
   "window.title": "${dirty}${separator}${activeEditorLong}${separator}${dirty}",
   "window.titleSeparator": " ",
   "workbench.activityBar.iconClickBehavior": "focus",
@@ -112,7 +134,6 @@
       "tree.indentGuidesStroke": "#4f4f4f"
     }
   },
-  "workbench.colorTheme": "Default High Contrast",
   "workbench.editor.editorActionsLocation": "hidden",
   "workbench.editor.showTabs": "none",
   "workbench.iconTheme": null,
@@ -128,18 +149,5 @@
   //"zenMode.hideStatusBar": true // unset in order to user-toggle
   "zenMode.restore": false,
   "zenMode.showTabs": "none",
-  "files.exclude": {
-    "**/.trunk/*actions/": true,
-    "**/.trunk/*logs/": true,
-    "**/.trunk/*notifications/": true,
-    "**/.trunk/*out/": true,
-    "**/.trunk/*plugins/": true
-  },
-  "files.watcherExclude": {
-    "**/.trunk/*actions/": true,
-    "**/.trunk/*logs/": true,
-    "**/.trunk/*notifications/": true,
-    "**/.trunk/*out/": true,
-    "**/.trunk/*plugins/": true
-  }
+  "files.autoSave": "afterDelay"
 }
