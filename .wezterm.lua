@@ -14,6 +14,8 @@ config.colors = {
   cursor_fg = "black",
 }
 
+config.adjust_window_size_when_changing_font_size = false
+
 -- local gpus = wezterm.gui.enumerate_gpus()
 -- config.webgpu_preferred_adapter = gpus[1]
 --config.front_end = "OpenGL"
@@ -50,14 +52,14 @@ config.window_padding = {
 }
 
 -- tabs
---config.hide_tab_bar_if_only_one_tab = true
+config.hide_tab_bar_if_only_one_tab = false
 config.use_fancy_tab_bar = false
 config.tab_bar_at_bottom = false
 
--- config.inactive_pane_hsb = {
--- 	saturation = 0.0,
--- 	brightness = 1.0,
--- }
+config.inactive_pane_hsb = {
+	saturation = 0.0,
+	brightness = 0.5,
+}
 
 config.window_frame = {
 	font = wezterm.font({ family = font_name, weight = "Regular" }),
@@ -89,14 +91,14 @@ config.keys = {
 		action = wezterm.action.EmitEvent("toggle-colorscheme"),
 	},]]
 	{
-		key = "h",
+		key = "s",
 		mods = "CTRL|ALT",
 		action = wezterm.action.SplitPane({
 			direction = "Right",
 		}),
 	},
 	{
-		key = "H",
+		key = "S",
 		mods = "CTRL|SHIFT|ALT",
 		action = wezterm.action.SplitPane({
 			direction = "Left",
@@ -229,13 +231,45 @@ config.keys = {
 	},
 }
 
---[[
-local function get_current_working_dir(tab)
-	local current_dir = tab.active_pane and tab.active_pane.current_working_dir or { file_path = '' }
-	local HOME_DIR = string.format('file://%s', os.getenv('HOME'))
+for i = 1, 8 do
+  table.insert(config.keys, {
+    key = tostring(i),
+    mods = "CTRL|ALT",
+    action = wezterm.action.MoveTab(i - 1),
+  })
+end
 
-	return current_dir == HOME_DIR and '.'
-	or string.gsub(current_dir.file_path, '(.*[/\\])(.*)', '%2')
+--[[
+local function current_dir(tab)
+  if not tab.active_pane then
+    return ""
+  end
+  local cwd_uri = tab.active_pane.current_working_dir.file_path or "" 
+  if not cwd_uri or cwd_uri == "" then
+    return ""
+  end
+  if cwd_uri == "/" then
+    return cwd_uri
+  end
+  -- extract stem from folder path
+  local stop_index = -1
+  local end_index = #cwd_uri
+  local cur_char = string.sub(cwd_uri, end_index, end_index)
+  if cur_char == "\\" or cur_char == "/" then
+    end_index = end_index - 1
+  end
+  for i=end_index,1,-1 do
+    cur_char = string.sub(cwd_uri, i, i)
+    if cur_char == "\\" or cur_char == "/" then
+      stop_index = i + 1
+      break
+    end
+  end
+  if stop_index == -1 then
+    return cwd_uri
+  end
+  return string.sub(cwd_uri, stop_index, #cwd_uri)
+  --local cwd = string.match(cwd_uri, "(?:.*[/\\])*(.*[/\\]?)$")
 end
 
 -- Set tab title to the one that was set via `tab:set_title()`
@@ -243,34 +277,26 @@ end
 wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
 	local index = tonumber(tab.tab_index) + 1
 	local custom_title = tab.tab_title
-	local title = get_current_working_dir(tab)
-
+	local title = ""
 	if custom_title and #custom_title > 0 then
 		title = custom_title
+  else
+    title = current_dir(tab)
 	end
-
-	return string.format('  %s•%s  ', index, title)
+	return string.format('%s:%s ', index, title)
 end)
 
 -- Set window title to the current working directory
 wezterm.on('format-window-title', function(tab, pane, tabs, panes, config)
-	return get_current_working_dir(tab)
+	return current_dir(tab)
 end)
 
--- Set the correct window size at the startup
 wezterm.on('gui-startup', function(cmd)
 	local active_screen = wezterm.gui.screens()["active"]
 	local _, _, window = wezterm.mux.spawn_window(cmd or {})
-
-	-- MacBook Pro 14" 2023
-	if active_screen.width <= 3024 then
-		-- Laptop: open full screen
-		window:gui_window():maximize()
-	else
-		-- Desktop: place on the right half of the screen
-		window:gui_window():set_position(active_screen.width / 2, 0)
-		window:gui_window():set_inner_size(active_screen.width / 2, active_screen.height)
-	end
+  -- place on the right half of the screen
+  window:gui_window():set_position(active_screen.width / 2, 0)
+  window:gui_window():set_inner_size(active_screen.width / 2, active_screen.height)
 end)
 ]]
 
