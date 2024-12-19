@@ -23,6 +23,117 @@ vim.diagnostic.config({
   },
 })
 
+local function augroup(name)
+  return vim.api.nvim_create_augroup(name, { clear = true })
+end
+
+vim.g.listchars_update = function()
+-- ↳ ↲ ↵ ↴ ▏ ␣ · ╎ │ ▶ ◀
+  local spacing = "·"
+  local tabchar = "↹"
+  local empty = " "
+  local indent = "│"
+  local block = "█"
+  local focus = "×"
+  --================
+  local tab = ""
+  local leadmultispace = ""
+	if vim.opt_local.expandtab:get() == true then
+		-- shiftwidth and tabstop are the same, shiftwidth is prioritized
+		-- tab button inserts softshiftwidth of spaces
+		local padding_len = vim.opt_local.shiftwidth:get() or vim.opt_local.tabstop:get() or -1
+		padding_len = (padding_len > 0) and (padding_len - 1) or (0)
+		tab = tabchar .. empty
+		leadmultispace = (padding_len == 0) and (indent) or (indent .. string.rep(spacing, padding_len))
+	else
+		-- tab is spawning when there are tabstop of spaces
+		-- single indent level is shiftwidth
+		-- tab button inserts softwhiftwidth of nonleading spaces
+		--tab = (padding_len == 0) and (indent) or (indent .. empty)
+		tab = indent .. empty
+		leadmultispace = spacing
+	end
+  --===========
+  vim.opt_local.showbreak = block --"▬"--"╪"
+  vim.opt_local.fillchars = {
+    lastline = block,
+    eob = block,
+  }
+  vim.opt_local.list = true
+  vim.opt_local.listchars = {
+    eol="↲",
+    tab=tab,
+    nbsp="␣",
+    extends=block,
+    precedes=block,
+    trail=focus,
+    space=empty,
+    multispace=focus,
+    leadmultispace=leadmultispace,
+  }
+end
+vim.opt.autoindent = true
+vim.opt.smartindent = false
+vim.opt.smarttab = false
+vim.opt.expandtab = false
+vim.opt.shiftwidth = 4
+vim.opt.tabstop = 4
+vim.opt.softtabstop = 4
+vim.g.listchars_update()
+local indent_group = augroup("filetype_indent")
+vim.api.nvim_create_autocmd("FileType", {
+  group = indent_group,
+  pattern = {
+    "html",
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "json",
+    "jsonc",
+    "css",
+  },
+  callback = function()
+    vim.opt_local.autoindent = false
+    vim.opt_local.expandtab = true
+    vim.opt_local.shiftwidth = 2
+    vim.opt_local.tabstop = 2
+    vim.opt_local.softtabstop = 2
+    vim.g.listchars_update()
+  end,
+})
+vim.api.nvim_create_autocmd("FileType", {
+  group = indent_group,
+  pattern = {
+    "rust",
+  },
+  callback = function()
+    vim.opt_local.autoindent = false
+    vim.opt_local.expandtab = true
+    vim.opt_local.shiftwidth = 4
+    vim.opt_local.tabstop = 4
+    vim.opt_local.softtabstop = 4
+    vim.g.listchars_update()
+  end,
+})
+vim.api.nvim_create_autocmd("FileType", {
+  group = indent_group,
+  pattern = {
+    "Makefile",
+    "c",
+    "cpp",
+    "cs",
+  },
+  callback = function()
+    vim.opt_local.autoindent = false
+    vim.opt_local.expandtab = false
+    vim.opt_local.shiftwidth = 4
+    vim.opt_local.tabstop = 4
+    vim.opt_local.softtabstop = 4
+    vim.g.listchars_update()
+  end,
+})
+
 local apply_default_keymaps = function(event)
   local bufnr = event.buf
   local command = vim.api.nvim_buf_create_user_command
@@ -142,7 +253,10 @@ M.spawn_on_attach = function(config)
       -- Enables "go to definition", <C-]> and other tag commands
       vim.api.nvim_set_option_value("tagfunc", "v:lua.vim.lsp.tagfunc", { buf = bufnr })
     end
-    --[[if not disable.completion and client.server_capabilities.completionProvider then
+    if disable.completion then
+      client.server_capabilities.completionProvider = false
+    end
+    --[[elseif client.server_capabilities.completionProvider then
       -- Enables (manual) omni mode competion with <C-X><C-O> in Insert mode. For autocompletion, an autocompletion plugin is required
       vim.api.nvim_set_option_value("omnifunc", "v:lua.vim.lsp.omnifunc", { buf = bufnr })
     end]]

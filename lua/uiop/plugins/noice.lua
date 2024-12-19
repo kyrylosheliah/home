@@ -1,9 +1,24 @@
 return {
+
+  {
   "folke/noice.nvim",
   event = "VeryLazy",
   dependencies = {
     "MunifTanjim/nui.nvim",
     "j-hui/fidget.nvim",
+	  {
+		"nvim-treesitter/nvim-treesitter",
+		opts = {
+		  ensure_installed = {
+			"vim",
+			"regex",
+			"lua",
+			"bash",
+			"markdown",
+			"markdown_inline",
+		  },
+		},
+	  },
   },
   opts = {
     cmdline = {
@@ -26,4 +41,6 @@ return {
       lsp_doc_border = false, -- add a border to hover docs and signature help
     },
   },
+},
+
 }

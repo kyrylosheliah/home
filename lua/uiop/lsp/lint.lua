@@ -1,27 +1,10 @@
 return {
 
   {
-    "WhoIsSethDaniel/mason-tool-installer.nvim",
-    dependencies = {
-      "williamboman/mason.nvim",
-      "williamboman/mason-lspconfig.nvim",
-    },
-    opts = {
-      ensure_installed = {
-        -- PYTHON
-        "ruff",
-        "debugpy",
-        "black",
-        "isort",
-        -- RUST
-        "codelldb",
-        --"rustfmt", -- deprecated, install via rustup
-      },
-    },
-  },
-
-  {
     "mfussenegger/nvim-lint",
+    dependencies = {
+      "WhoIsSethDaniel/mason-tool-installer.nvim",
+    },
     --[[opts = {
       linters_by_ft = {
         --markdown = { "markdownlint" },

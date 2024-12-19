@@ -1,3 +1,17 @@
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "python",
+	callback = function()
+		vim.opt_local.autoindent = false
+		-- pep8
+		vim.opt_local.expandtab = true
+		vim.opt_local.shiftwidth = 4
+		vim.opt_local.tabstop = 4
+		vim.opt_local.softtabstop = 4
+		vim.g.listchars_update()
+	end,
+	group = vim.api.nvim_create_augroup("python indent", { clear = true }),
+})
+
 return {
 
   {
@@ -52,6 +66,8 @@ return {
             on_attach = lsp.spawn_on_attach({
               disable = {
                 hover = true,
+                definition = true,
+                completion = true,
               },
             }),
             root_dir = lsp.common_root_dir,
@@ -103,34 +119,30 @@ return {
       },
       handlers = {
         python = function(config)
-          config.adapters = {
-            python = {
-              type = "executable",
-              command = vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/bin/python",
-              args = { "-m", "debugpy.adapter" },
-            },
+          config.adapters.python = {
+            type = "executable",
+            command = vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/bin/python",
+            args = { "-m", "debugpy.adapter" },
           }
-          config.configurations = {
-            python = {
-              {
-                type = "python",
-                request = "launch",
-                name = "Launch",
-                program = function()
-                  return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-                end,
-                pythonPath = function()
-                  local venv_path = os.getenv("VIRTUAL_ENV")
-                  if venv_path then
-                    return venv_path .. "/bin/python"
-                  end
-                  if vim.fn.executable(vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/bin/python") == 1 then
-                    return vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/bin/python"
-                  else
-                    return "python"
-                  end
+          config.configurations.python = {
+            {
+              type = "python",
+              request = "launch",
+              name = "Launch",
+              program = function()
+                return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+              end,
+              pythonPath = function()
+                local venv_path = os.getenv("VIRTUAL_ENV")
+                if venv_path then
+                  return venv_path .. "/bin/python"
                 end
-              },
+                if vim.fn.executable(vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/bin/python") == 1 then
+                  return vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/bin/python"
+                else
+                  return "python"
+                end
+              end
             },
           }
         end,

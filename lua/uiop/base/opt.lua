@@ -60,7 +60,6 @@ opt.smartcase = true
 
 opt.linebreak = false
 opt.breakindent = false
-opt.showbreak = "↳"
 opt.wrap = true
 opt.termguicolors = true -- Enable 24-bit RGB colors
 opt.laststatus = 2 -- Set global statusline
@@ -84,101 +83,9 @@ opt.updatetime = 300
 -- Disable nvim intro
 --opt.shortmess:append("sI")
 
-opt.fillchars = {
-  --stl = "█",
-  --stlnc = "█",
-  --lastline = "█",
-  lastline = "↳",
-}
-
 local function augroup(name)
   return vim.api.nvim_create_augroup(name, { clear = true })
 end
-
-local indent_group = augroup("filetype_indent")
--- ↲ ↵ ↴ ▏ ␣ · ╎ │
-opt.list = true
-local eol = "↲"
-local tab = "│ "
-local trail = "·"
-local nbsp = "␣"
-local space = "·"
-  --multispace = "│···",
-  --extends = "▶",
-  --precedes = "◀",
-local two_space_listchars = {
-  eol=eol, tab=tab, trail=trail, nbsp=nbsp, space=space,
-  leadmultispace = "│·",
-}
-local four_space_listchars = {
-  eol=eol, tab=tab, trail=trail, nbsp=nbsp, space=space,
-  leadmultispace = "│···",
-}
-local tab_listchars = {
-  eol=eol, tab=tab, trail=trail, nbsp=nbsp, space=space,
-}
-opt.listchars = tab_listchars
-opt.autoindent = true
-opt.smartindent = false
-opt.smarttab = false
-opt.expandtab = false
-opt.shiftwidth = 4
-opt.tabstop = 4
-opt.softtabstop = 4
-vim.api.nvim_create_autocmd("FileType", {
-  group = indent_group,
-  pattern = {
-    "html",
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact",
-    "json",
-    "jsonc",
-    "css",
-    "lua",
-  },
-  callback = function()
-    opt.listchars = two_space_listchars
-    vim.opt_local.autoindent = false
-    vim.opt_local.expandtab = true
-    vim.opt_local.shiftwidth = 2
-    vim.opt_local.tabstop = 2
-    vim.opt_local.softtabstop = 2
-  end,
-})
-vim.api.nvim_create_autocmd("FileType", {
-  group = indent_group,
-  pattern = {
-    "rust",
-    "python",
-  },
-  callback = function()
-    opt.listchars = four_space_listchars
-    vim.opt_local.autoindent = false
-    vim.opt_local.expandtab = true
-    vim.opt_local.shiftwidth = 4
-    vim.opt_local.tabstop = 4
-    vim.opt_local.softtabstop = 4
-  end,
-})
-vim.api.nvim_create_autocmd("FileType", {
-  group = indent_group,
-  pattern = {
-    "Makefile",
-    "c",
-    "cpp",
-    "cs",
-  },
-  callback = function()
-    opt.listchars = tab_listchars
-    vim.opt_local.autoindent = false
-    vim.opt_local.expandtab = false
-    vim.opt_local.shiftwidth = 4
-    vim.opt_local.tabstop = 4
-    vim.opt_local.softtabstop = 4
-  end,
-})
 
 -- Check if we need to reload the file when it changed
 vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
@@ -214,7 +121,7 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 })
 
 -- Auto create dir when saving a file, in case some intermediate directory does not exist
---[[vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   group = augroup("auto_create_dir"),
   callback = function(event)
     if event.match:match("^%w%w+:[\\/][\\/]") then
@@ -223,4 +130,4 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
     local file = vim.uv.fs_realpath(event.match) or event.match
     vim.fn.mkdir(vim.fn.fnamemodify(file, ":p:h"), "p")
   end,
-})]]
+})
