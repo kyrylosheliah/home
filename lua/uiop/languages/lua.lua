@@ -1,16 +1,3 @@
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = "lua",
-	callback = function()
-		vim.opt_local.autoindent = false
-		vim.opt_local.expandtab = false
-		vim.opt_local.shiftwidth = 2
-		vim.opt_local.tabstop = 2
-		vim.opt_local.softtabstop = 2
-		vim.g.listchars_update()
-	end,
-	group = vim.api.nvim_create_augroup("lua indent", { clear = true }),
-})
-
 return {
 
   {
@@ -35,7 +22,9 @@ return {
           local lsp = require(vim.g.username .. ".base.lsp")
           require("lspconfig").lua_ls.setup({
             capabilities = lsp.spawn_common_capabilities(),
-            on_attach = lsp.spawn_on_attach(),
+            on_attach = lsp.spawn_on_attach({
+							apply_indent = lsp.apply_narrow_tab_indent,
+						}),
             root_dir = lsp.common_root_dir,
             filetypes = {
               "lua",

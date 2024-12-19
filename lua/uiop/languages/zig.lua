@@ -21,7 +21,9 @@ return {
           local lsp = require(vim.g.username .. ".base.lsp")
           require("lspconfig").zls.setup({
             capabilities = lsp.spawn_common_capabilities(),
-            on_attach = lsp.spawn_on_attach(),
+            on_attach = lsp.spawn_on_attach({
+							apply_indent = lsp.apply_two_space_indent,
+						}),
             root_dir = lsp.common_root_dir,
             filetypes = {
               "zig",

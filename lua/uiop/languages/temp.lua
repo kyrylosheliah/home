@@ -1,6 +1,19 @@
 if true then return {} end
 
 
+    --[[
+    "html",
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "css",
+    "Makefile",
+    "c",
+    "cpp",
+    "cs",
+]]
+
 
 M.get_cpp_capabilities = function()
     local capabilities = vim.lsp.protocol.make_client_capabilities()

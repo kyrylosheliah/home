@@ -23,55 +23,7 @@ vim.diagnostic.config({
   },
 })
 
-local function augroup(name)
-  return vim.api.nvim_create_augroup(name, { clear = true })
-end
-
-vim.g.listchars_update = function()
--- ↳ ↲ ↵ ↴ ▏ ␣ · ╎ │ ▶ ◀
-  local spacing = "·"
-  local tabchar = "↹"
-  local empty = " "
-  local indent = "│"
-  local block = "█"
-  local focus = "×"
-  --================
-  local tab = ""
-  local leadmultispace = ""
-	if vim.opt_local.expandtab:get() == true then
-		-- shiftwidth and tabstop are the same, shiftwidth is prioritized
-		-- tab button inserts softshiftwidth of spaces
-		local padding_len = vim.opt_local.shiftwidth:get() or vim.opt_local.tabstop:get() or -1
-		padding_len = (padding_len > 0) and (padding_len - 1) or (0)
-		tab = tabchar .. empty
-		leadmultispace = (padding_len == 0) and (indent) or (indent .. string.rep(spacing, padding_len))
-	else
-		-- tab is spawning when there are tabstop of spaces
-		-- single indent level is shiftwidth
-		-- tab button inserts softwhiftwidth of nonleading spaces
-		--tab = (padding_len == 0) and (indent) or (indent .. empty)
-		tab = indent .. empty
-		leadmultispace = spacing
-	end
-  --===========
-  vim.opt_local.showbreak = block --"▬"--"╪"
-  vim.opt_local.fillchars = {
-    lastline = block,
-    eob = block,
-  }
-  vim.opt_local.list = true
-  vim.opt_local.listchars = {
-    eol="↲",
-    tab=tab,
-    nbsp="␣",
-    extends=block,
-    precedes=block,
-    trail=focus,
-    space=empty,
-    multispace=focus,
-    leadmultispace=leadmultispace,
-  }
-end
+-- default indent
 vim.opt.autoindent = true
 vim.opt.smartindent = false
 vim.opt.smarttab = false
@@ -79,60 +31,36 @@ vim.opt.expandtab = false
 vim.opt.shiftwidth = 4
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
-vim.g.listchars_update()
-local indent_group = augroup("filetype_indent")
-vim.api.nvim_create_autocmd("FileType", {
-  group = indent_group,
-  pattern = {
-    "html",
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact",
-    "json",
-    "jsonc",
-    "css",
-  },
-  callback = function()
-    vim.opt_local.autoindent = false
-    vim.opt_local.expandtab = true
-    vim.opt_local.shiftwidth = 2
-    vim.opt_local.tabstop = 2
-    vim.opt_local.softtabstop = 2
-    vim.g.listchars_update()
-  end,
-})
-vim.api.nvim_create_autocmd("FileType", {
-  group = indent_group,
-  pattern = {
-    "rust",
-  },
-  callback = function()
-    vim.opt_local.autoindent = false
-    vim.opt_local.expandtab = true
-    vim.opt_local.shiftwidth = 4
-    vim.opt_local.tabstop = 4
-    vim.opt_local.softtabstop = 4
-    vim.g.listchars_update()
-  end,
-})
-vim.api.nvim_create_autocmd("FileType", {
-  group = indent_group,
-  pattern = {
-    "Makefile",
-    "c",
-    "cpp",
-    "cs",
-  },
-  callback = function()
-    vim.opt_local.autoindent = false
-    vim.opt_local.expandtab = false
-    vim.opt_local.shiftwidth = 4
-    vim.opt_local.tabstop = 4
-    vim.opt_local.softtabstop = 4
-    vim.g.listchars_update()
-  end,
-})
+
+-- ↳ ↲ ↵ ↴ ▏ ␣ · ╎ │ ▶ ◀
+local tabchar = "↹"
+local spacing = "·"
+local empty = " "
+local indent = "│"
+local block = "█"
+local focus = "×"
+vim.opt.showbreak = block
+vim.opt.fillchars = {
+	lastline = block,
+	eob = block,
+}
+vim.opt.list = true
+local function create_listchars(tab, leadmultispace)
+	return {
+		eol = "↲",
+		tab = tab,
+		nbsp = "␣",
+		extends = block,
+		precedes = block,
+		trail = focus,
+		space = empty,
+		multispace = focus,
+		leadmultispace = leadmultispace,
+	}
+end
+vim.opt.listchars = create_listchars(
+	indent .. empty,
+	indent .. string.rep(spacing, 3))
 
 local apply_default_keymaps = function(event)
   local bufnr = event.buf
@@ -237,6 +165,61 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 M = {}
 
+M.apply_narrow_tab_indent = function()
+	vim.opt_local.autoindent = false
+	vim.opt_local.expandtab = false
+	vim.opt_local.shiftwidth = 2
+	vim.opt_local.tabstop = 2
+	vim.opt_local.softtabstop = 2
+	vim.opt_local.listchars = create_listchars(
+		indent .. empty,
+		spacing)
+end
+
+M.apply_tab_indent = function()
+	vim.opt_local.autoindent = false
+	vim.opt_local.expandtab = false
+	vim.opt_local.shiftwidth = 4
+	vim.opt_local.tabstop = 4
+	vim.opt_local.softtabstop = 4
+	vim.opt_local.listchars = create_listchars(
+		indent .. empty,
+		spacing)
+end
+
+M.apply_wide_tab_indent = function()
+	vim.opt_local.autoindent = false
+	vim.opt_local.expandtab = false
+	vim.opt_local.shiftwidth = 8
+	vim.opt_local.tabstop = 8
+	vim.opt_local.softtabstop = 8
+	vim.opt_local.listchars = create_listchars(
+		indent .. empty,
+		spacing)
+end
+
+M.apply_two_space_indent = function()
+	vim.opt_local.autoindent = false
+	vim.opt_local.expandtab = true
+	vim.opt_local.shiftwidth = 2
+	vim.opt_local.tabstop = 2
+	vim.opt_local.softtabstop = 2
+	vim.opt_local.listchars = create_listchars(
+		tabchar .. empty,
+		indent .. spacing)
+end
+
+M.apply_four_space_indent = function()
+	vim.opt_local.autoindent = false
+	vim.opt_local.expandtab = true
+	vim.opt_local.shiftwidth = 4
+	vim.opt_local.tabstop = 4
+	vim.opt_local.softtabstop = 4
+	vim.opt_local.listchars = create_listchars(
+		tabchar .. empty,
+		indent .. string.rep(spacing, 3))
+end
+
 M.spawn_common_capabilities = function()
   local capabilities = vim.lsp.protocol.make_client_capabilities()
   capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
@@ -244,11 +227,16 @@ M.spawn_common_capabilities = function()
 end
 
 M.spawn_on_attach = function(config)
-  local disable = config and (config.disable == nil and {} or config.disable) or {}
+  config = config or {}
+  local disable = config.disable == nil and {} or config.disable
+	local apply_indent = config.apply_indent
   return function(client, bufnr)
     if disable.hover and not client.server_capabilities.hoverProvider then
       client.server_capabilities.hoverProvider = false
     end
+		if apply_indent ~= nil then
+			apply_indent()
+		end
     if not disable.definition and client.server_capabilities.definitionProvider then
       -- Enables "go to definition", <C-]> and other tag commands
       vim.api.nvim_set_option_value("tagfunc", "v:lua.vim.lsp.tagfunc", { buf = bufnr })

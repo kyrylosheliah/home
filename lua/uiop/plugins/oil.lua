@@ -33,9 +33,18 @@ return {
       local plugin = require("oil-vcs-status")
       local status_const = require("oil-vcs-status.constant.status")
       local StatusType = status_const.StatusType
-      require("oil-vcs-status").setup({
+      require("oil-vcs-status").setup({})
 
-      })
-    end,
+			vim.api.nvim_create_autocmd({ "FileType" }, {
+				group = augroup("conceal_enforce"),
+				pattern = {
+					-- Remove conceal for oil file browser
+					"oil",
+				},
+				callback = function()
+					vim.opt_local.conceallevel = 0
+				end,
+			})
+		end,
   },
 }

@@ -1,17 +1,3 @@
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = "python",
-	callback = function()
-		vim.opt_local.autoindent = false
-		-- pep8
-		vim.opt_local.expandtab = true
-		vim.opt_local.shiftwidth = 4
-		vim.opt_local.tabstop = 4
-		vim.opt_local.softtabstop = 4
-		vim.g.listchars_update()
-	end,
-	group = vim.api.nvim_create_augroup("python indent", { clear = true }),
-})
-
 return {
 
   {
@@ -41,7 +27,9 @@ return {
           local lsp = require(vim.g.username .. ".base.lsp")
           require("lspconfig").pyright.setup({
             capabilities = lsp.spawn_common_capabilities(),
-            on_attach = lsp.spawn_on_attach(),
+            on_attach = lsp.spawn_on_attach({
+							apply_indent = lsp.apply_four_space_indent,
+						}),
             root_dir = lsp.common_root_dir,
             filetypes = {
               "python",

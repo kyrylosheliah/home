@@ -105,21 +105,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
-vim.api.nvim_create_autocmd({ "FileType" }, {
-  group = augroup("conceal_enforce"),
-  pattern = {
--- Remove conceal for oil file browser
-    "oil",
--- Fix conceallevel for json files
-    "json",
-    "jsonc",
-    "json5",
-  },
-  callback = function()
-    vim.opt_local.conceallevel = 0
-  end,
-})
-
 -- Auto create dir when saving a file, in case some intermediate directory does not exist
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   group = augroup("auto_create_dir"),
