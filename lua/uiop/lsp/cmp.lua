@@ -1,6 +1,17 @@
 return {
 
   {
+    "folke/lazydev.nvim",
+    ft = "lua", -- only load on lua files
+    opts = {
+      library = {
+        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+        { path = "wezterm-types", mods = { "wezterm" } },
+      },
+    },
+  },
+
+  {
     'hrsh7th/nvim-cmp',
     event = 'InsertEnter',
     dependencies = {
@@ -9,9 +20,10 @@ return {
       'hrsh7th/cmp-cmdline',
       "hrsh7th/cmp-nvim-lua",
       "hrsh7th/cmp-nvim-lsp",
-      --"hrsh7th/cmp-nvim-lsp-signature-help",
+      "hrsh7th/cmp-nvim-lsp-signature-help",
       --'hrsh7th/cmp-calc',
       --'hrsh7th/cmp-emoji',
+      "folke/lazydev.nvim",
       {
         enabled = false,
         "Exafunction/codeium.vim",
@@ -80,10 +92,14 @@ return {
             auto_open = false,
           },
         },
-        --[[window = {
-          completion = cmp.config.window.bordered(),
-          documentation = cmp.config.window.bordered(),
-        },]]
+        window = {
+          --completion = cmp.config.window.bordered(),
+          --documentation = cmp.config.window.bordered(),
+          documentation = {
+            border = nil,
+            zindex = 5,
+          },
+        },
         mapping = mapping,
         cmp.setup.cmdline({ "/", "?" }, {
           mapping = mapping,
@@ -99,7 +115,8 @@ return {
           }),
         }),
         sources = {
-          --{ name = 'nvim_lsp_signature_help', max_item_count = 5 },
+          { name = "lazydev", max_item_count = 5 },
+          { name = 'nvim_lsp_signature_help', max_item_count = 5 },
           { name = 'nvim_lsp', max_item_count = 5 },
           { name = "buffer", max_item_count = 5 },
           { name = "path", max_item_count = 5 },

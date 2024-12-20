@@ -5,7 +5,6 @@ vim.g.debug = true
 vim.g.transparent = true
 --vim.g.highlight_table_name = "visual_studio"
 vim.g.highlight_table_name = "custom"
---vim.g.highlight_table_name = "mix"
 vim.o.background = 'dark'
 
 local M = {}

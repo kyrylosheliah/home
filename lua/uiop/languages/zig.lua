@@ -22,8 +22,8 @@ return {
           require("lspconfig").zls.setup({
             capabilities = lsp.spawn_common_capabilities(),
             on_attach = lsp.spawn_on_attach({
-							apply_indent = lsp.apply_two_space_indent,
-						}),
+              apply_indent = lsp.apply_indent(true, 4),
+            }),
             root_dir = lsp.common_root_dir,
             filetypes = {
               "zig",
@@ -46,19 +46,12 @@ return {
     },
   },
 
-  --[[
   {
     "jay-babu/mason-nvim-dap.nvim",
     opts = {
       ensure_installed = {
-        --"nlua", -- isn't there, you know...
+        "codelldb",
       },
-    },
-  },
-
-  {
-    "mfussenegger/nvim-dap",
-    opts = {
       adapters = {
         nlua = function(callback, config)
           callback({ type = "server", host = config.host, port = config.port })
@@ -90,5 +83,5 @@ return {
       },
     },
   },
-  ]]
+
 }

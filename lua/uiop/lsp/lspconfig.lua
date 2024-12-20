@@ -1,4 +1,3 @@
-
 return {
 
   {
@@ -21,17 +20,15 @@ return {
       },
       handlers = {
         function(server_name) -- default handler
-          local lsp = require(vim.g.username .. ".base.lsp").lspconfig_default_server_options
+          local lsp = require(vim.g.username .. ".base.lsp")
           require("lspconfig")[server_name].setup({
-            capabilities = lsp.capabilities,
-            on_attach = lsp.on_attach,
+            capabilities = lsp.spawn_common_capabilities(),
+            on_attach = lsp.spawn_on_attach(),
             --[[flags = {
               debounce_text_changes = 150,
             },]]
             --autostart = true,
-            --[[root_dir = function(fname)
-              return vim.fn.getcwd()
-            end,]]
+            root_dir = lsp.common_root_dir,
           })
         end,
       },

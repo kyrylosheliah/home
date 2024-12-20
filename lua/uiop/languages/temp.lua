@@ -47,9 +47,19 @@ end
 
 
 
+-- C++ only
 
-
-
+    if not disable.signature_help  then
+      require("lsp-overloads").setup(client, {
+        keymaps = {
+          next_signature = "<A-j>",
+          previous_signature = "<A-k>",
+          next_parameter = "<A-l>",
+          previous_parameter = "<A-h>",
+          close_signature = "<A-n>"
+        },
+      })
+    end
 
 
 

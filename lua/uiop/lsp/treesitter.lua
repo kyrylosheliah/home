@@ -1,4 +1,5 @@
 return {
+
   {
     "nvim-treesitter/nvim-treesitter",
     version = false, -- last release is way too old and doesn't work on Windows
@@ -30,9 +31,9 @@ return {
         enable = true,
         keymaps = {
           init_selection = "<C-i>",
-          node_incremental = "<C-i>",
-          scope_incremental = false,
-          node_decremental = "<C-I>",
+          node_incremental = "<C-k>",
+          scope_incremental = "<C-l>",
+          node_decremental = "<C-j>",
         },
       },
     },

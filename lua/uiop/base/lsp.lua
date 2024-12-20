@@ -41,26 +41,23 @@ local block = "█"
 local focus = "×"
 vim.opt.showbreak = block
 vim.opt.fillchars = {
-	lastline = block,
-	eob = block,
+  lastline = block,
+  eob = block,
 }
 vim.opt.list = true
 local function create_listchars(tab, leadmultispace)
-	return {
-		eol = "↲",
-		tab = tab,
-		nbsp = "␣",
-		extends = block,
-		precedes = block,
-		trail = focus,
-		space = empty,
-		multispace = focus,
-		leadmultispace = leadmultispace,
-	}
+  return {
+    eol = "↲",
+    tab = tab,
+    nbsp = "␣",
+    extends = block,
+    precedes = block,
+    trail = focus,
+    space = empty,
+    multispace = spacing,
+    leadmultispace = leadmultispace,
+  }
 end
-vim.opt.listchars = create_listchars(
-	indent .. empty,
-	indent .. string.rep(spacing, 3))
 
 local apply_default_keymaps = function(event)
   local bufnr = event.buf
@@ -165,60 +162,37 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 M = {}
 
-M.apply_narrow_tab_indent = function()
-	vim.opt_local.autoindent = false
-	vim.opt_local.expandtab = false
-	vim.opt_local.shiftwidth = 2
-	vim.opt_local.tabstop = 2
-	vim.opt_local.softtabstop = 2
-	vim.opt_local.listchars = create_listchars(
-		indent .. empty,
-		spacing)
+--[[require("editorconfig").properties.indent_size = function(bufnr, val, opts)
+  local padding_len = val - 1
+  local tab = indent .. empty
+  local leadmultispace = indent .. string.rep(spacing, padding_len)
+  vim.opt_local.listchars = create_listchars(tab, leadmultispace)
+end]]
+
+M.apply_indent = function(space_else_tab, space_count)
+  return function()
+    --local editorconfig_exists = vim.fn.filereadable(vim.fn.getcwd() .. "/.editorconfig")
+    local editorconfig = vim.b.editorconfig
+    local editorconfig_exists = editorconfig ~= nil and editorconfig ~= false
+    local padding_len = 0
+    if editorconfig_exists == true then
+      space_else_tab = editorconfig.indent_style == "space"
+      padding_len = editorconfig.indent_size - 1
+    else
+      padding_len = space_count - 1
+      vim.opt_local.autoindent = false
+      vim.opt_local.expandtab = space_else_tab
+      vim.opt_local.shiftwidth = space_count
+      vim.opt_local.tabstop = space_count
+      vim.opt_local.softtabstop = space_count
+    end
+    local tab = (space_else_tab and tabchar or indent) .. empty
+    local leadmultispace = indent .. string.rep(spacing, padding_len)
+    vim.opt_local.listchars = create_listchars(tab, leadmultispace)
+  end
 end
 
-M.apply_tab_indent = function()
-	vim.opt_local.autoindent = false
-	vim.opt_local.expandtab = false
-	vim.opt_local.shiftwidth = 4
-	vim.opt_local.tabstop = 4
-	vim.opt_local.softtabstop = 4
-	vim.opt_local.listchars = create_listchars(
-		indent .. empty,
-		spacing)
-end
-
-M.apply_wide_tab_indent = function()
-	vim.opt_local.autoindent = false
-	vim.opt_local.expandtab = false
-	vim.opt_local.shiftwidth = 8
-	vim.opt_local.tabstop = 8
-	vim.opt_local.softtabstop = 8
-	vim.opt_local.listchars = create_listchars(
-		indent .. empty,
-		spacing)
-end
-
-M.apply_two_space_indent = function()
-	vim.opt_local.autoindent = false
-	vim.opt_local.expandtab = true
-	vim.opt_local.shiftwidth = 2
-	vim.opt_local.tabstop = 2
-	vim.opt_local.softtabstop = 2
-	vim.opt_local.listchars = create_listchars(
-		tabchar .. empty,
-		indent .. spacing)
-end
-
-M.apply_four_space_indent = function()
-	vim.opt_local.autoindent = false
-	vim.opt_local.expandtab = true
-	vim.opt_local.shiftwidth = 4
-	vim.opt_local.tabstop = 4
-	vim.opt_local.softtabstop = 4
-	vim.opt_local.listchars = create_listchars(
-		tabchar .. empty,
-		indent .. string.rep(spacing, 3))
-end
+M.apply_indent(false, 4)
 
 M.spawn_common_capabilities = function()
   local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -234,9 +208,9 @@ M.spawn_on_attach = function(config)
     if disable.hover and not client.server_capabilities.hoverProvider then
       client.server_capabilities.hoverProvider = false
     end
-		if apply_indent ~= nil then
-			apply_indent()
-		end
+    if apply_indent ~= nil then
+      apply_indent()
+    end
     if not disable.definition and client.server_capabilities.definitionProvider then
       -- Enables "go to definition", <C-]> and other tag commands
       vim.api.nvim_set_option_value("tagfunc", "v:lua.vim.lsp.tagfunc", { buf = bufnr })
@@ -252,7 +226,7 @@ M.spawn_on_attach = function(config)
       -- Enables LSP formatting with gq
       vim.api.nvim_set_option_value("formatexpr", 'v:lua.require("conform").formatexpr()', { buf = bufnr })
     end
-    if not disable.highlight and client.server_capabilities.documentHighlightProvider then
+    --[[if not disable.highlight and client.server_capabilities.documentHighlightProvider then
       local group = vim.api.nvim_create_augroup("lsp-highlight", { clear = false })
       vim.api.nvim_create_autocmd("CursorHold", {
         buffer = bufnr,
@@ -272,7 +246,7 @@ M.spawn_on_attach = function(config)
           vim.api.nvim_clear_autocmds({ group = group, buffer = event.buf })
         end,
       })
-    end
+    end]]
     if not disable.inlay_hints and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint ~= nil then
       -- vim.lsp.inlay_hint(bufnr, true)
       -- vim.lsp.inlay_hint.enable(bufnr, true)
@@ -282,16 +256,8 @@ M.spawn_on_attach = function(config)
       local navic = require("nvim-navic")
       navic.attach(client, bufnr)
     end]]
-    if not disable.signature_help and client.server_capabilities.signatureHelpProvider then
-      require("lsp-overloads").setup(client, {
-        keymaps = {
-          next_signature = "<A-j>",
-          previous_signature = "<A-k>",
-          next_parameter = "<A-l>",
-          previous_parameter = "<A-h>",
-          close_signature = "<A-n>"
-        },
-      })
+    if disable.signature_help and not client.server_capabilities.signatureHelpProvider then
+      client.server_capabilities.signatureHelpProvider = false
     end
   end
 end
