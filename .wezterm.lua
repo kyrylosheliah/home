@@ -27,7 +27,7 @@ config.term = "xterm-256color" -- Set the terminal type
 config.harfbuzz_features = { 'calt=0' } -- disable font ligatures
 local font_size = 15.0
 config.font_size = font_size
-local font_name = "IosevkaTerm Nerd Font Mono"
+local font_name = "Iosevka Fixed"
 --config.font = wezterm.font(font_name)
 config.font = wezterm.font_with_fallback({
   { family = font_name },
