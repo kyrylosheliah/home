@@ -36,6 +36,7 @@ vim.opt.softtabstop = 4
 local tabchar = "↹"
 local spacing = "·"
 local empty = " "
+local space = "␣"
 local indent = "│"
 local block = "█"
 local focus = "×"
@@ -49,7 +50,7 @@ local function create_listchars(tab, leadmultispace)
   return {
     eol = "↲",
     tab = tab,
-    nbsp = "␣",
+    nbsp = space,
     extends = block,
     precedes = block,
     trail = focus,
@@ -171,11 +172,11 @@ end]]
 
 M.apply_indent = function(space_else_tab, space_count)
   return function()
-    --local editorconfig_exists = vim.fn.filereadable(vim.fn.getcwd() .. "/.editorconfig")
-    local editorconfig = vim.b.editorconfig
-    local editorconfig_exists = editorconfig ~= nil and editorconfig ~= false
+    --local editorconfig_exists = editorconfig ~= nil and editorconfig ~= false
+    local editorconfig_exists = vim.fn.filereadable(vim.fn.getcwd() .. "/.editorconfig")
     local padding_len = 0
     if editorconfig_exists == true then
+      local editorconfig = vim.b.editorconfig
       space_else_tab = editorconfig.indent_style == "space"
       padding_len = editorconfig.indent_size - 1
     else
@@ -186,8 +187,15 @@ M.apply_indent = function(space_else_tab, space_count)
       vim.opt_local.tabstop = space_count
       vim.opt_local.softtabstop = space_count
     end
-    local tab = (space_else_tab and tabchar or indent) .. empty
-    local leadmultispace = indent .. string.rep(spacing, padding_len)
+    local tab = ""
+    local leadmultispace = ""
+    if space_else_tab == true then
+      tab = tabchar .. empty
+      leadmultispace = indent .. string.rep(spacing, padding_len)
+    else
+      tab = indent .. empty
+      leadmultispace = space .. string.rep(spacing, padding_len)
+    end
     vim.opt_local.listchars = create_listchars(tab, leadmultispace)
   end
 end

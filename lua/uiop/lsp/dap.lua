@@ -36,6 +36,11 @@ return {
 
     config = function(_, opts)
 
+      local mason_nvim_dap = require("mason-nvim-dap")
+      if mason_nvim_dap ~= nil then
+        mason_nvim_dap.setup()
+      end
+
       local dap, dapui = require("dap"), require("dapui")
       dap.listeners.before.attach.dapui_config = function()
         dapui.open()
@@ -48,11 +53,6 @@ return {
       end
       dap.listeners.before.event_exited.dapui_config = function()
         dapui.close()
-      end
-
-      local mason_nvim_dap = require("mason-nvim-dap")
-      if mason_nvim_dap ~= nil then
-        mason_nvim_dap.setup()
       end
 
       -- setup dap config by VsCode launch.json file

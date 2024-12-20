@@ -19,13 +19,7 @@ return {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
     },
-    opts = {
-      ensure_installed = {
-        -- RUST
-        --"codelldb",
-        --"rustfmt", -- deprecated, install via rustup
-      },
-    },
+    opts = {},
   },
 
   {
@@ -38,6 +32,7 @@ return {
     opts = {
       handlers = {
         function(config) -- default handler
+          -- all sources with no handler get passed here
           require("mason-nvim-dap").default_setup(config)
         end,
       },

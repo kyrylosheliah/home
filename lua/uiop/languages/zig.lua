@@ -38,6 +38,15 @@ return {
   },
 
   {
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    opts = {
+      ensure_installed = {
+        "codelldb",
+      },
+    },
+  },
+
+  {
     "stevearc/conform.nvim",
     opts = {
       formatters_by_ft = {
@@ -52,34 +61,25 @@ return {
       ensure_installed = {
         "codelldb",
       },
-      adapters = {
-        nlua = function(callback, config)
-          callback({ type = "server", host = config.host, port = config.port })
+      handlers = {
+        zig = function(config)
+          config.adapters = {
+            type = 'executable',
+            command = 'C:\\Program Files\\LLVM\\bin\\lldb-vscode.exe', -- adjust as needed, must be absolute path
+            name = 'lldb'
+          }
+          config.configurations = {
+            {
+              name = 'Launch',
+              type = 'lldb',
+              request = 'launch',
+              program = '${workspaceFolder}/zig-out/bin/zig_hello_world.exe',
+              cwd = '${workspaceFolder}',
+              stopOnEntry = false,
+              args = {},
+            },
+          }
         end,
-      },
-      configurations = {
-        lua = {
-          {
-            type = "nlua",
-            request = "attach",
-            name = "Attach to running Neovim instance",
-            host = function()
-              local value = vim.fn.input("Host [127.0.0.1]: ")
-              if value ~= "" then
-                return value
-              end
-              return "127.0.0.1"
-            end,
-            port = function()
-              local value = tonumber(vim.fn.input("Port: "))
-              assert(value, "Please provide a port number")
-              if value ~= "" then
-                return value
-              end
-              return 8086
-            end,
-          },
-        },
       },
     },
   },
