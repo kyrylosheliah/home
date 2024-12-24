@@ -43,7 +43,7 @@ local focus = "×"
 vim.opt.showbreak = block
 vim.opt.fillchars = {
   lastline = block,
-  eob = block,
+  --eob = block,
 }
 vim.opt.list = true
 local function create_listchars(tab, leadmultispace)
@@ -51,8 +51,8 @@ local function create_listchars(tab, leadmultispace)
     eol = "↲",
     tab = tab,
     nbsp = space,
-    extends = block,
-    precedes = block,
+    --extends = block,
+    --precedes = block,
     trail = focus,
     space = empty,
     multispace = spacing,
@@ -211,7 +211,7 @@ end
 M.spawn_on_attach = function(config)
   config = config or {}
   local disable = config.disable == nil and {} or config.disable
-	local apply_indent = config.apply_indent
+  local apply_indent = config.apply_indent
   return function(client, bufnr)
     if disable.hover and not client.server_capabilities.hoverProvider then
       client.server_capabilities.hoverProvider = false

@@ -137,8 +137,8 @@ local highlight = {
   ["SpellCap"] = { fg = c.yellow }, -- Word that should start with a capital. This will be combined with the highlighting used otherwise.
   ["SpellLocal"] = { fg = c.yellow }, -- Word that is recognized by the spellchecker as one that is used in another region. This will be combined with the highlighting used otherwise.
   ["SpellRare"] = { fg = c.yellow }, -- Word that is recognized by the spellchecker as one that is hardly ever used. spell This will be combined with the highlighting used otherwise.
-  ["StatusLine"] = { fg = c.black, bg = c.white }, -- status line of current window
-  ["StatusLineNC"] = { fg = c.white, bg = c.sub_gray }, -- status lines of not-current windows Note = if this is equal to "StatusLine" Vim will use "^^^" in the status line of the current window.
+  ["StatusLine"] = { fg = c.white, bg = c.sub_gray }, -- status line of current window
+  ["StatusLineNC"] = { fg = c.gray, bg = c.sub_black }, -- status lines of not-current windows Note = if this is equal to "StatusLine" Vim will use "^^^" in the status line of the current window.
   ["StatusLineTerm"] = { fg = c.pure_blue, bg = c.white }, -- status line of current :terminal window
   ["StatusLineTermNC"] = { fg = c.black, bg = c.sub_gray }, -- status line of non-current  =terminal window
   ["TabLine"] = { fg = c.gray }, -- tab pages line, not active tab page label
@@ -146,7 +146,7 @@ local highlight = {
   ["TabLineSel"] = { fg = c.white }, -- tab pages line, active tab page label
   ["Terminal"] = { fg = c.white, bg = c.black }, -- terminal window (see terminal-size-color)
   ["Title"] = { fg = c.green }, -- titles for output from " =set all", ":autocmd" etc.
-  ["Visual"] = { fg = c.white, bg = c.sub_blue, bold = true }, -- Visual mode selection
+  ["Visual"] = { bg = c.sub_blue, bold = true }, -- Visual mode selection
   ["VisualNOS"] = { fg = c.pure_purple, bg = c.sub_blue, bold = true }, -- Visual mode selection when vim is "Not Owning the Selection". Only X11 Gui's gui-x11 and xterm-clipboard supports this.
   ["WarningMsg"] = { fg = c.pure_yellow }, -- warning messages
   ["WildMenu"] = { fg = c.black, bg = c.blue }, -- current match in 'wildmenu' completion
@@ -270,15 +270,15 @@ local highlight = {
   ["@markup.strikethrough"] = { fg = c.gray, strikethrough = true },
 
   -- Diagnostics
-  ["DiagnosticOk"] = { fg = c.green },
-  ["DiagnosticError"] = { fg = c.red },
-  ["DiagnosticWarn"] = { fg = c.yellow },
-  ["DiagnosticInfo"] = { fg = c.blue },
-  ["DiagnosticHint"] = { fg = c.cyan },
-  ["DiagnosticUnderlineError"] = { fg = c.red, undercurl = true },
-  ["DiagnosticUnderlineWarn"] = { fg = c.yellow, undercurl = true },
-  ["DiagnosticUnderlineInfo"] = { fg = c.blue, undercurl = true },
-  ["DiagnosticUnderlineHint"] = { fg = c.cyan, undercurl = true },
+  ["DiagnosticOk"] = { fg = c.pure_green },
+  ["DiagnosticError"] = { fg = c.pure_red },
+  ["DiagnosticWarn"] = { fg = c.pure_yellow },
+  ["DiagnosticInfo"] = { fg = c.pure_blue },
+  ["DiagnosticHint"] = { fg = c.pure_cyan },
+  ["DiagnosticUnderlineError"] = { fg = c.pure_red, undercurl = true },
+  ["DiagnosticUnderlineWarn"] = { fg = c.pure_yellow, undercurl = true },
+  ["DiagnosticUnderlineInfo"] = { fg = c.pure_blue, undercurl = true },
+  ["DiagnosticUnderlineHint"] = { fg = c.pure_cyan, undercurl = true },
 
   -- Neovim's built-in language server client
   ["LspReferenceWrite"] = { bg = c.sub_purple },
