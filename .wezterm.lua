@@ -30,10 +30,19 @@ config.font_size = font_size
 local font_name = "Iosevka Fixed"
 --config.font = wezterm.font(font_name)
 config.font = wezterm.font_with_fallback({
-  { family = font_name },
+  { family = font_name, weight = 300 },
   { family = "Consolas" },
   { family = "Ubuntu" },
 })
+config.font_rules = {
+  {
+    intensity = "Bold", font = wezterm.font_with_fallback({
+      { family = font_name, weight = 600 },
+      { family = "Consolas" },
+      { family = "Ubuntu" },
+    })
+  },
+}
 --config.cell_width = 0.9
 local opacity = 0.5
 config.window_background_opacity = opacity
@@ -45,10 +54,10 @@ config.win32_system_backdrop = "Acrylic"
 --"Tabbed" - enable the Tabbed effect, available on Windows 11 build 22621 and later.
 
 config.window_padding = {
-	left = 0,
-	right = 0,
-	top = 0,
-	bottom = 0,
+  left = 0,
+  right = 0,
+  top = 0,
+  bottom = 0,
 }
 
 -- tabs
@@ -57,12 +66,12 @@ config.use_fancy_tab_bar = false
 config.tab_bar_at_bottom = false
 
 config.inactive_pane_hsb = {
-	saturation = 0.0,
-	brightness = 0.5,
+  saturation = 0.0,
+  brightness = 0.5,
 }
 
 config.window_frame = {
-	font = wezterm.font({ family = font_name, weight = "Regular" }),
+  font = wezterm.font({ family = font_name, weight = 500 }),
   font_size = font_size,
 }
 
@@ -73,162 +82,162 @@ config.default_prog = { "powershell.exe", "-NoLogo" }
 config.initial_cols = 120
 
 -- wezterm.on("gui-startup", function(cmd)
--- 	local args = {}
--- 	if cmd then
--- 		args = cmd.args
--- 	end
+-- local args = {}
+-- if cmd then
+--   args = cmd.args
+-- end
 --
--- 	local tab, pane, window = mux.spawn_window(cmd or {})
--- 	-- window:gui_window():maximize()
--- 	-- window:gui_window():set_position(0, 0)
+--  local tab, pane, window = mux.spawn_window(cmd or {})
+--  -- window:gui_window():maximize()
+--  -- window:gui_window():set_position(0, 0)
 -- end)
 
 -- keymaps
 config.keys = {
-	--[[{
-		key = "E",
-		mods = "CTRL|SHIFT|ALT",
-		action = wezterm.action.EmitEvent("toggle-colorscheme"),
-	},]]
-	{
-		key = "s",
-		mods = "CTRL|ALT",
-		action = wezterm.action.SplitPane({
-			direction = "Right",
-		}),
-	},
-	{
-		key = "S",
-		mods = "CTRL|SHIFT|ALT",
-		action = wezterm.action.SplitPane({
-			direction = "Left",
-		}),
-	},
-	{
-		key = "v",
-		mods = "CTRL|ALT",
-		action = wezterm.action.SplitPane({
-			direction = "Down",
-			size = { Percent = 50 },
-		}),
-	},
-	{
-		key = "V",
-		mods = "CTRL|SHIFT|ALT",
-		action = wezterm.action.SplitPane({
-			direction = "Up",
-			size = { Percent = 50 },
-		}),
-	},
-	{
-		key = 't',
-		mods = 'CTRL|ALT',
-		action = wezterm.action.SpawnTab("CurrentPaneDomain"),
-	},
-	{
-		key = 'q',
-		mods = 'CTRL|ALT',
-		action = wezterm.action.CloseCurrentPane({ confirm = false }),
-	},
-	{ key = "9", mods = "CTRL", action = act.PaneSelect },
-	{ key = "L", mods = "CTRL|SHIFT", action = act.ShowDebugOverlay },
+  --[[{
+    key = "E",
+    mods = "CTRL|SHIFT|ALT",
+    action = wezterm.action.EmitEvent("toggle-colorscheme"),
+  },]]
+  {
+    key = "s",
+    mods = "CTRL|ALT",
+    action = wezterm.action.SplitPane({
+      direction = "Right",
+    }),
+  },
+  {
+    key = "S",
+    mods = "CTRL|SHIFT|ALT",
+    action = wezterm.action.SplitPane({
+      direction = "Left",
+    }),
+  },
+  {
+    key = "v",
+    mods = "CTRL|ALT",
+    action = wezterm.action.SplitPane({
+      direction = "Down",
+      size = { Percent = 50 },
+    }),
+  },
+  {
+    key = "V",
+    mods = "CTRL|SHIFT|ALT",
+    action = wezterm.action.SplitPane({
+      direction = "Up",
+      size = { Percent = 50 },
+    }),
+  },
+  {
+    key = 't',
+    mods = 'CTRL|ALT',
+    action = wezterm.action.SpawnTab("CurrentPaneDomain"),
+  },
+  {
+    key = 'q',
+    mods = 'CTRL|ALT',
+    action = wezterm.action.CloseCurrentPane({ confirm = false }),
+  },
+  { key = "9", mods = "CTRL", action = act.PaneSelect },
+  { key = "L", mods = "CTRL|SHIFT", action = act.ShowDebugOverlay },
 
-	{
-		key = "LeftArrow",
-		mods = "CTRL|ALT",
-		action = act.AdjustPaneSize({ "Left", 1 }),
-	},
-	{
-		key = "DownArrow",
-		mods = "CTRL|ALT",
-		action = act.AdjustPaneSize({ "Down", 1 }),
-	},
-	{
-		key = "UpArrow",
-		mods = "CTRL|ALT",
-		action = act.AdjustPaneSize({ "Up", 1 }),
-	},
-	{
-		key = "RightArrow",
-		mods = "CTRL|ALT",
-		action = act.AdjustPaneSize({ "Right", 1 }),
-	},
+  {
+    key = "LeftArrow",
+    mods = "CTRL|ALT",
+    action = act.AdjustPaneSize({ "Left", 1 }),
+  },
+  {
+    key = "DownArrow",
+    mods = "CTRL|ALT",
+    action = act.AdjustPaneSize({ "Down", 1 }),
+  },
+  {
+    key = "UpArrow",
+    mods = "CTRL|ALT",
+    action = act.AdjustPaneSize({ "Up", 1 }),
+  },
+  {
+    key = "RightArrow",
+    mods = "CTRL|ALT",
+    action = act.AdjustPaneSize({ "Right", 1 }),
+  },
 
   -- Make Page up/down work
-	{ key = 'PageUp', action = wezterm.action.ScrollByPage(-1) },
-	{ key = 'PageDown', action = wezterm.action.ScrollByPage(1) },
+  { key = 'PageUp', action = wezterm.action.ScrollByPage(-1) },
+  { key = 'PageDown', action = wezterm.action.ScrollByPage(1) },
 
-	-- Switch between tabs
-	{
-		key = 'p',
-		mods = 'CTRL|ALT',
-		action = wezterm.action.ActivateTabRelative(-1),
-	},
-	{
-		key = 'n',
-		mods = 'CTRL|ALT',
-		action = wezterm.action.ActivateTabRelative(1),
-	},
+  -- Switch between tabs
+  {
+    key = 'p',
+    mods = 'CTRL|ALT',
+    action = wezterm.action.ActivateTabRelative(-1),
+  },
+  {
+    key = 'n',
+    mods = 'CTRL|ALT',
+    action = wezterm.action.ActivateTabRelative(1),
+  },
 
-	-- Switch between panes
-	{
-		key = 'h',
-		mods = 'CTRL|ALT',
-		action = wezterm.action.ActivatePaneDirection('Left'),
-	},
-	{
-		key = 'l',
-		mods = 'CTRL|ALT',
-		action = wezterm.action.ActivatePaneDirection('Right'),
-	},
-	{
-		key = 'j',
-		mods = 'CTRL|ALT',
-		action = wezterm.action.ActivatePaneDirection('Down'),
-	},
-	{
-		key = 'k',
-		mods = 'CTRL|ALT',
-		action = wezterm.action.ActivatePaneDirection('Up'),
-	},
+  -- Switch between panes
+  {
+    key = 'h',
+    mods = 'CTRL|ALT',
+    action = wezterm.action.ActivatePaneDirection('Left'),
+  },
+  {
+    key = 'l',
+    mods = 'CTRL|ALT',
+    action = wezterm.action.ActivatePaneDirection('Right'),
+  },
+  {
+    key = 'j',
+    mods = 'CTRL|ALT',
+    action = wezterm.action.ActivatePaneDirection('Down'),
+  },
+  {
+    key = 'k',
+    mods = 'CTRL|ALT',
+    action = wezterm.action.ActivatePaneDirection('Up'),
+  },
 
-	-- Case-insensitive search
-	{
-		key = 'F',
-		mods = 'CTRL|SHIFT|ALT',
-		action = wezterm.action.Search({ CaseInSensitiveString = '' }),
-	},
+  -- Case-insensitive search
+  {
+    key = 'F',
+    mods = 'CTRL|SHIFT|ALT',
+    action = wezterm.action.Search({ CaseInSensitiveString = '' }),
+  },
 
-	-- Rename tab title
-	{
-		key = 'r',
-		mods = 'CTRL|ALT',
-		action = wezterm.action.PromptInputLine {
-			description = 'Enter new name for tab',
-			action = wezterm.action_callback(function(window, _, line)
-				-- line will be `nil` if they hit escape without entering anything
-				-- An empty string if they just hit enter
-				-- Or the actual line of text they wrote
-				if line then
-					window:active_tab():set_title(line)
-				end
-			end),
-		},
-	},
+  -- Rename tab title
+  {
+    key = 'r',
+    mods = 'CTRL|ALT',
+    action = wezterm.action.PromptInputLine {
+      description = 'Enter new name for tab',
+      action = wezterm.action_callback(function(window, _, line)
+        -- line will be `nil` if they hit escape without entering anything
+        -- An empty string if they just hit enter
+        -- Or the actual line of text they wrote
+        if line then
+          window:active_tab():set_title(line)
+        end
+      end),
+    },
+  },
 
-	{
-		key = "o",
-		mods = "CMD|ALT",
-		action = wezterm.action_callback(function(window, _)
-			local overrides = window:get_config_overrides() or {}
-			if overrides.window_background_opacity == 1.0 then
-				overrides.window_background_opacity = opacity
-			else
-				overrides.window_background_opacity = 1.0
-			end
-			window:set_config_overrides(overrides)
-		end),
-	},
+  {
+    key = "o",
+    mods = "CMD|ALT",
+    action = wezterm.action_callback(function(window, _)
+      local overrides = window:get_config_overrides() or {}
+      if overrides.window_background_opacity == 1.0 then
+        overrides.window_background_opacity = opacity
+      else
+        overrides.window_background_opacity = 1.0
+      end
+      window:set_config_overrides(overrides)
+    end),
+  },
 }
 
 for i = 1, 8 do
@@ -275,25 +284,25 @@ end
 -- Set tab title to the one that was set via `tab:set_title()`
 -- or fall back to the current working directory as a title
 wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
-	local index = tonumber(tab.tab_index) + 1
-	local custom_title = tab.tab_title
-	local title = ""
-	if custom_title and #custom_title > 0 then
-		title = custom_title
+  local index = tonumber(tab.tab_index) + 1
+  local custom_title = tab.tab_title
+  local title = ""
+  if custom_title and #custom_title > 0 then
+    title = custom_title
   else
     title = current_dir(tab)
-	end
-	return string.format('%s:%s ', index, title)
+  end
+  return string.format('%s:%s ', index, title)
 end)
 
 -- Set window title to the current working directory
 wezterm.on('format-window-title', function(tab, pane, tabs, panes, config)
-	return current_dir(tab)
+  return current_dir(tab)
 end)
 
 wezterm.on('gui-startup', function(cmd)
-	local active_screen = wezterm.gui.screens()["active"]
-	local _, _, window = wezterm.mux.spawn_window(cmd or {})
+  local active_screen = wezterm.gui.screens()["active"]
+  local _, _, window = wezterm.mux.spawn_window(cmd or {})
   -- place on the right half of the screen
   window:gui_window():set_position(active_screen.width / 2, 0)
   window:gui_window():set_inner_size(active_screen.width / 2, active_screen.height)
