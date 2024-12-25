@@ -30,14 +30,14 @@ config.font_size = font_size
 local font_name = "Iosevka Fixed"
 --config.font = wezterm.font(font_name)
 config.font = wezterm.font_with_fallback({
-  { family = font_name, weight = 300 },
+  { family = font_name, weight = 400 },
   { family = "Consolas" },
   { family = "Ubuntu" },
 })
 config.font_rules = {
   {
     intensity = "Bold", font = wezterm.font_with_fallback({
-      { family = font_name, weight = 600 },
+      { family = font_name, weight = 900 },
       { family = "Consolas" },
       { family = "Ubuntu" },
     })
