@@ -146,8 +146,8 @@ local highlight = {
   ["TabLineSel"] = { fg = c.white }, -- tab pages line, active tab page label
   ["Terminal"] = { fg = c.white, bg = c.black }, -- terminal window (see terminal-size-color)
   ["Title"] = { fg = c.green }, -- titles for output from " =set all", ":autocmd" etc.
-  ["Visual"] = { bg = c.sub_blue, bold = true }, -- Visual mode selection
-  ["VisualNOS"] = { fg = c.pure_purple, bg = c.sub_blue, bold = true }, -- Visual mode selection when vim is "Not Owning the Selection". Only X11 Gui's gui-x11 and xterm-clipboard supports this.
+  ["Visual"] = { bg = c.sub_blue }, -- Visual mode selection
+  ["VisualNOS"] = { fg = c.pure_purple, bg = c.sub_blue }, -- Visual mode selection when vim is "Not Owning the Selection". Only X11 Gui's gui-x11 and xterm-clipboard supports this.
   ["WarningMsg"] = { fg = c.pure_yellow }, -- warning messages
   ["WildMenu"] = { fg = c.black, bg = c.blue }, -- current match in 'wildmenu' completion
   ["Winbar"] = { fg = c.white, bg = c.sub_gray }, -- Winbar

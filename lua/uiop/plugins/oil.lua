@@ -1,3 +1,9 @@
+local function is_in_git_repo()
+  return 0 ~= #(vim.fs.find(
+    { '.git' },
+    { limit = 1, type = 'directory', path = "./" }))
+end
+
 return {
   {
     'stevearc/oil.nvim',
@@ -12,9 +18,15 @@ return {
         --"mtime",
       },
       git = {
-        add = function(path) return true end,
-        mv = function(src_path, dest_path) return true end,
-        add = function(path) return true end,
+        add = function(path)
+          return is_in_git_repo()
+        end,
+        mv = function(src_path, dest_path)
+          return is_in_git_repo()
+        end,
+        rm = function(path)
+          return is_in_git_repo()
+        end,
       },
       win_options = {
         signcolumn = "yes:2",
@@ -30,21 +42,10 @@ return {
       "stevearc/oil.nvim",
     },
     setup = function(_)
-      local plugin = require("oil-vcs-status")
+      --[[local vsc_status= require("oil-vcs-status")
       local status_const = require("oil-vcs-status.constant.status")
-      local StatusType = status_const.StatusType
+      local StatusType = status_const.StatusType]]
       require("oil-vcs-status").setup({})
-
-			vim.api.nvim_create_autocmd({ "FileType" }, {
-				group = augroup("conceal_enforce"),
-				pattern = {
-					-- Remove conceal for oil file browser
-					"oil",
-				},
-				callback = function()
-					vim.opt_local.conceallevel = 0
-				end,
-			})
-		end,
+    end,
   },
 }

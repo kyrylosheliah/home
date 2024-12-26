@@ -20,6 +20,16 @@ set({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and Clear hlsea
 
 set("n", "Q", "<nop>") -- unmap
 
+-- Reminder: tab movement
+-- :tabnew
+-- :tabclose
+-- :tabedit {filename}
+-- :tabnext or gt or Ctrl+PageUp
+-- :tabprev or gT or Ctrl+PageDown
+-- :tabfirst, :tablast, :tabrewind
+-- {i}gt
+-- :tabmove {N}, :tabmove +{N}, :tabmove -{N}
+
 -- Move to window using the <ctrl> hjkl keys
 set("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window", remap = true })
 set("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
