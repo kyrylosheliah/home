@@ -78,7 +78,7 @@ config.window_frame = {
 config.window_decorations = "INTEGRATED_BUTTONS | RESIZE"
 --config.window_decorations = "RESIZE" --"NONE | RESIZE"
 --config.window_decorations = "TITLE | RESIZE"
-config.default_prog = { "powershell.exe", "-NoLogo" }
+config.default_prog = { "pwsh.exe", "-NoLogo" }
 config.initial_cols = 120
 
 -- wezterm.on("gui-startup", function(cmd)
