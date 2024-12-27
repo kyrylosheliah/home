@@ -2,9 +2,6 @@
   "[cpp]": {
     "editor.defaultFormatter": "ms-vscode.cpptools"
   },
-  "[csharp]": {
-    "editor.defaultFormatter": "ms-dotnettools.csharp"
-  },
   "[javascript]": {
     "editor.indentSize": 2
   },
@@ -19,9 +16,6 @@
   },
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter"
-  },
-  "[rust]": {
-    "editor.defaultFormatter": "rust-lang.rust-analyzer"
   },
   "[typescript]": {
     "editor.indentSize": 2
@@ -60,6 +54,9 @@
   ],
   "editor.stickyScroll.enabled": false,
   "editor.suggest.insertMode": "insert",
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [],
+  },
   "emmet.includeLanguages": {
     "django-html": "html",
     "javascript": "javascriptreact",
@@ -97,24 +94,20 @@
   "print.colourScheme": "Visual Studio",
   "print.lineNumbers": "off",
   "print.renderMarkdown": true,
-  "python.analysis.extraPaths": [
-    "D:/programs/anaconda3/Lib/site-packages/"
-  ],
   "telemetry.telemetryLevel": "off",
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "typescript.updateImportsOnFileMove.enabled": "always",
   "unocss.autocomplete.maxItems": 10,
   "update.showReleaseNotes": false,
   "window.commandCenter": false,
-  "window.menuBarVisibility": "compact",
+  "window.menuBarVisibility": "visible",
   //"window.restoreWindows": "none",
   "window.title": "${dirty}${separator}${activeEditorLong}${separator}${dirty}",
   "window.titleSeparator": " ",
   "workbench.activityBar.iconClickBehavior": "focus",
-  "workbench.activityBar.location": "top",
+  "workbench.activityBar.location": "hidden",
   "workbench.colorCustomizations": {
     "[Default High Contrast]": {
-      //"editor.background": "#00000030", // BREAKS SELECTION
       "contrastBorder": "#4f4f4f",
       "editorIndentGuide.activeBackground1": "#4f4f4f",
       "editorIndentGuide.activeBackground2": "#4f4f4f",
@@ -131,14 +124,14 @@
       "editorUnnecessaryCode.border": "#4f4f4f",
       "editorWhitespace.foreground": "#4f4f4f",
       "tree.inactiveIndentGuidesStroke": "#4f4f4f",
-      "tree.indentGuidesStroke": "#4f4f4f"
+      "tree.indentGuidesStroke": "#4f4f4f",
     }
   },
   "workbench.editor.editorActionsLocation": "hidden",
   "workbench.editor.showTabs": "none",
   "workbench.iconTheme": null,
   "workbench.layoutControl.enabled": false,
-  "workbench.layoutControl.type": "menu",
+  //"workbench.layoutControl.type": "menu",
   "workbench.sideBar.location": "right",
   "workbench.tree.enableStickyScroll": false,
   "workbench.tree.indent": 15,
@@ -149,5 +142,6 @@
   //"zenMode.hideStatusBar": true // unset in order to user-toggle
   "zenMode.restore": false,
   "zenMode.showTabs": "none",
-  "files.autoSave": "afterDelay"
+  "files.autoSave": "afterDelay",
+  "workbench.colorTheme": "Default High Contrast"
 }
