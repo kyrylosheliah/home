@@ -40,7 +40,32 @@ return {
         mason_nvim_dap.setup()
       end
 
-      local dap, dapui = require("dap"), require("dapui")
+      local dapui = require("dapui")
+      dapui.setup()
+
+      local dap = require("dap")
+      for k, v in pairs(opts.adapters) do
+        dap.adapters[k] = v
+      end
+      for k, v in pairs(opts.configurations) do
+        dap.configurations[k] = v
+      end
+
+      local dap_virtual_text = require("nvim-dap-virtual-text")
+      dap_virtual_text.setup({
+        display_callback = function(variable)
+          local name = string.lower(variable.name)
+          local value = string.lower(variable.value)
+          if name:match("secret") or name:match("api") or value:match("secret") or value:match("api") then
+            return "*****"
+          end
+          if #variable.value > 15 then
+            return " " .. string.sub(variable.value, 1, 15) .. " ... "
+          end
+          return " " .. variable.value
+        end,
+      })
+
       dap.listeners.before.attach.dapui_config = function()
         dapui.open()
       end

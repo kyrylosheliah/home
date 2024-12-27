@@ -147,9 +147,9 @@ return {
   },]]
 
   {
-    "mfussenegger/nvim-dap",
+    "mfussenegger/nvim-dap-python",
     dependencies = {
-      "mfussenegger/nvim-dap-python",
+      "mfussenegger/nvim-dap",
       -- stylua: ignore
       keys = {
         { "<leader>dPt", function() require('dap-python').test_method() end, desc = "Debug Method", ft = "python" },
