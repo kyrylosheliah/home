@@ -1,101 +1,15 @@
 // Place your key bindings in this file to override the defaults
 [
-  /*{
-    "command": "expand_region",
-    "key": "ctrl+=",
-    "when": "editorTextFocus"
-  },
-  {
-    "command": "undo_expand_region",
-    "key": "ctrl+-",
-    "when": "editorTextFocus"
-  },
-  //#########
   {
     "command": "workbench.action.toggleStatusbarVisibility",
-    "key": "ctrl+;"
+    "key": "ctrl+shift+alt+l"
   },
   {
-    "key": "ctrl+z",
-    "command": "workbench.action.toggleZenMode"
-  },
-  //#########
-  {
-    "command": "workbench.action.togglePanel",
-    "key": "ctrl+l"
+    "command": "workbench.action.toggleMenuBar",
+    "key": "ctrl+shift+alt+k"
   },
   {
-    "command": "workbench.action.terminal.focus",
-    "key": "ctrl+l",
-    "when": "!panelVisible"
+    "command": "workbench.action.toggleActivityBarVisibility",
+    "key": "ctrl+shift+alt+j"
   },
-  {
-    "key": "shift+n",
-    "command": "workbench.action.terminal.focusNext",
-    "when": "terminalFocus"
-  },
-  {
-    "key": "shift+p",
-    "command": "workbench.action.terminal.focusPrevious",
-    "when": "terminalFocus"
-  },
-  {
-    "key": "ctrl+a",
-    "command": "workbench.action.terminal.new",
-    "when": "terminalFocus"
-  },
-  {
-    "key": "ctrl+d",
-    "command": "workbench.action.terminal.kill",
-    "when": "terminalFocus"
-  },
-  // ##############
-  {
-    "command": "workbench.action.toggleSidebarVisibility",
-    "key": "ctrl+j"
-  },
-  {
-    "command": "workbench.files.action.focusFilesExplorer",
-    "key": "ctrl+j",
-    "when": "!sideBarVisible"
-  },
-  {
-    "command": "workbench.action.toggleSidebarVisibility",
-    "key": "ctrl+k"
-  },
-  {
-    "command": "workbench.files.action.focusOpenEditorsView",
-    "key": "ctrl+k",
-    "when": "!sideBarVisible"
-  },
-  {
-    "key": "r",
-    "command": "renameFile",
-    "when": "filesExplorerFocus && !inputFocus"
-  },
-  {
-    "key": "y",
-    "command": "filesExplorer.copy",
-    "when": "filesExplorerFocus && !inputFocus"
-  },
-  {
-    "key": "p",
-    "command": "filesExplorer.paste",
-    "when": "filesExplorerFocus && !inputFocus"
-  },
-  {
-    "key": "a",
-    "command": "explorer.newFile",
-    "when": "filesExplorerFocus && !inputFocus"
-  },
-  {
-    "key": "d",
-    "command": "deleteFile",
-    "when": "filesExplorerFocus && !inputFocus"
-  }*/
-  //######################
-  /*{
-    "key": "ctrl+shift+5",
-    "command": "editor.emmet.action.matchTag"
-  },*/
 ]
