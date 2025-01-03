@@ -138,7 +138,7 @@
   "editor.tokenColorCustomizations": {
     "comments": "#7f7f7f",
     "functions": "#ffffff",
-    "keywords": "#f08080",
+    "keywords": "#f08080", // ffbbff // f08080
     "numbers": "#00bfff",
     "strings": "#90ee90",
     "types": "#00bfff",
@@ -216,7 +216,18 @@
           "keyword",
           "storage.type",
           "storage.modifier",
-          "support.function.builtin"
+          "support.function.builtin",
+          // ...
+          "variable.language.this",
+          // ...
+          "keyword.statement",
+          // ...
+          "keyword.control",
+          "source.cpp keyword.operator.new",
+          "source.cpp keyword.operator.delete",
+          "keyword.other.using",
+          "keyword.other.directive.using",
+          "keyword.other.operator",
         ],
         "settings": {
           "foreground": "#f08080",
@@ -224,15 +235,51 @@
       },
       {
         "scope": [
-          "keyword.control",
-          "source.cpp keyword.operator.new",
-          "source.cpp keyword.operator.delete",
-          "keyword.other.using",
-          "keyword.other.directive.using",
-          "keyword.other.operator"
+          "keyword.constant",
+          "constant.language",
+          "constant.character",
+          "constant.numeric",
         ],
         "settings": {
-          "foreground": "#ffbbff"
+          "foreground": "#ffbbff",
+        }
+      },
+      {
+        "scope": [
+          "keyword.type",
+          "constant.other.color.rgb-value",
+          "constant.other.rgb-value",
+          "support.constant.color",
+          // ...
+          "entity.name.tag",
+          // ...
+          "support.class",
+          "support.type",
+          "entity.name.type",
+          "entity.name.namespace",
+          "entity.name.scope-resolution",
+          "entity.name.class",
+          "storage.type.cs",
+          "storage.type.generic.cs",
+          "storage.type.modifier.cs",
+          "storage.type.variable.cs",
+          "storage.type.annotation.java",
+          "storage.type.generic.java",
+          "storage.type.java",
+          "storage.type.object.array.java",
+          "storage.type.primitive.array.java",
+          "storage.type.primitive.java",
+          "storage.type.token.java",
+          "storage.type.groovy",
+          "storage.type.annotation.groovy",
+          "storage.type.parameters.groovy",
+          "storage.type.generic.groovy",
+          "storage.type.object.array.groovy",
+          "storage.type.primitive.array.groovy",
+          "storage.type.primitive.groovy"
+        ],
+        "settings": {
+          "foreground": "#00bfff"
         }
       },
       {
@@ -401,54 +448,6 @@
         }
       },
       {
-        "scope": "variable.language.this",
-        "settings": {
-          "foreground": "#569CD6"
-        }
-      },
-      {
-        "scope": [
-          "keyword.type",
-          "keyword.constant",
-          "constant.language",
-          "constant.character",
-          "constant.numeric",
-          "constant.other.color.rgb-value",
-          "constant.other.rgb-value",
-          "support.constant.color",
-          // ...
-          "entity.name.tag",
-          // ...
-          "support.class",
-          "support.type",
-          "entity.name.type",
-          "entity.name.namespace",
-          "entity.name.scope-resolution",
-          "entity.name.class",
-          "storage.type.cs",
-          "storage.type.generic.cs",
-          "storage.type.modifier.cs",
-          "storage.type.variable.cs",
-          "storage.type.annotation.java",
-          "storage.type.generic.java",
-          "storage.type.java",
-          "storage.type.object.array.java",
-          "storage.type.primitive.array.java",
-          "storage.type.primitive.java",
-          "storage.type.token.java",
-          "storage.type.groovy",
-          "storage.type.annotation.groovy",
-          "storage.type.parameters.groovy",
-          "storage.type.generic.groovy",
-          "storage.type.object.array.groovy",
-          "storage.type.primitive.array.groovy",
-          "storage.type.primitive.groovy"
-        ],
-        "settings": {
-          "foreground": "#00bfff"
-        }
-      },
-      {
         "scope": [
           "meta.type.cast.expr",
           "meta.type.new.expr",
@@ -534,6 +533,7 @@
   "workbench.colorTheme": "Default High Contrast",
   "zig.zls.enabled": "on",
 "zig.formattingProvider": "off",
-"workbench.statusBar.visible": false,
 "window.menuBarVisibility": "compact",
+"workbench.activityBar.location": "hidden",
+"workbench.statusBar.visible": false,
 }
