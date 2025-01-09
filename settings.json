@@ -105,7 +105,7 @@
   "window.titleSeparator": " ",
   "workbench.activityBar.iconClickBehavior": "focus",
   "workbench.colorCustomizations": {
-    "editor.foreground": "#fce77f",
+    "editor.foreground": "#ffe77f",
     "contrastBorder": "#666666",
     "editorBracketMatch.background": "#660066", 
     "editorBracketMatch.border": "#ff00ff", // ffbbff
@@ -156,7 +156,7 @@
           "keyword.operator.logical.python"
         ],
         "settings": {
-          "foreground": "#fce77f",
+          "foreground": "#ffe77f",
         }
       },
       {
@@ -542,5 +542,4 @@
 ],
 "workbench.statusBar.visible": false,
 "window.menuBarVisibility": "compact",
-"workbench.activityBar.location": "hidden",
 }
