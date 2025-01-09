@@ -105,10 +105,10 @@
   "window.titleSeparator": " ",
   "workbench.activityBar.iconClickBehavior": "focus",
   "workbench.colorCustomizations": {
-    "editor.foreground": "#eedd82",
+    "editor.foreground": "#fce77f",
     "contrastBorder": "#666666",
-    "editorBracketMatch.background": "#660066",
-    "editorBracketMatch.border": "#ff00ff",
+    "editorBracketMatch.background": "#660066", 
+    "editorBracketMatch.border": "#ff00ff", // ffbbff
     "editorIndentGuide.activeBackground1": "#666666",
     "editorIndentGuide.activeBackground2": "#666666",
     "editorIndentGuide.activeBackground3": "#666666",
@@ -140,9 +140,9 @@
   "editor.tokenColorCustomizations": {
     "comments": "#7f7f7f",
     "functions": "#ffffff",
-    "keywords": "#f08080", // ffbbff // f08080
+    "keywords": "#fd7f7f",
     "numbers": "#00bfff",
-    "strings": "#90ee90",
+    "strings": "#8fff8f",
     "types": "#ffffff",
     "variables": "#ffffff",
     "textMateRules": [
@@ -156,7 +156,7 @@
           "keyword.operator.logical.python"
         ],
         "settings": {
-          "foreground": "#eedd82",
+          "foreground": "#fce77f",
         }
       },
       {
@@ -232,7 +232,7 @@
           "keyword.other.operator",
         ],
         "settings": {
-          "foreground": "#f08080",
+          "foreground": "#fd7f7f",
         }
       },
       {
@@ -243,7 +243,7 @@
           "constant.numeric",
         ],
         "settings": {
-          "foreground": "#ffbbff",
+          "foreground": "#00bfff", // ffbbff
         }
       },
       {
@@ -281,7 +281,7 @@
           "storage.type.primitive.groovy"
         ],
         "settings": {
-          "foreground": "#00bfff"
+          "foreground": "#ffffff" // 00bfff
         }
       },
       {
@@ -394,7 +394,7 @@
           // ...
         ],
         "settings": {
-          "foreground": "#90ee90"
+          "foreground": "#8fff8f"
         }
       },
       {
