@@ -105,7 +105,7 @@
   "window.titleSeparator": " ",
   "workbench.activityBar.iconClickBehavior": "focus",
   "workbench.colorCustomizations": {
-    "editor.foreground": "#ffe77f",
+    "editor.foreground": "#ffef7f",
     "contrastBorder": "#666666",
     "editorBracketMatch.background": "#660066", 
     "editorBracketMatch.border": "#ff00ff", // ffbbff
@@ -140,10 +140,10 @@
   "editor.tokenColorCustomizations": {
     "comments": "#7f7f7f",
     "functions": "#ffffff",
-    "keywords": "#fd7f7f",
-    "numbers": "#00bfff",
+    "keywords": "#ff7f7f",
+    "numbers": "#ffbfff",
     "strings": "#8fff8f",
-    "types": "#ffffff",
+    "types": "#7fbfff",
     "variables": "#ffffff",
     "textMateRules": [
       {
@@ -156,7 +156,7 @@
           "keyword.operator.logical.python"
         ],
         "settings": {
-          "foreground": "#ffe77f",
+          "foreground": "#ffef7f",
         }
       },
       {
@@ -232,7 +232,7 @@
           "keyword.other.operator",
         ],
         "settings": {
-          "foreground": "#fd7f7f",
+          "foreground": "#ffbfff",
         }
       },
       {
@@ -243,7 +243,19 @@
           "constant.numeric",
         ],
         "settings": {
-          "foreground": "#00bfff", // ffbbff
+          "foreground": "#7fbfff", // 7fff7f ffbfff
+        }
+      },
+      {
+        "scope": [
+          "meta.preprocessor.string",
+          "string",
+          "string.tag",
+          "string.value",
+          // ...
+        ],
+        "settings": {
+          "foreground": "#7fff7f"
         }
       },
       {
@@ -281,7 +293,7 @@
           "storage.type.primitive.groovy"
         ],
         "settings": {
-          "foreground": "#ffffff" // 00bfff
+          "foreground": "#ff7f7f"
         }
       },
       {
@@ -387,22 +399,10 @@
       },
       {
         "scope": [
-          "meta.preprocessor.string",
-          "string",
-          "string.tag",
-          "string.value",
-          // ...
-        ],
-        "settings": {
-          "foreground": "#8fff8f"
-        }
-      },
-      {
-        "scope": [
           
         ],
         "settings": {
-          "foreground": "#00bfff",
+          "foreground": "#7fbfff",
         }
       },
       {
@@ -542,4 +542,5 @@
 ],
 "workbench.statusBar.visible": false,
 "window.menuBarVisibility": "compact",
+"workbench.activityBar.location": "hidden",
 }
