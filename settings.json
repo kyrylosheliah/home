@@ -140,7 +140,7 @@
   "editor.tokenColorCustomizations": {
     "comments": "#7f7f7f",
     "functions": "#ffffff",
-    "keywords": "#ff7f7f",
+    "keywords": "#ff8f8f",
     "numbers": "#ffbfff",
     "strings": "#8fff8f",
     "types": "#7fbfff",
@@ -243,7 +243,7 @@
           "constant.numeric",
         ],
         "settings": {
-          "foreground": "#7fbfff", // 7fff7f ffbfff
+          "foreground": "#ff8f8f",
         }
       },
       {
@@ -293,7 +293,7 @@
           "storage.type.primitive.groovy"
         ],
         "settings": {
-          "foreground": "#ff7f7f"
+          "foreground": "#7fbfff"
         }
       },
       {
