@@ -23,7 +23,6 @@
   "auto-rename-tag.activationOnLanguage": [
     "*"
   ],
-  "breadcrumbs.enabled": false,
   "editor.bracketPairColorization.enabled": false,
   "editor.codeActionsOnSave": {
     "source.fixAll": "never",
@@ -38,6 +37,7 @@
   "editor.glyphMargin": true,
   "editor.guides.indentation": true,
   //"editor.hover.delay": 700,
+  "editor.renderWhitespace": "all",
   "editor.hover.enabled": true,
   "editor.largeFileOptimizations": true,
   "editor.lineNumbers": "on",
@@ -107,7 +107,7 @@
   "workbench.colorCustomizations": {
     "editor.foreground": "#ffef7f",
     "contrastBorder": "#666666",
-    "editorBracketMatch.background": "#660066", 
+    "editorBracketMatch.background": "#660066",
     "editorBracketMatch.border": "#ff00ff", // ffbbff
     "editorIndentGuide.activeBackground1": "#666666",
     "editorIndentGuide.activeBackground2": "#666666",
@@ -149,24 +149,10 @@
       {
         "scope": [
           "keyword.operator",
-          "keyword.operator.new",
-          "keyword.operator.expression",
-          "keyword.operator.cast",
-          "keyword.operator.sizeof",
           "keyword.operator.logical.python"
         ],
         "settings": {
           "foreground": "#ffef7f",
-        }
-      },
-      {
-        "scope": [
-          "variable",
-          "meta.definition.variable.name",
-          "support.variable"
-        ],
-        "settings": {
-          "foreground": "#ffffff"
         }
       },
       {
@@ -177,6 +163,11 @@
       },
       {
         "scope": [
+          "variable",
+          "entity.name.variable",
+          "meta.definition.variable.name",
+          "support.variable",
+          // ...
           "meta.embedded",
           "source.groovy.embedded",
           "string meta.image.inline.markdown",
@@ -210,7 +201,7 @@
           "source.powershell variable.other.member"
         ],
         "settings": {
-          "foreground": "#ffffff"
+          "foreground": "#ffffff",
         }
       },
       {
@@ -219,6 +210,11 @@
           "storage.type",
           "storage.modifier",
           "support.function.builtin",
+          // ...
+          "keyword.operator.cast",
+          "keyword.operator.sizeof",
+          "keyword.operator.new",
+          "keyword.operator.expression",
           // ...
           "variable.language.this",
           // ...
@@ -232,7 +228,7 @@
           "keyword.other.operator",
         ],
         "settings": {
-          "foreground": "#ffbfff",
+          "foreground": "#ff8f8f",
         }
       },
       {
@@ -243,7 +239,7 @@
           "constant.numeric",
         ],
         "settings": {
-          "foreground": "#ff8f8f",
+          "foreground": "#7fbfff",
         }
       },
       {
@@ -293,7 +289,7 @@
           "storage.type.primitive.groovy"
         ],
         "settings": {
-          "foreground": "#7fbfff"
+          "foreground": "#ffbfff"
         }
       },
       {
@@ -395,14 +391,6 @@
         "scope": "meta.structure.dictionary.key.python",
         "settings": {
           "foreground": "#9CDCFE"
-        }
-      },
-      {
-        "scope": [
-          
-        ],
-        "settings": {
-          "foreground": "#7fbfff",
         }
       },
       {
@@ -540,7 +528,11 @@
   "warning",
   "info"
 ],
-"workbench.statusBar.visible": false,
+"breadcrumbs.enabled": false,
+"dotnet.completion.showCompletionItemsFromUnimportedNamespaces": false,
+"editor.codeActionWidget.includeNearbyQuickFixes": false,
+"editor.acceptSuggestionOnCommitCharacter": false,
 "window.menuBarVisibility": "compact",
+"workbench.statusBar.visible": false,
 "workbench.activityBar.location": "hidden",
 }
