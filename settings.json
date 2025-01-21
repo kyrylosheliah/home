@@ -156,9 +156,12 @@
         }
       },
       {
-        "scope": "comment",
+        "scope": [
+          "comment",
+          "punctuation.definition.comment",
+        ],
         "settings": {
-          "foreground": "#7f7f7f"
+          "foreground": "#ffafaf" // 7f7f7f
         }
       },
       {
@@ -172,8 +175,8 @@
           "source.groovy.embedded",
           "string meta.image.inline.markdown",
           "variable.legacy.builtin.python",
-		      // ...
-		      "meta.template.expression",
+          // ...
+          "meta.template.expression",
           // ...
           "entity.name.tag.css",
           "entity.name.tag.less",
@@ -194,14 +197,20 @@
           "support.type.vendored.property-name",
           "support.type.property-name",
           "source.coffee.embedded",
-          // ...
+        ],
+        "settings": {
+          "foreground": "#ffffff",
+        }
+      },
+      {
+        "scope": [
           "entity.name.function",
           "support.function",
           "support.constant.handlebars",
           "source.powershell variable.other.member"
         ],
         "settings": {
-          "foreground": "#ffffff",
+          "foreground": "#ffffff", // ffffcf
         }
       },
       {
@@ -219,7 +228,13 @@
           "variable.language.this",
           // ...
           "keyword.statement",
-          // ...
+        ],
+        "settings": {
+          "foreground": "#ffffff", // 7fbfff
+        }
+      },
+      {
+        "scope": [
           "keyword.control",
           "source.cpp keyword.operator.new",
           "source.cpp keyword.operator.delete",
@@ -228,7 +243,7 @@
           "keyword.other.operator",
         ],
         "settings": {
-          "foreground": "#ff8f8f",
+          "foreground": "#ffffff", // ffbfff
         }
       },
       {
@@ -239,7 +254,7 @@
           "constant.numeric",
         ],
         "settings": {
-          "foreground": "#7fbfff",
+          "foreground": "#7fcfff", // 7fbfff
         }
       },
       {
@@ -251,7 +266,7 @@
           // ...
         ],
         "settings": {
-          "foreground": "#7fff7f"
+          "foreground": "#7fff7f" // ffef7f
         }
       },
       {
@@ -289,7 +304,7 @@
           "storage.type.primitive.groovy"
         ],
         "settings": {
-          "foreground": "#ffbfff"
+          "foreground": "#ffffff" // 8fffcf
         }
       },
       {
