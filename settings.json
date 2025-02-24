@@ -106,7 +106,7 @@
   "window.titleSeparator": " ",
   "workbench.activityBar.iconClickBehavior": "focus",
   "workbench.colorCustomizations": {
-    "editor.foreground": "#ffffff", // ffef7f
+    "editor.foreground": "#ffef7f",
     "contrastBorder": "#3f3f3f",
     "editorBracketMatch.background": "#000000",
     "editorBracketMatch.border": "#ff00ff",
@@ -153,7 +153,7 @@
           "keyword.operator.logical.python"
         ],
         "settings": {
-          "foreground": "#ffffff", // ffef7f
+          "foreground": "#ffef7f",
         }
       },
       {
