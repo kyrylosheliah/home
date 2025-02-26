@@ -21,7 +21,10 @@
     "editor.indentSize": 2
   },
   "auto-rename-tag.activationOnLanguage": [
-    "*"
+    "html",
+    "xml",
+    "php",
+    "javascript"
   ],
   "editor.bracketPairColorization.enabled": false,
   "editor.codeActionsOnSave": {
@@ -29,8 +32,6 @@
     "source.fixAll.eslint": "never",
     "source.organizeImports": "never"
   },
-  //"editor.cursorSurroundingLines": 5,
-  //"editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.defaultFormatter": null,
   "editor.folding": false,
   "editor.formatOnSave": false,
@@ -41,59 +42,35 @@
   "editor.hover.enabled": true,
   "editor.largeFileOptimizations": true,
   "editor.lineNumbers": "on",
-  "editor.renderLineHighlight": "gutter",
   "editor.linkedEditing": true,
   "editor.minimap.enabled": false,
   //"editor.quickSuggestionsDelay": 1000,
   "editor.rulers": [
     {
-      "color": "#3f3f3f",
-      "column": 80
+      "color": "#000000",
+      "column": 79
     },
     {
-      "color": "#3f3f3f",
-      "column": 120
+      "color": "#000000",
+      "column": 119
     }
   ],
   //"editor.cursorSurroundingLines": 200,
   "editor.stickyScroll.enabled": false,
   "editor.suggest.insertMode": "insert",
-  "emmet.includeLanguages": {
-    "django-html": "html",
-    "javascript": "javascriptreact",
-    "plaintext": "pug",
-    "razor": "html",
-    "typescript": "typescriptreact",
-    "vue": "html",
-    "vue-html": "html"
-  },
-  "emmet.preferences": {
-    "files.associations": {
-      "*html": "html"
-    }
-  },
   "explorer.confirmDelete": true,
   "extensions.autoUpdate": "onlyEnabledExtensions",
   "files.eol": "\n",
   "files.exclude": {
-    "**/.trunk/*actions/": true,
-    "**/.trunk/*logs/": true,
-    "**/.trunk/*notifications/": true,
-    "**/.trunk/*out/": true,
-    "**/.trunk/*plugins/": true
+    // ...
   },
   "files.watcherExclude": {
-    "**/.trunk/*actions/": true,
-    "**/.trunk/*logs/": true,
-    "**/.trunk/*notifications/": true,
-    "**/.trunk/*out/": true,
-    "**/.trunk/*plugins/": true
+    // ...
   },
   "javascript.updateImportsOnFileMove.enabled": "always",
   "prettier.useEditorConfig": false,
   "print.alternateBrowser": false,
   "print.colourScheme": "Visual Studio",
-  "print.lineNumbers": "off",
   "print.renderMarkdown": true,
   "telemetry.telemetryLevel": "off",
   "typescript.preferences.importModuleSpecifier": "non-relative",
@@ -101,10 +78,8 @@
   "unocss.autocomplete.maxItems": 10,
   "update.showReleaseNotes": false,
   "window.commandCenter": false,
-  //"window.restoreWindows": "none",
   "window.title": "${dirty}${separator}${activeEditorLong}${separator}${dirty}",
   "window.titleSeparator": " ",
-  "workbench.activityBar.iconClickBehavior": "focus",
   "workbench.colorCustomizations": {
     "editor.foreground": "#ffef7f",
     "contrastBorder": "#3f3f3f",
@@ -139,13 +114,12 @@
     "enabled": false
   },
   "editor.tokenColorCustomizations": {
-    //"comments": "#7f7f7f",
-    //"functions": "#ffffff",
-    //"keywords": "#ff8f8f",
-    //"numbers": "#ffbfff",
-    //"strings": "#8fff8f",
-    //"types": "#7fbfff",
-    //"variables": "#ffffff",
+    // #7f7f7f gray
+    // #ffafaf red
+    // #ffef7f yellow
+    // #7fff7f green
+    // #7fcfff blue
+    // #ffbfff purple
     "textMateRules": [
       {
         "scope": [
@@ -162,7 +136,7 @@
           "punctuation.definition.comment",
         ],
         "settings": {
-          "foreground": "#ffafaf" // 7f7f7f
+          "foreground": "#ffafaf"
         }
       },
       {
@@ -533,7 +507,7 @@
   "zenMode.centerLayout": true,
   "zenMode.fullScreen": false,
   "zenMode.hideLineNumbers": false,
-  //"zenMode.hideStatusBar": true // unset in order to user-toggle
+  "zenMode.hideStatusBar": false,
   "zenMode.restore": false,
   "zenMode.showTabs": "none",
   "files.autoSave": "off",
@@ -549,14 +523,8 @@
 "zig.zls.enabled": "on",
 "zig.formattingProvider": "off",
 "zig.zls.enableArgumentPlaceholders": false,
-"zig.zls.enableSnippets": false,
-"zig.zls.inlayHintsShowParameterName": false,
-"zig.zls.inlayHintsShowBuiltin": false,
-"zig.zls.inlayHintsShowStructLiteralFieldType": false,
-"zig.zls.inlayHintsShowVariableTypeHints": false,
-"zig.zls.inlayHintsExcludeSingleArgument": false,
 "window.menuBarVisibility": "compact",
-"workbench.statusBar.visible": false,
 "workbench.activityBar.location": "hidden",
+"workbench.statusBar.visible": false,
 
 }
