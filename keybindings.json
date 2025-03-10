@@ -2,14 +2,14 @@
 [
   {
     "command": "workbench.action.toggleStatusbarVisibility",
-    "key": "ctrl+shift+alt+l"
-  },
-  {
-    "command": "workbench.action.toggleMenuBar",
-    "key": "ctrl+shift+alt+k"
+    "key": "ctrl+shift+alt+j"
   },
   {
     "command": "workbench.action.toggleActivityBarVisibility",
-    "key": "ctrl+shift+alt+j"
+    "key": "ctrl+shift+alt+k"
+  },
+  {
+    "command": "workbench.action.toggleMenuBar",
+    "key": "ctrl+shift+alt+h"
   },
 ]
