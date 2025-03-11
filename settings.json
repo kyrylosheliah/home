@@ -181,7 +181,8 @@
 "print.folder.maxFiles": 30,
 "print.folder.includeFileList": false,
 "window.menuBarVisibility": "compact",
-"workbench.activityBar.location": "hidden",
 "workbench.statusBar.visible": false,
+"workbench.activityBar.location": "hidden",
+"chat.commandCenter.enabled": false,
 
 }
