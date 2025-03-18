@@ -64,7 +64,7 @@
     "editor.foreground": "#ffffff",
     "contrastBorder": "#3f3f3f",
     "editorBracketMatch.background": "#000000",
-    "editorBracketMatch.border": "#ff00ff",
+    "editorBracketMatch.border": "#f38518", // ff00ff
     "editorIndentGuide.activeBackground1": "#7f7f7f",
     "editorIndentGuide.activeBackground2": "#7f7f7f",
     "editorIndentGuide.activeBackground3": "#7f7f7f",
@@ -102,6 +102,8 @@
     // #7fff7f green
     // #7fcfff blue
     // #ffbfff purple
+    // #ff00ff contrast purple
+    // #f38518 contrastActiveBorder
     "comments": "#ffafaf",
     "functions": "#ffffff",
     "keywords": "#ffffff",
@@ -181,8 +183,8 @@
 "print.folder.maxFiles": 30,
 "print.folder.includeFileList": false,
 "window.menuBarVisibility": "compact",
+"chat.commandCenter.enabled": false,
 "workbench.statusBar.visible": false,
 "workbench.activityBar.location": "hidden",
-"chat.commandCenter.enabled": false,
 
 }
