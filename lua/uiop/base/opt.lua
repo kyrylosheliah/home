@@ -5,6 +5,8 @@ end
 --vim.o.fileencoding = 'utf-8' -- written
 --vim.o.encoding = 'utf-8' -- shown
 
+--vim.opt.fileformat = "unix"
+
 vim.g.have_nerd_font = false
 
 --vim.g.loaded_matchit = 0
@@ -46,7 +48,7 @@ vim.opt.spell = false
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.cursorline = false
-vim.opt.colorcolumn = "" --"80,120"
+vim.opt.colorcolumn = "80,120"
 --vim.opt.scrolloff = 4
 vim.opt.sidescrolloff = 8
 vim.opt.signcolumn = "yes" -- yes, number

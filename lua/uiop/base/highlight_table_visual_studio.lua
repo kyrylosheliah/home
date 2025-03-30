@@ -99,7 +99,7 @@ local highlight = {
   ["Todo"] = { fg = c.pure_yellow }, -- anything that needs extra attention; mostly the keywords TODO FIXME and XXX
 
   -- Highlighting Groups (descriptions and ordering from ` =h highlight-groups`) {{{
-  ["ColorColumn"] = { bg = c.gray }, -- used for the columns set with 'colorcolumn'
+  ["ColorColumn"] = { bg = c.sub_gray }, -- used for the columns set with 'colorcolumn'
   ["Conceal"] = { fg = c.sub_gray }, -- placeholder characters substituted for concealed text (see 'conceallevel')
   ["Cursor"] = { fg = c.black, bg = c.white }, -- the character under the cursor
   ["lCursor"] = { fg = c.black, bg = c.white }, -- the character under the cursor
@@ -289,6 +289,7 @@ local highlight = {
   ["LspReferenceText"] = { bg = c.sub_gray },
   ["LspReferenceRead"] = { bg = c.sub_gray },
   ["LspSignatureActiveParameter"] = { fg = c.blue, bold = true },
+  ["LspInlayHint"] = { bg = c.sub_gray, fg = c.pure_black, bold = true, italic = true },
 
   -- GitSigns
   ["GitSignsAdd"] = { fg = c.pure_green },
