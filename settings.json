@@ -1,39 +1,54 @@
 {
   "[javascript]": {
-    "editor.indentSize": 2
+    "editor.indentSize": 2,
+    "editor.tabSize": 2,
   },
   "[javascriptreact]": {
-    "editor.indentSize": 2
+    "editor.indentSize": 2,
+    "editor.tabSize": 2,
   },
   "[jsx-tags]": {
-    "editor.indentSize": 2
+    "editor.indentSize": 2,
+    "editor.tabSize": 2,
   },
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter"
   },
   "[typescript]": {
-    "editor.indentSize": 2
+    "editor.indentSize": 2,
+    "editor.tabSize": 2,
+  },
+  "[typescriptreact]": {
+    "editor.indentSize": 2,
+    "editor.tabSize": 2,
   },
   "auto-rename-tag.activationOnLanguage": [
     "html",
-    "xml",
-    "php",
-    "javascript"
+    "javascript",
+    "typescript",
+    "javascriptreact",
+    "typescriptreact",
   ],
+  "breadcrumbs.enabled": false,
+  "chat.commandCenter.enabled": false,
+  "dotnet.completion.showCompletionItemsFromUnimportedNamespaces": false,
+  "editor.acceptSuggestionOnCommitCharacter": false,
   "editor.bracketPairColorization.enabled": false,
   "editor.codeActionsOnSave": {
     "source.fixAll": "never",
     "source.fixAll.eslint": "never",
     "source.organizeImports": "never"
   },
-  "editor.defaultFormatter": null,
+  "editor.codeActionWidget.includeNearbyQuickFixes": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.folding": false,
   "editor.formatOnSave": false,
-  //"editor.glyphMargin": true,
-  "editor.renderWhitespace": "all",
-  "editor.renderLineHighlight": "gutter",
   "editor.linkedEditing": true,
   "editor.minimap.enabled": false,
+  "editor.occurrencesHighlight": "off",
+  "editor.renderLineHighlight": "gutter",
+  //"editor.glyphMargin": true,
+  "editor.renderWhitespace": "all",
   "editor.rulers": [
     {
       "color": "#3f3f3f",
@@ -44,57 +59,11 @@
       "column": 119
     }
   ],
-  "editor.stickyScroll.enabled": false,
-  "files.eol": "\n",
-  "files.exclude": {
-    // ...
-  },
-  "files.watcherExclude": {
-    // ...
-  },
-  "prettier.useEditorConfig": false,
-  "print.colourScheme": "[none]",
-  "telemetry.telemetryLevel": "off",
-  "typescript.preferences.importModuleSpecifier": "non-relative",
-  "unocss.autocomplete.maxItems": 10,
-  "window.commandCenter": false,
-  "window.title": "${dirty}${separator}${activeEditorLong}${separator}${dirty}",
-  "window.titleSeparator": " ",
-  "workbench.colorCustomizations": {
-    "editor.foreground": "#ffffff",
-    "contrastBorder": "#3f3f3f",
-    "editorBracketMatch.background": "#000000",
-    "editorBracketMatch.border": "#f38518", // ff00ff
-    "editorIndentGuide.activeBackground1": "#7f7f7f",
-    "editorIndentGuide.activeBackground2": "#7f7f7f",
-    "editorIndentGuide.activeBackground3": "#7f7f7f",
-    "editorIndentGuide.activeBackground4": "#7f7f7f",
-    "editorIndentGuide.activeBackground5": "#7f7f7f",
-    "editorIndentGuide.activeBackground6": "#7f7f7f",
-    "editorIndentGuide.background1": "#3f3f3f",
-    "editorIndentGuide.background2": "#3f3f3f",
-    "editorIndentGuide.background3": "#3f3f3f",
-    "editorIndentGuide.background4": "#3f3f3f",
-    "editorIndentGuide.background5": "#3f3f3f",
-    "editorIndentGuide.background6": "#3f3f3f",
-    "editorUnnecessaryCode.border": "#3f3f3f",
-    "editorWhitespace.foreground": "#3f3f3f",
-    "tree.inactiveIndentGuidesStroke": "#3f3f3f",
-    "tree.indentGuidesStroke": "#3f3f3f",
-    // reduce inlay hint's contrast
-    "editorInlayHint.background": "#3f3f3f",
-    "editorInlayHint.foreground": "#000000",
-    "editorInlayHint.parameterBackground": "#3f3f3f",
-    "editorInlayHint.parameterForeground": "#000000",
-    "editorInlayHint.typeBackground": "#3f3f3f",
-    "editorInlayHint.typeForeground": "#000000",
-  },
-  "editor.occurrencesHighlight": "off",
   "editor.semanticHighlighting.enabled": false,
   "editor.semanticTokenColorCustomizations": {
     "enabled": false
   },
-  "workbench.colorTheme": "Default High Contrast",
+  "editor.stickyScroll.enabled": false,
   "editor.tokenColorCustomizations": {
     // #7f7f7f gray
     // #ffafaf red
@@ -109,14 +78,13 @@
     "keywords": "#ffffff",
     "numbers": "#ffffff",
     "strings": "#ffffff",
-    "types": "#ffffff",
-    "variables": "#ffffff",
     "textMateRules": [
       {
         "scope": [
           "constant.language",
           "entity.name.namespace",
           "entity.name.scope-resolution",
+          "entity.name.tag",
           "entity.other.attribute-name",
           "keyword.operator.cast",
           "keyword.operator.expression",
@@ -136,18 +104,74 @@
           "support.type.property-name",
           "support.variable",
           "variable.language.this",
+          "punctuation.definition.tag",
+          "punctuation.section.embedded",
+          "punctuation.definition.template-expression.begin",
+          "punctuation.definition.template-expression.end"
         ],
         "settings": {
           "foreground": "#ffffff"
-        },
-      },
+        }
+      }
     ],
+    "types": "#ffffff",
+    "variables": "#ffffff"
   },
+  "errorLens.enabledDiagnosticLevels": [
+    "error",
+    "warning",
+    "info"
+  ],
+  "files.autoSave": "off",
+  "files.eol": "\n",
+  "files.exclude": {
+    // ...
+  },
+  "files.watcherExclude": {
+    // ...
+  },
+  "prettier.useEditorConfig": false,
+  "telemetry.telemetryLevel": "off",
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "unocss.autocomplete.maxItems": 10,
+  "window.commandCenter": false,
+  "window.menuBarVisibility": "compact",
+  "window.title": "${dirty}${separator}${activeEditorLong}${separator}${dirty}",
+  "window.titleSeparator": " ",
+  "workbench.colorCustomizations": {
+    "contrastBorder": "#3f3f3f",
+    "editor.foreground": "#ffffff",
+    "editorBracketMatch.background": "#000000",
+    "editorBracketMatch.border": "#f38518", // ff00ff
+    "editorIndentGuide.activeBackground1": "#7f7f7f",
+    "editorIndentGuide.activeBackground2": "#7f7f7f",
+    "editorIndentGuide.activeBackground3": "#7f7f7f",
+    "editorIndentGuide.activeBackground4": "#7f7f7f",
+    "editorIndentGuide.activeBackground5": "#7f7f7f",
+    "editorIndentGuide.activeBackground6": "#7f7f7f",
+    "editorIndentGuide.background1": "#3f3f3f",
+    "editorIndentGuide.background2": "#3f3f3f",
+    "editorIndentGuide.background3": "#3f3f3f",
+    "editorIndentGuide.background4": "#3f3f3f",
+    "editorIndentGuide.background5": "#3f3f3f",
+    "editorIndentGuide.background6": "#3f3f3f",
+    // reduce inlay hint's contrast
+    "editorInlayHint.background": "#3f3f3f",
+    "editorInlayHint.foreground": "#000000",
+    "editorInlayHint.parameterBackground": "#3f3f3f",
+    "editorInlayHint.parameterForeground": "#000000",
+    "editorInlayHint.typeBackground": "#3f3f3f",
+    "editorInlayHint.typeForeground": "#000000",
+    "editorUnnecessaryCode.border": "#3f3f3f",
+    "editorWhitespace.foreground": "#3f3f3f",
+    "tree.inactiveIndentGuidesStroke": "#3f3f3f",
+    "tree.indentGuidesStroke": "#3f3f3f"
+  },
+  "workbench.colorTheme": "Default High Contrast",
   "workbench.editor.editorActionsLocation": "hidden",
   "workbench.editor.showTabs": "none",
   "workbench.iconTheme": null,
   "workbench.layoutControl.enabled": false,
-  //"workbench.layoutControl.type": "menu",
   "workbench.sideBar.location": "right",
   "workbench.tree.enableStickyScroll": false,
   "workbench.tree.indent": 15,
@@ -157,34 +181,9 @@
   "zenMode.hideStatusBar": false,
   "zenMode.restore": false,
   "zenMode.showTabs": "none",
-  "files.autoSave": "off",
-"errorLens.enabledDiagnosticLevels": [
-  "error",
-  "warning",
-  "info"
-],
-"dotnet.completion.showCompletionItemsFromUnimportedNamespaces": false,
-"editor.codeActionWidget.includeNearbyQuickFixes": false,
-"editor.acceptSuggestionOnCommitCharacter": false,
-"breadcrumbs.enabled": false,
-"zig.zls.enabled": "on",
-"zig.formattingProvider": "off",
-"zig.zls.enableArgumentPlaceholders": false,
-"print.sourcecode.colourScheme": "[none]",
-"print.folder.fileNames": true,
-"print.folder.include": [],
-"print.folder.exclude": [
-  "{bin,obj,out}",
-  "node_modules",
-  "data",
-  "**/*.{bin,exe,dll,hex,pdb,pdf,pfx,png,jpg,gif,bmp,suo,design}"
-],
-"print.folder.maxLines": 1200,
-"print.folder.maxFiles": 30,
-"print.folder.includeFileList": false,
-"window.menuBarVisibility": "compact",
-"chat.commandCenter.enabled": false,
-"workbench.statusBar.visible": false,
-"workbench.activityBar.location": "hidden",
-
+  "zig.formattingProvider": "off",
+  "zig.zls.enableArgumentPlaceholders": false,
+  "zig.zls.enabled": "on",
+  "workbench.activityBar.location": "hidden",
+  "workbench.statusBar.visible": false,
 }
