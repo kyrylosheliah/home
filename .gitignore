@@ -1,5 +1,16 @@
 *
 
 !.gitignore
-!.wezterm.lua
+
 !dconf-gnome-extensions.txt
+
+!.wezterm.lua
+
+!.config/
+.config/*
+
+!.config/nvim/
+
+!.config/Code/
+.config/Code/*
+!.config/Code/User/
