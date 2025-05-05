@@ -1,0 +1,15 @@
+// Place your key bindings in this file to override the defaults
+[
+  {
+    "command": "workbench.action.toggleStatusbarVisibility",
+    "key": "ctrl+shift+alt+j"
+  },
+  {
+    "command": "workbench.action.toggleActivityBarVisibility",
+    "key": "ctrl+shift+alt+k"
+  },
+  {
+    "command": "workbench.action.toggleMenuBar",
+    "key": "ctrl+shift+alt+h"
+  },
+]
