@@ -2,7 +2,10 @@
 
 !.gitignore
 
-!dconf-gnome-extensions.txt
+!.bashrc_template
+
+!.nixos/
+!.nixos/**
 
 !.wezterm.lua
 
