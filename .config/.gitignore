@@ -1,0 +1,10 @@
+*
+!.gitignore
+!Code
+!Code/**
+!hypr
+!hypr/**
+!nixos
+!nixos/**
+!nvim
+!nvim/**

@@ -15,19 +15,10 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = hostName;
-
-  # Pick only one of the below networking options.
-  #networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
-  networking.networkmanager.wifi.powersave = true;
+  #networking.hostName = hostName;
 
   # Set your time zone.
   time.timeZone = "Europe/Kyiv";
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
@@ -73,8 +64,6 @@
 
   programs.firefox.enable = true;
 
-  programs.hyprland.enable = true;
-
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -83,7 +72,7 @@
     wget
     neovim
     git
-    kitty
+	zig
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

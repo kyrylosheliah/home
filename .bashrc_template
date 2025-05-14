@@ -1,4 +1,4 @@
 # source with `. ~/.bashrc`
 # reset with `unalias`
 
-alias nrs='sudo nixos-rebuild switch --flake ~/.nixos/#hp_15-db'
+alias nrs='sudo nixos-rebuild switch --flake ~/.config/nixos/#hostName'

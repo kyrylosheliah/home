@@ -8,7 +8,7 @@ local c = {}
 c.tin = 0.15
 c.tint = def.c["Tan3"]
 -- Primary color saturation
-c.pri = 0.08
+c.pri = 0.0--0.08
 c.primary = def.c["Magenta"]
 -- Saturation
 c.sat = 1.0

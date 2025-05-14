@@ -33,17 +33,22 @@
     hosts = [
      { hostName = "hp_15-db"; system = "x86_64-linux"; stateVersion = "24.11"; }
     ];
-    makeSystem = { hostName, system, stateVersion }: nixpkgs.lib.nixosSystem {
+    makeSystem = { hostName, system, stateVersion }@inputsInjection: nixpkgs.lib.nixosSystem {
       inherit system;
-      modules = [ ./host/${hostName}/configuration.nix ];
-      specialArgs = {
-        inherit inputs stateVersion hostName userName;
-      };
+      modules = [
+        ./host/${hostName}/configuration.nix
+        #(inputs: { _module.args = { inherit inputs_injection; }; })
+        ## is an equivalent to the `specialArgs` property
+      ];
+      #specialArgs = {
+      #  inherit hostName system stateVersion userName;
+      #};
+      specialArgs = inputsInjection;
     };
   in {
     nixosConfigurations = builtins.listToAttrs (map ({ hostName, ... }@host: {
       name = hostName;
-      value = makeSystem host; # // {}
+      value = (makeSystem host) // { inherit userName; };
     }) hosts);
 
     #nixosConfigurations.hp_15-db = nixpkgs.lib.nixosSystem {
