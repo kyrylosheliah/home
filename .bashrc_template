@@ -2,3 +2,4 @@
 # reset with `unalias`
 
 alias nrs='sudo nixos-rebuild switch --flake ~/.config/nixos/#hostName'
+alias nrb='sudo nixos-rebuild build --flake ~/.config/nixos/#hostName'

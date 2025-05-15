@@ -1,17 +1,11 @@
 # # planned structure
-# common/*.nix # reference as `./common`
 # home-manager/home.nix
-# host/${hostname}#/configuration.nix
 # lib/
-# flake.nix
 
 # nix.dev
 # search.nixos.org
 # mynixos.com
 # wiki.nixos.org
-
-# sudo nixos-rebuild switch --flake ./#hostname
-# e.g. `... ./#hp_15-db`
 
 # update `flake.lock` with
 # nix flake update
@@ -33,22 +27,19 @@
     hosts = [
      { hostName = "hp_15-db"; system = "x86_64-linux"; stateVersion = "24.11"; }
     ];
-    makeSystem = { hostName, system, stateVersion }@inputsInjection: nixpkgs.lib.nixosSystem {
+    makeSystem = userName: { hostName, system, ... }@inputsInjection: nixpkgs.lib.nixosSystem {
       inherit system;
       modules = [
         ./host/${hostName}/configuration.nix
-        #(inputs: { _module.args = { inherit inputs_injection; }; })
-        ## is an equivalent to the `specialArgs` property
+        # same as setting `specialArgs`
+        #(inputs: { _module.args = inputsInjection; })
       ];
-      #specialArgs = {
-      #  inherit hostName system stateVersion userName;
-      #};
-      specialArgs = inputsInjection;
+      specialArgs = { inherit userName; } // inputsInjection; # overrides default userName with injected one
     };
   in {
     nixosConfigurations = builtins.listToAttrs (map ({ hostName, ... }@host: {
       name = hostName;
-      value = (makeSystem host) // { inherit userName; };
+      value = (makeSystem userName host);
     }) hosts);
 
     #nixosConfigurations.hp_15-db = nixpkgs.lib.nixosSystem {

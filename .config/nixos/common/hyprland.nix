@@ -7,7 +7,7 @@
 
   programs.hyprland = {
     enable = true;
-	withUWSM = true;
+    withUWSM = true;
   };
 
   # hint Electron apps to use Wayland
