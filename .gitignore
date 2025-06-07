@@ -1,5 +1,7 @@
 *
-!.bashrc_template
+!.bash_profile
 !.wezterm.lua
 !.config
 !.config/**
+!.arch
+!.arch/**

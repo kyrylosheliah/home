@@ -6,3 +6,5 @@
 !hypr/**
 !nvim
 !nvim/**
+!waybar
+!waybar/**

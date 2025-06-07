@@ -1,0 +1,117 @@
+@define-color background #000;
+@define-color foreground #fff;
+@define-color active #f0f;
+
+* {
+  font-size: 16px;
+  font-family: "Iosevka NF", "sans-serif";
+  min-width: 8px;
+  border: none;
+  box-shadow: none;
+  text-shadow: none;
+  color: @foreground;
+  padding: 0;
+  margin: 0;
+}
+
+window#waybar {
+  background: @background;
+}
+
+menu,
+tooltip {
+  border: 1px solid @foreground;
+  background: alpha(@background, 0.5);
+  color: @foreground;
+}
+
+menu label,
+tooltip label {
+  color: @foreground;
+}
+
+#gcpu,
+#custom-github,
+#memory,
+#disk,
+#together,
+#submap,
+#custom-weather,
+#custom-recorder,
+#connection,
+#cnoti,
+#brightness,
+#power,
+#custom-updates,
+#tray,
+#audio,
+#privacy,
+#sound {
+  padding-left: 1px;
+  margin-left: 2px;
+  padding-right: 1px;
+  margin-right: 2px;
+}
+
+
+#submap,
+#tray>.needs-attention {
+  animation-name: blink-active;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+#battery.discharging.warning {
+  animation-name: blink-yellow;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+#battery.discharging.critical {
+  animation-name: blink-red;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+#backlight-slider trough,
+#pulseaudio-slider trough {
+  min-width: 60px;
+  min-height: 6px;
+}
+
+#bluetooth.discoverable,
+#bluetooth.discovering,
+#bluetooth.pairable {
+  animation-name: blink-active;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes blink-active {
+  to {
+    background-color: @active;
+    color: @foreground;
+  }
+}
+
+@keyframes blink-red {
+  to {
+    background-color: #c64d4f;
+    color: @foreground;
+  }
+}
+
+@keyframes blink-yellow {
+  to {
+    background-color: #cf9022;
+    color: @foreground;
+  }
+}
