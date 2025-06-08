@@ -1,0 +1,26 @@
+#!/bin/bash
+
+if [ "$(id -u)" -ne 0 ]; then
+	echo "This script should be run as a root or with sudo"
+	exit 1
+fi
+
+# package cache
+sudo paccache -rk3
+
+# orphaned packages
+sudo pacman -Rns $(pacman -Qtdq)
+
+# logs
+sudo journalctl --vacuum-time=2weeks
+
+# user cache
+rm -rf ~/.cache/thumbnails/*
+rm -rf ~/.cache/mozilla/firefox/*/cache2/*
+
+# temporary files
+sudo find /tmp -type f -atime +14 -delete
+
+# trash
+rm -rf ~/.local/share/Trash/*
+

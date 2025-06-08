@@ -1,0 +1,21 @@
+#!/bin/bash
+
+if [ "$(id -u)" -ne 0 ]; then
+	echo "This script should be run as a root or with sudo"
+	exit 1
+fi
+
+echo -e "\n... updating package databases"
+sudo pacman -Sy
+
+echo -e "\n... list of updates available: "
+pacman -Qu
+
+read -p $'\n... proceed with update? (Y/n): ' answer
+if [[ $answer =~ ^[Yy]$ ]]; then
+	sudo pacman -Su
+	if command -v yay &> /dev/null; then
+		yay -Su --aur
+	fi
+fi
+

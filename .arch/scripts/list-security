@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if [ "$(id -u)" -ne 0 ]; then
+	echo "This script should be run as a root or with sudo"
+	exit 1
+fi
+
+echo -e "\n... world-writable files in /etc"
+sudo find /etc -type f -perm -002 2>/dev/null
+
+echo -e "\n... SSH login attempts"
+journalctl -u sshd -n 20 --no-pager | grep -E "(Failed|Accepted)"
+
+echo -e "\n... listening services"
+ss -tulpn | grep LISTEN
+

@@ -8,3 +8,5 @@
 !nvim/**
 !waybar
 !waybar/**
+!rofi
+!rofi/**

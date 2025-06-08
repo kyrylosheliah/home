@@ -1,0 +1,11 @@
+#!/bin/bash
+
+echo -e "\n... systemd errors"
+systemctl --failed --no-legend
+
+echo -e "\n... journal errors"
+journalctl -p err -n 20 --no-pager
+
+echo -e "\n... broken symlinks"
+find /usr/bin /usr/lib -xtype l 2>/dev/null | head -10
+

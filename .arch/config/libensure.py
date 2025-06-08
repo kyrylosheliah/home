@@ -1,23 +1,30 @@
 # Example
 #ensure([
-#  { "ensure": packages_installed, "for": [ "", "", "" ] },
-#  { "ensure": aur_packages_installed, "for": [ "", "", "" ] },
-#  { "ensure": services_enabled, "for": [ "", "", "" ] },
-#  {
-#    "ensure": files_contents,
-#    "for": [
-#      {
-#        "filename": "",
-#        "contents": ""
-#      },
-#    ]
-#  },
+#    { "ensure": packages_installed, "for": [
+#        "",
+#        "",
+#        "",
+#        ] },
+#    { "ensure": aur_packages_installed, "for": [ "", "", "" ] },
+#    { "ensure": services_enabled, "for": [ "", "", "" ] },
+#    { "ensure": files_contents, "for": [
+#        {
+#          "filename": "",
+#          "contents": ""
+#        },
+#        ] },
+#    { "ensure": files_contents, "for": [
+#        { "filename": "", "contents": """
+#[abcd]
+#efgh
+#            """ },
+#        ] },
 #])
-#
 
 import subprocess
 import sys
 import os
+import shlex
 from pathlib import Path
 from typing import List, Dict, Union
 
@@ -31,10 +38,10 @@ class bcolors:
     YELLOW = '\033[93m'
 
 def log_error(message: str):
-    print(f"ensure.py |{bcolors.RED}{bcolors.BOLD}{message}{bcolors.ENDC}")
+    print(f"ensure.py | {bcolors.RED}{bcolors.BOLD}{message}{bcolors.ENDC}")
 
 def log_success(message: str):
-    print(f"ensure.py |{bcolors.GREEN}{bcolors.BOLD}{message}{bcolors.ENDC}")
+    print(f"ensure.py | {bcolors.GREEN}{bcolors.BOLD}{message}{bcolors.ENDC}")
 
 def log_warning(message: str):
     print(f"ensure.py | {bcolors.YELLOW}{message}{bcolors.ENDC}")
@@ -47,58 +54,60 @@ def sh(command: List[str]) -> subprocess.CompletedProcess[str]:
 
 packages_installed = 0
 aur_packages_installed = 1
-services_enabled = 2
-files_contents = 3
+system_services_enabled = 2
+user_services_enabled = 3
+files_contents = 4
 
 operations = {}
-
-def ensure_yay_installed():
-    """Ensure yay AUR helper is installed"""
-    check_result = sh(['which', 'yay'])
-    if check_result.returncode == 0:
-        return True
-    log_info("Installing yay")
-    original_cwd = os.getcwd()
-    temp_dir = "/tmp"
-    try:
-        os.chdir(temp_dir)
-        yay_dir = Path(temp_dir) / "yay"
-        if yay_dir.exists():
-            sh(['rm', 'rf', str(yay_dir)])
-        clone_result = sh(['git', 'clone', 'https://aur.archlinux.org/yay.git'])
-        if clone_result.returncode != 0:
-            log_error(f"Failed to clone yay repository: {clone_result.stderr}")
-            return False
-        os.chdir(str(yay_dir))
-        makepgk_result = sh(['makepkg', '-si', '--noconfirm'])
-        if makepkg_result.returncode != 0:
-            log_error(f"Failed to build yay: {makepkg_result.stderr}")
-            return False
-        return True
-    except Exception as e:
-        log_error(f"Error installing yay: {e}")
-        return False
-    finally:
-        os.chdir(original_cwd)
-        yay_dir = Path(temp_dir) / "yay"
-        if yay_dir.exists():
-            sh(['rm', '-rf', str(yay_dir)])
-
-def ensure(configurations_sequence: List[Dict]) -> bool:
-    """Main function to ensure all configurations are applied sequentially"""
-    for subject in configurations_sequence:
-        result = operations[subject["ensure"]](subject["for"])
-        if not result:
-            log_error(f"ensure(): Failed")
-            return False
-    return True
 
 def package_exists(package_name: str) -> bool:
     check_result = sh(['pacman', '-Q', package_name])
     if check_result.returncode == 0:
-        log_info(f"Package '{package_name}' is already installed")
+        #log_info(f"Package '{package_name}' is already installed")
         return True
     return False
+
+def ensure_aur_package_installed_raw(package_name):
+    """Ensure some package is installed from AUR assuming yay isn't available"""
+    #check_result = sh(['which', 'yay'])
+    if package_exists(package_name):
+        return True
+    log_info(f"Installing {package_name} raw from AUR")
+    original_cwd = os.getcwd()
+    temp_dir = "/tmp"
+    try:
+        os.chdir(temp_dir)
+        package_dir = Path(temp_dir) / package_name
+        if package_dir.exists():
+            sh(['rm', 'rf', str(package_dir)])
+        clone_result = sh(['git', 'clone', f'https://aur.archlinux.org/{package_name}.git'])
+        if clone_result.returncode != 0:
+            log_error(f"Failed to clone '{package_name}' from AUR repository: {clone_result.stderr}")
+            return False
+        os.chdir(str(package_dir))
+        makepkg_result = sh(['makepkg', '-si', '--noconfirm'])
+        if makepkg_result.returncode != 0:
+            log_error(f"Failed to build '{package_name}': {makepkg_result.stderr}")
+            return False
+        return True
+    except Exception as e:
+        log_error(f"Error ensuring '{package_name}' from AUR: {e}")
+        return False
+    finally:
+        os.chdir(original_cwd)
+        package_dir = Path(temp_dir) / package_name
+        if package_dir.exists():
+            sh(['rm', '-rf', str(package_dir)])
+
+def ensure(configurations_sequence: List[Dict]) -> bool:
+    """Main function to ensure all configurations are applied sequentially"""
+    ensure_aur_package_installed_raw("yay") # hard dependency
+    for subject in configurations_sequence:
+        result = operations[subject["ensure"]](subject["for"])
+        if not result:
+            #log_error(f"ensure(): Failed")
+            return False
+    return True
 
 def ensure_packages_installed(package_list: List[str]) -> bool:
     """Ensure packages are installed using pacman"""
@@ -128,53 +137,56 @@ def ensure_aur_packages_installed(package_list: List[str]) -> bool:
 
 operations[aur_packages_installed] = ensure_aur_packages_installed
 
-def ensure_services_enabled(service_list: List[str]) -> bool:
+def ensure_services_enabled(is_system: bool, service_list: List[str]) -> bool:
     """Ensure services are enabled and started"""
     for service_name in service_list:
         if not service_name.endswith('.service'):
             service_name += '.service'
-        log_info(f"Enabling service '{service_name}'")
-        enable_result = sh(['sudo', 'systemctl', 'enable', service_name])
+        enable_result = sh(['systemctl', mode, 'enable', service_name])
         if enable_result.returncode != 0:
             log_error(f"Failed to enable service '{service_name}': {enable_result.stderr}")
             return False
-        status_result = sh(['sudo', 'systemctl', 'is-active', service_name])
-        if status_result.stdouit.strip() != 'active':
+        status_result = sh(['systemctl', mode, 'is-active', service_name])
+        if status_result.stdout.strip() != 'active':
             log_info(f"Starting service '{service_name}'")
-            start_result = sh(['sudo', 'systemctl', 'start', service_name])
+            start_result = sh(['systemctl', mode, 'start', service_name])
             if start_result.returncode != 0:
                 print(f"Failed to start service'{service_name}: {start_result.stderr}")
                 return False
     return True
 
-operations[services_enabled] = ensure_services_enabled
+def ensure_system_services_enabled(service_list: List[str]) -> bool:
+    return ensure_services_enabled("--system", service_list)
 
-def ensure_files_contents(file_list: List[Dict[str, str]]) -> bool:
-    """Ensure files have specified contents (appends if missing)"""
+operations[system_services_enabled] = ensure_system_services_enabled
+
+def ensure_user_services_enabled(service_list: List[str]) -> bool:
+    return ensure_services_enabled("--user", service_list)
+
+operations[user_services_enabled] = ensure_user_services_enabled
+
+def ensure_files_contents(file_list):
     for file_config in file_list:
         filename = file_config["filename"]
         contents = file_config["contents"]
-        file_path = Path(filename)
-        file_path.parent.mkdir(parents=True, exist_ok=True)
-        current_content = ""
-        if file_path.exists():
-            try:
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    current_content = f.read()
-            except UnicodeDecodeError:
-                with open(file_path, 'r', encoding='latin-1') as f:
-                    current_content = f.read()
-        if contents in current_content:
+        result = subprocess.call(
+            f"sudo grep -Fq -- {shlex.quote(contents)} {shlex.quote(filename)}",
+            shell=True, )
+        if result == 0:
             continue
         log_info(f"Appending content to '{filename}'")
+        newline_result = subprocess.call(
+                # 0a = newline
+                f"sudo tail -c1 {shlex.quote(filename)} | od -An -t x1 | grep -q '0a'",
+                shell=True, )
+        if newline_result != 0:
+            contents = "\n" + contents
         try:
-            with open(file_path, 'a', encoding='utf-8') as f:
-                if current_content and not current_content.endswith('\n'):
-                    f.write('\n')
-                f.write(contents)
-                if not contents.endswith('\n'):
-                    f.write('\n')
-        except Exception as e:
+            subprocess.run(
+                f"sudo echo {shlex.quote(contents)} >> {shlex.quote(filename)}",
+                shell=True,
+                check=True, )
+        except subprocess.CalledProcessError as e:
             log_error(f"Error writing to '{filename}': {e}")
             return False
     return True

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+echo -e "\n# Explicitly installed packages"
+pacman -Qe
+echo "# total: "
+pacman -Qe | wc -l
+
+echo -e "\n# AUR packages"
+pacman -Qm
+echo "# total: "
+pacman -Qm | wc -l
+
