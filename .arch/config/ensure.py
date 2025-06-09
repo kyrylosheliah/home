@@ -2,16 +2,7 @@
 
 import sys
 import os
-import socket
-from libensure import (
-    ensure,
-    packages_installed,
-    aur_packages_installed,
-    system_services_enabled,
-    user_services_enabled,
-    files_contents,
-    log_error,
-)
+from libensure import log_error
 
 if __name__ != '__main__':
     log_error("This script is not a library")
@@ -20,6 +11,16 @@ if __name__ != '__main__':
 if os.getuid() == 0:
     log_error("This script should not be run as a root or with sudo")
     sys.exit(1)
+
+import socket
+from libensure import (
+    ensure,
+    packages_installed,
+    aur_packages_installed,
+    system_services_active,
+    user_services_active,
+    files_contents,
+)
 
 username = os.getlogin()
 hostname = socket.gethostname()
@@ -30,7 +31,7 @@ sys.exit(1 if False == ensure([
     { "ensure": packages_installed, "for": [
         'networkmanager',
         ] },
-    { "ensure": system_services_enabled, "for": [
+    { "ensure": system_services_active, "for": [
         'NetworkManager.service',
         ] },
 
@@ -38,7 +39,7 @@ sys.exit(1 if False == ensure([
     { "ensure": packages_installed, "for": [
         "bluez", "bluez-utils"
         ] },
-    { "ensure": system_services_enabled, "for": [
+    { "ensure": system_services_active, "for": [
         "bluetooth.service",
         ] },
 
@@ -49,12 +50,12 @@ sys.exit(1 if False == ensure([
         "pipewire-jack",
         "pipewire-pulse",
         ] },
-    { "ensure": user_services_enabled, "for": [
+    { "ensure": user_services_active, "for": [
         'pipewire-pulse.service',
         ] },
 
     # storage
-    { "ensure": system_services_enabled, "for": [
+    { "ensure": system_services_active, "for": [
         "fstrim.timer", # Enable TRIM for SSDs
         ] },
 
@@ -66,21 +67,14 @@ sys.exit(1 if False == ensure([
         'curl',
         'unzip',
         'man-db',
-        ] },
-
-    # git
-    { "ensure": packages_installed, "for": [
+        # git and related
         'git',
         'less',
-        ] },
-
-    # desktop
-    { "ensure": packages_installed, "for": [
         # fonts
         "noto-fonts",
         "noto-fonts-emoji",
         "ttf-iosevka-nerd",
-        # ui
+        # desktop ui
         "hyprland",
         "hyprpaper",
         "waybar",
@@ -100,14 +94,15 @@ sys.exit(1 if False == ensure([
     # graphics
     { "ensure": files_contents, "for": [
         # multilib repository
-        { "filename": "/etc/pacman.conf", "contents": """
+        { "filename": "/etc/pacman.conf", "content": """
 [multilib]
 Include = /etc/pacman.d/mirrorlist
             """ },
         ] },
     # amd graphics
     { "ensure": packages_installed, "for": [
-        "mesa", "lib32-mesa", "vulkan-radeon", "lib32-vulkan-radeon",
+        "mesa", "lib32-mesa",
+        "vulkan-radeon", "lib32-vulkan-radeon",
         "vulkan-icd-loader", "lib32-vulkan-icd-loader",
         ] },
     { "ensure": aur_packages_installed, "for": [
@@ -118,8 +113,6 @@ Include = /etc/pacman.d/mirrorlist
     #    "nvidia", "nvidia-utils", "lib32-nvidia-utils", "nvidia-settings",
     #    "opencl-nvidia",
     #    ] },
-    # TODO: EITHER dispatch accumulation per hostname OR make an addtional
-    # detailed hardware configuration `*.py` imported interface
 
     ## gaming
     ## launchers

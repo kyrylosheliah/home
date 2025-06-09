@@ -1,4 +1,4 @@
-# Example
+# Example usage
 #ensure([
 #    { "ensure": packages_installed, "for": [
 #        "",
@@ -8,11 +8,11 @@
 #    { "ensure": files_contents, "for": [
 #        {
 #          "filename": "",
-#          "contents": ""
+#          "content": ""
 #        },
 #        ] },
 #    { "ensure": files_contents, "for": [
-#        { "filename": "", "contents": """
+#        { "filename": "", "content": """
 #[abcd]
 #efgh
 #            """ },
@@ -35,7 +35,7 @@ class bcolors:
     GREEN = '\033[92m'
     YELLOW = '\033[93m'
 
-log_prefix = f"{bcolors.DIM}ensure:{bcolors.ENDC} "
+log_prefix = f"{bcolors.DIM}libensure:{bcolors.ENDC} "
 
 def log_error(message: str):
     print(f"{log_prefix}{bcolors.RED}{bcolors.BOLD}{message}{bcolors.ENDC}")
@@ -57,24 +57,24 @@ def sh(command: str) -> subprocess.CompletedProcess[str]:
 
 packages_installed = 0
 aur_packages_installed = 1
-user_services_enabled = 2
-system_services_enabled = 3
+user_services_active = 2
+system_services_active = 3
 files_contents = 4
 
 operations = {}
 
 def package_is_installed(package_name: str) -> bool:
     if 0 == run(['pacman', '-Q', package_name]).returncode:
-        log_info(f"Package '{package_name}' is already installed")
+        log_info(f"Package '{package_name}' was already installed")
         return True
     log_warning(f"Package '{package_name}' is not installed")
     return False
 
 def ensure_aur_package_installed_raw(package_name):
     """Ensure some package is installed from AUR assuming yay isn't available"""
-    if package_is_installed(package_name): # run(['which', 'yay'])
+    if package_is_installed(package_name):
         return True
-    log_warning(f"Installing '{package_name}' raw from AUR")
+    log_info(f"Installing AUR package '{package_name}'")
     original_cwd = os.getcwd()
     temp_dir = "/tmp"
     try:
@@ -84,16 +84,17 @@ def ensure_aur_package_installed_raw(package_name):
             run(['rm', 'rf', str(package_dir)])
         clone_result = run(['git', 'clone', f'https://aur.archlinux.org/{package_name}.git'])
         if 0 != clone_result.returncode:
-            log_error(f"Failed to clone '{package_name}' from AUR repository: {clone_result.stderr}")
+            log_error(f"Failed to clone AUR package '{package_name}': {clone_result.stderr}")
             return False
         os.chdir(str(package_dir))
         makepkg_result = run(['makepkg', '-si', '--noconfirm'])
         if 0 != makepkg_result.returncode:
             log_error(f"Failed to build '{package_name}': {makepkg_result.stderr}")
             return False
+        log_success(f"Installed AUR package '{package_name}'")
         return True
     except Exception as e:
-        log_error(f"Error ensuring '{package_name}' from AUR: {e}")
+        log_error(f"Error ensuring AUR package '{package_name}': {e}")
         return False
     finally:
         os.chdir(original_cwd)
@@ -117,11 +118,11 @@ def ensure_packages_installed(package_list: List[str]) -> bool:
     for package_name in package_list:
         if package_is_installed(package_name):
             continue
-        log_info(f"Installing pacman package '{package_name}'")
         install_result = run(['sudo', 'pacman', '-S', '--noconfirm', package_name])
         if 0 != install_result.returncode:
             log_error(f"Failed to install pacman package '{package_name}': {install_result.stderr}")
             return False
+        log_success(f"Installed pacman package '{package_name}'")
     return True
 
 operations[packages_installed] = ensure_packages_installed
@@ -131,11 +132,11 @@ def ensure_aur_packages_installed(package_list: List[str]) -> bool:
     for package_name in package_list:
         if package_is_installed(package_name):
             continue
-        log_info(f"Installing AUR package '{package_name}'")
         install_result = run(['yay', '-S', '--noconfirm', package_name])
         if 0 != install_result.returncode:
             log_error(f"Failed to install AUR package '{package_name}': {install_result.stderr}")
             return False
+        log_success(f"Installed AUR package '{package_name}'")
     return True
 
 operations[aur_packages_installed] = ensure_aur_packages_installed
@@ -145,53 +146,55 @@ systemctl_prefixes = [
     [ "sudo", "systemctl" ], # is_system = True or 1
 ]
 
-def ensure_services_enabled(systemctl_prefix: List[str], service_list: List[str]) -> bool:
-    """Ensure services are enabled and started"""
+def ensure_services_active(systemctl_prefix: List[str], service_list: List[str]) -> bool:
+    """Ensure services are enabled and active"""
     for service_name in service_list:
-        #if not service_name.endswith('.service'):
-        #    service_name += '.service'
         if 'enabled' != run(systemctl_prefix + ['is-enabled', service_name]).stdout.strip():
             log_info(f"Enabling service '{service_name}'")
             enable_result = run(systemctl_prefix + ['enable', service_name])
             if 0 != enable_result.returncode:
                 log_error(f"Failed to enable service '{service_name}': {enable_result.stderr}")
                 return False
+            log_success(f"Service '{service_name}' is enabled")
         if 'active' != run(systemctl_prefix + ['is-active', service_name]).stdout.strip():
             log_info(f"Starting service '{service_name}'")
             start_result = run(systemctl_prefix + ['start', service_name])
             if 0 != start_result.returncode:
                 print(f"Failed to start service '{service_name}': {start_result.stderr}")
                 return False
+            log_success(f"Service '{service_name}' is active")
     return True
 
-def ensure_user_services_enabled(service_list: List[str]) -> bool:
-    return ensure_services_enabled(systemctl_prefixes[0], service_list)
+def ensure_user_services_active(service_list: List[str]) -> bool:
+    return ensure_services_active(systemctl_prefixes[0], service_list)
 
-operations[user_services_enabled] = ensure_user_services_enabled
+operations[user_services_active] = ensure_user_services_active
 
-def ensure_system_services_enabled(service_list: List[str]) -> bool:
-    return ensure_services_enabled(systemctl_prefixes[1], service_list)
+def ensure_system_services_active(service_list: List[str]) -> bool:
+    return ensure_services_active(systemctl_prefixes[1], service_list)
 
-operations[system_services_enabled] = ensure_system_services_enabled
+operations[system_services_active] = ensure_system_services_active
 
 def ensure_files_contents(file_list):
+    """Ensure listed files contain specified text"""
     for file_config in file_list:
         filename = file_config["filename"]
-        contents = file_config["contents"]
+        content = file_config["content"]
         grep_result = sh(
-            f"sudo grep -Fq -- {shlex.quote(contents)} {shlex.quote(filename)}")
+            f"sudo grep -Fq -- {shlex.quote(content)} {shlex.quote(filename)}")
         if 0 == grep_result.returncode:
             continue
-        log_info(f"Appending content to '{filename}'")
+        log_warning(f"File '{filename}' content missing")
         newline_result = sh( # 0a = newline
             f"sudo tail -c1 {shlex.quote(filename)} | od -An -t x1 | grep -q '0a'")
         if 0 != newline_result.returncode:
-            contents = "\n" + contents
+            content = "\n" + content
         write_result = sh(
-            f"sudo echo {shlex.quote(contents)} >> {shlex.quote(filename)}")
+            f"sudo echo {shlex.quote(content)} >> {shlex.quote(filename)}")
         if 0 != write_result.returncode:
             log_error(f"Error writing to '{filename}': {write_result.stderr}")
             return False
+        log_success(f"File '{filename}' content written")
     return True
 
 operations[files_contents] = ensure_files_contents
