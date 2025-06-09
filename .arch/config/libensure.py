@@ -65,7 +65,6 @@ operations = {}
 
 def package_is_installed(package_name: str) -> bool:
     if 0 == run(['pacman', '-Q', package_name]).returncode:
-        log_info(f"Package '{package_name}' was already installed")
         return True
     log_warning(f"Package '{package_name}' is not installed")
     return False
@@ -74,7 +73,6 @@ def ensure_aur_package_installed_raw(package_name):
     """Ensure some package is installed from AUR assuming yay isn't available"""
     if package_is_installed(package_name):
         return True
-    log_info(f"Installing AUR package '{package_name}'")
     original_cwd = os.getcwd()
     temp_dir = "/tmp"
     try:
@@ -150,14 +148,14 @@ def ensure_services_active(systemctl_prefix: List[str], service_list: List[str])
     """Ensure services are enabled and active"""
     for service_name in service_list:
         if 'enabled' != run(systemctl_prefix + ['is-enabled', service_name]).stdout.strip():
-            log_info(f"Enabling service '{service_name}'")
+            log_warning(f"Service '{service_name}' is not enabled")
             enable_result = run(systemctl_prefix + ['enable', service_name])
             if 0 != enable_result.returncode:
                 log_error(f"Failed to enable service '{service_name}': {enable_result.stderr}")
                 return False
             log_success(f"Service '{service_name}' is enabled")
         if 'active' != run(systemctl_prefix + ['is-active', service_name]).stdout.strip():
-            log_info(f"Starting service '{service_name}'")
+            log_warning(f"Service '{service_name}' is not started")
             start_result = run(systemctl_prefix + ['start', service_name])
             if 0 != start_result.returncode:
                 print(f"Failed to start service '{service_name}': {start_result.stderr}")
