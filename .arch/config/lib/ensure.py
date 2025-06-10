@@ -1,7 +1,7 @@
 import os
 import shlex
 from pathlib import Path
-from typing import List
+from typing import List, Dict
 from lib.helpers import run, sh, bcolors
 import lib.helpers as helpers
 
@@ -62,15 +62,15 @@ module = 0 # { "title": str, "for": Block | List[Block] }
 conditional_module = 1 # { "title": str, "condition": Lambda, "module": Module }
 conditional_error = 2 # { "title": str, "condition": Lambda }
 conditional_execution = 3 # { "title": str, "condition": Lambda, "function": Lambda }
-packages_installed = 4 # str
-aur_packages_installed = 5 # str
-user_services_active = 6 # str
-system_services_active = 7 # str
-files_contents = 8 # { "filename": str, "content": str }
+package_installed = 4 # str
+aur_package_installed = 5 # str
+user_service_active = 6 # str
+system_service_active = 7 # str
+file_content = 8 # { "filename": str, "content": str }
 
 operations = {}
 
-def ensure_module(module) -> bool:
+def ensure_module(module: Dict) -> bool:
     """Main function to ensure all configurations are applied sequentially"""
     blocks = module["for"]
     ensure_aur_package_installed_raw("yay") # hard dependency
@@ -90,26 +90,26 @@ def ensure_module(module) -> bool:
 
 operations[module] = ensure_module
 
-def ensure_conditional_module(block):
-    if block.condition():
+def ensure_conditional_module(block: Dict) -> bool:
+    if block["condition"]():
         return ensure_module(block.module)
     return True
 
 operations[conditional_module] = ensure_conditional_module
 
-def ensure_conditional_error(block):
-    if not block.condition():
-        log_error(f"Unexpected condition for '{block.title}'")
+def ensure_conditional_error(block: Dict) -> bool:
+    if not block["condition"]():
+        log_error(f"Unexpected condition for '{block["title"]}'")
         return False
     return True
 
 operations[conditional_error] = ensure_conditional_error
 
-def ensure_conditional_execution(block):
-    if not block.condition():
+def ensure_conditional_execution(block: Dict):
+    if not block["condition"]():
         return True
-    if not block.function():
-        log_error(f"Unexpected conditional result for '{block.title}'")
+    if not block["function"]():
+        log_error(f"Unexpected conditional result for '{block["title"]}'")
         return False
     return True
 
@@ -126,7 +126,7 @@ def ensure_package_installed(package_name: str) -> bool:
     log_success(f"Installed pacman package '{package_name}'")
     return True
 
-operations[packages_installed] = ensure_package_installed
+operations[package_installed] = ensure_package_installed
 
 def ensure_aur_package_installed(package_name: str) -> bool:
     """Ensure an AUR package is installed using yay"""
@@ -139,7 +139,7 @@ def ensure_aur_package_installed(package_name: str) -> bool:
     log_success(f"Installed AUR package '{package_name}'")
     return True
 
-operations[aur_packages_installed] = ensure_aur_package_installed
+operations[aur_package_installed] = ensure_aur_package_installed
 
 systemctl_prefixes = [
     [ "systemctl", "--user" ], # is_system = False or 0
@@ -167,14 +167,14 @@ def ensure_service_active(systemctl_prefix: List[str], service_name: str) -> boo
 def ensure_user_service_active(service_name: str) -> bool:
     return ensure_service_active(systemctl_prefixes[0], service_name)
 
-operations[user_services_active] = ensure_user_service_active
+operations[user_service_active] = ensure_user_service_active
 
 def ensure_system_service_active(service_name: str) -> bool:
     return ensure_service_active(systemctl_prefixes[1], service_name)
 
-operations[system_services_active] = ensure_system_service_active
+operations[system_service_active] = ensure_system_service_active
 
-def ensure_file_contents(file_config):
+def ensure_file_content(file_config: Dict) -> bool:
     """Ensure a file contains specified text"""
     filename = file_config["filename"]
     content = file_config["content"]
@@ -195,5 +195,5 @@ def ensure_file_contents(file_config):
     log_success(f"File '{filename}' content written")
     return True
 
-operations[files_contents] = ensure_file_contents
+operations[file_content] = ensure_file_content
 

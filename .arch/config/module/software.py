@@ -1,49 +1,45 @@
 import sys
+import os
 sys.path.append('../lib')
 from lib.ensure import (
-    packages_installed,
-    aur_packages_installed,
-    system_services_active,
-    user_services_active,
-    files_contents,
+    conditional_execution,
+    package_installed,
+    aur_package_installed,
+    system_service_active,
+    user_service_active,
+    file_content,
+)
+from lib.helpers import (
+    file_exists,
+    sh,
 )
 
-software_module = { "title": "Root software", "for": [
-
+blocks = [
     # network
-    { "ensure": packages_installed, "for": [
-        'networkmanager',
-        ] },
-    { "ensure": system_services_active, "for": [
-        'NetworkManager.service',
-        ] },
+    { "ensure": package_installed, "for": 'networkmanager' },
+    { "ensure": system_service_active, "for": 'NetworkManager.service' },
 
     # bluetooth
-    { "ensure": packages_installed, "for": [
+    { "ensure": package_installed, "for": [
         "bluez", "bluez-utils"
         ] },
-    { "ensure": system_services_active, "for": [
-        "bluetooth.service",
-        ] },
+    { "ensure": system_service_active, "for": "bluetooth.service" },
 
     # audio
-    { "ensure": packages_installed, "for": [
+    { "ensure": package_installed, "for": [
         "pipewire",
         "pipewire-alsa",
         "pipewire-jack",
         "pipewire-pulse",
         ] },
-    { "ensure": user_services_active, "for": [
-        'pipewire-pulse.service',
-        ] },
+    { "ensure": user_service_active, "for": 'pipewire-pulse.service' },
 
     # storage
-    { "ensure": system_services_active, "for": [
-        "fstrim.timer", # Enable TRIM for SSDs
-        ] },
+    # Enable TRIM for SSDs
+    { "ensure": system_service_active, "for": "fstrim.timer" },
 
     # base
-    { "ensure": packages_installed, "for": [
+    { "ensure": package_installed, "for": [
         'base-devel',
         'htop',
         'wget',
@@ -56,63 +52,62 @@ software_module = { "title": "Root software", "for": [
         # fonts
         "noto-fonts",
         "noto-fonts-emoji",
+        ] },
+
+    # desktop ui
+    { "ensure": package_installed, "for": [
         "ttf-iosevka-nerd",
-        # desktop ui
         "hyprland",
         "hyprpaper",
         "waybar",
         "rofi-wayland",
-        ] },
+        ]},
 
     # development
-    { "ensure": packages_installed, "for": [
+    { "ensure": package_installed, "for": [
         #"python",
         "neovim", # laptop kb baaaaad
         "wl-clipboard", # neovim to linux and vice versa clipboard support
         ] },
-    { "ensure": aur_packages_installed, "for": [
+    { "ensure": aur_package_installed, "for": [
         "code",
         ] },
 
     # graphics
-    { "ensure": files_contents, "for": [
-        # multilib repository
-        { "filename": "/etc/pacman.conf", "content": """
+    # multilib repository
+    { "ensure": file_content, "for": { "filename": "/etc/pacman.conf", "content": """
 [multilib]
 Include = /etc/pacman.d/mirrorlist
-            """ },
-        ] },
+        """ }, },
     # amd graphics
-    { "ensure": packages_installed, "for": [
+    { "ensure": package_installed, "for": [
         "mesa", "lib32-mesa",
         "vulkan-radeon", "lib32-vulkan-radeon",
         "vulkan-icd-loader", "lib32-vulkan-icd-loader",
         ] },
-    { "ensure": aur_packages_installed, "for": [
-        "lact",
-        ] },
+    { "ensure": aur_package_installed, "for": "lact" },
     # nvidia graphics
-    #{ "ensure": packages_installed, "for": [
+    #{ "ensure": package_installed, "for": [
     #    "nvidia", "nvidia-utils", "lib32-nvidia-utils", "nvidia-settings",
     #    "opencl-nvidia",
     #    ] },
 
     ## gaming
     ## launchers
-    #{ "ensure": packages_installed, "for": [
+    #{ "ensure": package_installed, "for": [
     #    "steam", "lutris", "gamescope",
     #    ] },
     ## windows compatibility
-    #{ "ensure": packages_installed, "for": [
+    #{ "ensure": package_installed, "for": [
     #    "wine-staging", "winetricks",
     #    "proton-ge-custom-bin", "dxvk-bin",
     #    "vkd3d-proton-bin",
     #    ] },
     ## low-level features or driver compatibility
-    #{ "ensure": packages_installed, "for": [
+    #{ "ensure": package_installed, "for": [
     #    "linux-headers", "solaar", "xwaylandvideobridge", "xone-dkms-git"
     #    ] },
-    #{ "ensure": packages_installed, "for": [
+    #{ "ensure": package_installed, "for": [
     #    # native and 32 bit compatibility libraries
     #    "giflib", "lib32-giflib",
     #    "libpng", "lib32-libpng",
@@ -143,12 +138,13 @@ Include = /etc/pacman.d/mirrorlist
     #    ] },
 
     # apps
-    { "ensure": packages_installed, "for": [
+    { "ensure": package_installed, "for": [
         #"obs-studio",
         #"goverlay",
 
         "discord",
         "firefox",
         ] },
+]
 
-] }
+software_module = { "title": "Root software", "for": blocks }

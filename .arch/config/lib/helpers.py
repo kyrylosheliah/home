@@ -1,5 +1,6 @@
 import subprocess
 import sys
+from pathlib import Path
 from typing import List
 
 # https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
@@ -28,4 +29,7 @@ def run(command: List[str]) -> subprocess.CompletedProcess[str]:
 
 def sh(command: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(command, shell=True)
+
+def file_exists(path: str) -> bool:
+    return Path(path).is_file()
 
