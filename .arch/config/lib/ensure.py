@@ -85,7 +85,7 @@ def ensure_module(module: Dict) -> bool:
             if not operation(parameter):
                 log_error(f"Error in module {module["title"]}")
                 return False
-    log_success("Module check success")
+    log_success(f"Module '{module['title']}' check success")
     return True
 
 operations[module] = ensure_module

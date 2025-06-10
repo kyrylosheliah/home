@@ -5,10 +5,10 @@ M = {}
 
 local c = {}
 -- Tint
-c.tin = 0.15
-c.tint = def.c["Tan3"]
+c.tin = 0.0
+c.tint = def.c["Yellow"]
 -- Primary color saturation
-c.pri = 0.0--0.08
+c.pri = 0.1--0.08
 c.primary = def.c["Magenta"]
 -- Saturation
 c.sat = 1.0
@@ -111,11 +111,11 @@ local highlight = {
   ["VertSplit"] = { fg = c.sub_gray }, -- the column separating vertically split windows
   ["WinSeparator"] = { fg = c.sub_gray }, -- the column separating vertically split windows
   ["Folded"] = { fg = c.gray }, -- line used for closed folds
-  ["FoldColumn"] = { bg = vim.g.transparent and c.none or c.black, fg = c.gray }, -- column where folds are displayed
+  ["FoldColumn"] = { fg = c.gray, bg = vim.g.transparent and c.none or c.black }, -- column where folds are displayed
   ["SignColumn"] = { fg = c.white, bg = vim.g.transparent and c.none or nil }, -- column where signs are displayed
   ["IncSearch"] = { fg = c.black, bg = c.pure_green }, -- 'incsearch' highlighting; also used for the text replaced with ":s///c"
   ["CurSearch"] = { fg = c.black, bg = c.pure_green }, -- 'cursearch' highlighting; also used for the text replaced with ":s///c"
-  ["LineNr"] = { fg = c.sub_gray, bg = vim.g.transparent and c.none or nil }, -- Line number for " =number" and ":#" commands, and when 'number' or 'relativenumber' option is set.
+  ["LineNr"] = { fg = c.sub_white, bg = vim.g.transparent and c.none or nil }, -- Line number for " =number" and ":#" commands, and when 'number' or 'relativenumber' option is set.
   ["CursorLineNr"] = { fg = c.white, bg = c.sub_gray }, -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
   ["MatchParen"] = { fg = c.pure_black, bg = c.pure_purple }, -- The character under the cursor or just before it, if it is a paired bracket, and its match.
   ["ModeMsg"] = { fg = c.gray, bold = true }, --' showmode' message (e.g., "-- INSERT --")

@@ -15,9 +15,9 @@ if os.getuid() == 0:
     log_error("This script should not be run as a root or with sudo")
     sys.exit(1)
 
-from module.software import software_module
-
-root_result = ensure_module(software_module)
-
-sys.exit(0 if root_result else 1)
+#from module.software import software_module
+#
+#root_result = ensure_module(software_module)
+#
+#sys.exit(0 if root_result else 1)
 

@@ -1,5 +1,4 @@
 
-
 # # Adding a Hyprland plugin
 #
 ## hyprpm dependencies
@@ -23,3 +22,4 @@
 #    "condition": lambda: not file_exists(f"/var/cache/hyprpm/{username}/hy3/hy3.so"),
 #    "function": install_hy3,
 #    } },)
+

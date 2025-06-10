@@ -1,10 +1,9 @@
 # Arch Linux Configuration
 
 ## TODOs:
-- Dispatch configuration accumulation per hostname from a separate hardware
-config file import.
-- *ensure hyprland plugin installed block*
-- *ensure user present with a password prompt block*
-- separate first install script
+- firstinstall ensure user present with a password prompt
+- firstinstall secureboot installation
+- firstinstall archinstall configuration
+- Cardreader?
 - (yet to require) Blocks for comment/uncomment, line replace, variable assign
 or regex replace features.
