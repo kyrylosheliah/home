@@ -1,20 +1,6 @@
-#!/usr/bin/env python3
-
 import sys
-import os
-from libensure import log_error
-
-if __name__ != '__main__':
-    log_error("This script is not a library")
-    sys.exit(1)
-
-if os.getuid() == 0:
-    log_error("This script should not be run as a root or with sudo")
-    sys.exit(1)
-
-import socket
-from libensure import (
-    ensure,
+sys.path.append('../lib')
+from lib.ensure import (
     packages_installed,
     aur_packages_installed,
     system_services_active,
@@ -22,10 +8,7 @@ from libensure import (
     files_contents,
 )
 
-username = os.getlogin()
-hostname = socket.gethostname()
-
-sys.exit(1 if False == ensure([
+software_module = { "title": "Root software", "for": [
 
     # network
     { "ensure": packages_installed, "for": [
@@ -161,12 +144,11 @@ Include = /etc/pacman.d/mirrorlist
 
     # apps
     { "ensure": packages_installed, "for": [
-        # recording
-        #"obs-studio", "goverlay"
-        # apps
+        #"obs-studio",
+        #"goverlay",
+
         "discord",
         "firefox",
         ] },
 
-]) else 0) # END ensure()
-
+] }
