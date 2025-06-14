@@ -64,6 +64,9 @@ blocks = [
         "hyprland",
         "hyprpaper",
         "waybar",
+        "hicolor-icon-theme",
+        "otf-font-awesome",
+        "dunst",
         "rofi-wayland",
         # dark theme
         "xdg-desktop-portal-gtk",

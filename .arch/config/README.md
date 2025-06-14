@@ -2,8 +2,14 @@
 
 ## TODOs:
 - firstinstall ensure user present with a password prompt
-- firstinstall secureboot installation
-- firstinstall archinstall configuration
+- firstinstall secureboot
+- firstinstall partition
+- Pull in archinstall config
+- Secrets storage?
 - Cardreader?
-- (yet to require) Blocks for comment/uncomment, line replace, variable assign
-or regex replace features.
+- Text to speech?
+- hpfall?
+- (yet to require) Blocks for comment/uncomment, line replace, and regex
+replace features.
+- (yet to require) Variable assign via external CLI tool, like `git config`
+
