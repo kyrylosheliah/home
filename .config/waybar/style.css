@@ -5,7 +5,6 @@
 * {
   font-size: 16px;
   font-family: "Iosevka NF", "sans-serif";
-  min-width: 8px;
   border: none;
   box-shadow: none;
   text-shadow: none;
@@ -18,41 +17,26 @@ window#waybar {
   background: @background;
 }
 
+.modules-left > *,
+.modules-center > *,
+.modules-right > * {
+  padding: 0 8px;
+}
+
+#waybar .module {
+  padding: 0 8px;
+}
+
 menu,
 tooltip {
-  border: 1px solid @foreground;
-  background: alpha(@background, 0.5);
-  color: @foreground;
+  border: 2px solid @foreground;
+  background: alpha(@background, 0.8);
 }
 
 menu label,
 tooltip label {
   color: @foreground;
 }
-
-#gcpu,
-#custom-github,
-#memory,
-#disk,
-#together,
-#submap,
-#custom-weather,
-#custom-recorder,
-#connection,
-#cnoti,
-#brightness,
-#power,
-#custom-updates,
-#tray,
-#audio,
-#privacy,
-#sound {
-  padding-left: 1px;
-  margin-left: 2px;
-  padding-right: 1px;
-  margin-right: 2px;
-}
-
 
 #submap,
 #tray>.needs-attention {

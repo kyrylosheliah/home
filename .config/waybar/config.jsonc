@@ -5,75 +5,146 @@
   "modules-left": [
     "tray",
     "hyprland/workspaces",
-    "hyprland/submap",
-    "group/info"
-  ],
-  "modules-center": [
     "hyprland/window"
   ],
-  "modules-right": [
-    "privacy",
-    "backlight",
-    "group/sound",
-    "group/together",
-    "group/cnoti",
-    "group/power",
-    "clock"
+  "modules-center": [
+    "hyprland/submap",
+    "hyprland/language"
   ],
+  "modules-right": [
+    "group/right_drawer",
+    "backlight",
+    "privacy",
+    "pulseaudio",
+    "pulseaudio#mic",
+    "battery",
+    "network",
+    "clock",
+    "custom/notifications"
+  ],
+
+  "group/right_drawer": {
+      "orientation": "inherit",
+      "drawer": {
+          "transition-duration": 500,
+          "transition-left-to-right": false
+      },
+      "modules": [
+        "custom/right_mark",
+        "temperature",
+        "cpu",
+        "memory",
+        "disk",
+        "idle_inhibitor",
+        "custom/hyprkill"
+      ]
+  },
+
+  "custom/right_mark": {
+    "format": "[+]",
+    "tooltip": false
+  },
+
   "tray": {
-    "icon-size": 18,
-    "spacing": 6
+    "icon-size": 16,
+    "spacing": 4
   },
+
   "hyprland/workspaces": {
-	"orientation": "inherit",
-    "format": "{name}",
-	"active-only": true,
-	"show-special": true,
-	"special-visible-only": true,
-	"all-outputs": true,
-	"expand": false,
-    "on-click": "activate"
+    "orientation": "inherit",
+    "format": "[{name}]",
+    "active-only": true,
+    "show-special": true,
+    "special-visible-only": true,
+    "all-outputs": true,
+    "expand": false,
+    "on-click": "activate",
+    "tooltip": true
   },
+
   "hyprland/submap": {
     "format": "<b>󰇘</b>",
     "max-length": 8,
     "tooltip": true
   },
-  "group/info": {
-    "orientation": "inherit",
-    "drawer": {
-      "transition-duration": 0
-    },
-    "modules": [
-      "custom/dmark",
-      "temperature",
-      "cpu",
-      "memory",
-      "disk"
-    ]
-  },
-  "custom/dmark": {
-    "format": "[R]",
+
+  "hyprland/language": {
+    "format": "{}",
+    "format-en": "",
+    "format-uk": "UA",
+    "format-ru": "RU"
+  }, 
+
+  "temperature": {
+    "format": " {temperatureC}°C",
     "tooltip": false
   },
-  "temperature": {
-    "format": "{temperatureC}°C"
-  },
+
   "cpu": {
-    "format": "cpu%{usage}",
+    "format": "  {usage}%",
+    "tooltip": true,
     "on-click": "foot btop"
   },
+
   "memory": {
-    "format": "mem%{}"
+    "format": "  {used}GB",
+    "tooltip-format": "{used}GB / {total}GB",
+    "tooltip": true
   },
+
   "disk": {
     "interval": 30000,
-    "format": "dsk%{percentage_used}",
-    "path": "/"
+    "format": "  {percentage_used}%",
+    "path": "/",
+    "tooltip": true,
+    "tooltip-format": "{used}/{total} used on /"
   },
+
   "hyprland/window": {
-    "orientation": "inherit"
+    "orientation": "inherit",
+    "tooltip": true
   },
+
+  "idle_inhibitor": {
+    "format": "{icon}",
+    "tooltip-format-activated": "󰅶 Idle Inhibitor is <b>active</b>",
+    "tooltip-format-deactivated": "󰾪 Idle Inhibitor is <b>not active</b>",
+    "format-icons": {
+      "activated": "󰔡 ",
+      "deactivated": "󰔢 "
+    }
+  },
+
+  "custom/hyprkill": {
+    "format": "󰅙 ",
+    "interval": "once",
+    "tooltip": true,
+    "tooltip-format": "Click to kill focused window using hyprctl",
+    "on-click": "sleep 1 && hyprctl kill"
+  },
+
+  "network": {
+    "format-wifi": " ",
+    "format-ethernet": "󰈀 ",
+    "format-disconnected": "󰈂 ",
+    "format-linked": " ",
+    "tooltip": true,
+    "tooltip-format": "{ifname}\n{ipaddr}/{cidr}",
+    "tooltip-format-wifi": "up {bandwidthUpBits}, down {bandwidthDownBits}\n{essid} ({signalStrength}%)\n{ipaddr}/{cidr} @ {frequency} MHz",
+    "tooltip-format-ethernet": "{ifname} Ethernet\n{ipaddr}",
+    "tooltip-format-disconnected": "Disconnected",
+    "on-click": "pgrep -x rofi &>/dev/null && notify-send rofi || networkmanager_dmenu"
+  },
+
+  "backlight": {
+    "format": "{icon} {percent}%",
+    "format-icons": ["", "", "", "", "", "", "", "", ""],
+    "tooltip": true,
+    "tooltip-format": "Brightness: {percent}%",
+    "on-scroll-up": "brightnessctl set 1%+",
+    "on-scroll-down": "brightnessctl set 1%-"
+  },
+
   "privacy": {
     "icon-spacing": 4,
     "icon-size": 14,
@@ -82,113 +153,20 @@
       {
         "type": "screenshare",
         "tooltip": true,
-        "tooltip-icon-size": 24
+        "tooltip-icon-size": 16
       },
       {
         "type": "audio-in",
         "tooltip": true,
-        "tooltip-icon-size": 24
+        "tooltip-icon-size": 16
       }
     ]
   },
-  "backlight": {
-    "format": "b{percent}%",
-    "tooltip": false
-  },
-  "backlight/slider": {
-    "min": 5,
-    "max": 100
-  },
-  "group/sound": {
-    "orientation": "inherit",
-    "modules": [
-      "group/audio",
-      "custom/notifications"
-    ]
-  },
-  "group/audio": {
-    "orientation": "inherit",
-    "drawer": {
-      "transition-duration": 0
-    },
-    "modules": [
-      "pulseaudio",
-      "pulseaudio#mic",
-      "pulseaudio/slider"
-    ]
-  },
-  "group/together": {
-    "orientation": "inherit",
-    "modules": [
-      "group/utils",
-      "group/network"
-      //"group/bluetooth"
-    ]
-  },
-  "group/utils": {
-    "orientation": "inherit",
-    "drawer": {
-      "transition-duration": 0
-    },
-    "modules": [
-      "custom/mark",
-      "idle_inhibitor",
-      "custom/hyprkill"
-    ]
-  },
-  "custom/mark": {
-    "format": "[U]",
-    "tooltip": false
-  },
-  "idle_inhibitor": {
-    "format": "{icon} ",
-    "tooltip-format-activated": "Idle Inhibitor is active",
-    "tooltip-format-deactivated": "Idle Inhibitor is not active",
-    "format-icons": {
-      "activated": "󰔡 ",
-      "deactivated": "󰔢 "
-    }
-  },
-  "custom/hyprkill": {
-    "format": "{}",
-    "interval": "once",
-    "exec": "echo '󰅙 \nKill clients using hyrpctl kill'",
-    "on-click": "sleep 1 && hyprctl kill"
-  },
-  "group/network": {
-    "orientation": "inherit",
-    "drawer": {
-      "transition-duration": 0
-    },
-    "modules": [
-      "network",
-      "network#speed"
-    ]
-  },
-  "group/bluetooth": {
-    "orientation": "inherit",
-    "drawer": {
-      "transition-duration": 0
-    },
-    "modules": [
-      "bluetooth",
-      "bluetooth#status"
-    ]
-  },
-  "group/power": {
-    "orientation": "inherit",
-    "drawer": {
-      "transition-duration": 0
-    },
-    "modules": [
-      "battery",
-      "power-profiles-daemon"
-    ]
-  },
+
   "pulseaudio": {
-    "format": "{icon}",
+    "format": "{icon}{volume}%",
     "format-bluetooth": "{icon}",
-    "tooltip-format": "{volume}% {icon} | {desc}",
+    "tooltip-format": "{desc}",
     "format-muted": "󰖁 ",
     "format-icons": {
       "headphones": "󰋌 ",
@@ -197,124 +175,73 @@
       "phone": " ",
       "portable": " ",
       "car": " ",
-      "default": [
-        "󰕿 ",
-        "󰖀 ",
-        "󰕾 "
-      ]
+      "default": ["󰕿 ", "󰖀 ", "󰕾 "]
     },
-    "on-click": "volume mute",
+    "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
     "on-click-middle": "pavucontrol",
-    "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
-    "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -5%",
+    "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +1%",
+    "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -1%",
     "smooth-scrolling-threshold": 1
   },
+
   "pulseaudio#mic": {
-    "format": "{format_source}",
+    "format": "{format_source}{source_volume}%",
     "format-source": " ",
     "format-source-muted": " ",
-    "tooltip-format": "{volume}% {format_source} ",
+    "tooltip": true,
+    "tooltip-format": "{source_desc}",
     "on-click": "pactl set-source-mute 0 toggle",
     "on-scroll-down": "pactl set-source-volume 0 -1%",
     "on-scroll-up": "pactl set-source-volume 0 +1%"
   },
-  "pulseaudio/slider": {
-    "min": 0,
-    "max": 140
-  },
-  "network": {
-    "format": "{icon}",
-    "format-wifi": "net:wifi",
-    "format-ethernet": "net:eth",
-    "format-disconnected": "no:net",
-    "format-linked": "net:link",
-    "tooltip": false,
-    "on-click": "pgrep -x rofi &>/dev/null && notify-send rofi || networkmanager_dmenu"
-  },
-  "network#speed": {
-    "format": " {bandwidthDownBits} ",
-    "interval": 5,
-    "tooltip-format": "{ipaddr}",
-    "tooltip-format-wifi": "{essid} ({signalStrength}%) WiFi\n{ipaddr} | {frequency} MHz{icon} ",
-    "tooltip-format-ethernet": "{ifname} Ethernet\n{ipaddr} | {frequency} MHz{icon} ",
-    "tooltip-format-disconnected": "Not Connected to any type of Network",
-    "tooltip": true,
-    "on-click": "pgrep -x rofi &>/dev/null && notify-send rofi || networkmanager_dmenu"
-  },
-  "bluetooth": {
-    "format-on": " ",
-    "format-off": "󰂲 ",
-    "format-disabled": "",
-    "format-connected": " ",
-    "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
-    "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
-    "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
-    "tooltip-format-enumerate-connected-battery": "{device_alias}\t{device_address}\t{device_battery_percentage}%",
-    "on-click": "rofi-bluetooth -config ~/.config/rofi/menu.d/network.rasi -i"
-  },
-  "bluetooth#status": {
-    "format-on": "",
-    "format-off": "",
-    "format-disabled": "",
-    "format-connected": "<b>{num_connections}</b>",
-    "format-connected-battery": "<small><b>{device_battery_percentage}%</b></small>",
-    "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
-    "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
-    "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
-    "tooltip-format-enumerate-connected-battery": "{device_alias}\t{device_address}\t{device_battery_percentage}%",
-    "on-click": "rofi-bluetooth -config ~/.config/rofi/menu.d/network.rasi -i"
-  },
+
   "battery": {
     "states": {
       "good": 95,
       "warning": 30,
       "critical": 15
     },
-    "format": "{icon}{capacity}%",
-    "format-charging": "{icon}{capacity}",
-    "format-full": "{icon}",
-    "format-icons": [
-      "󰁻 ",
-      "󰁼 ",
-      "󰁾 ",
-      "󰂀 ",
-      "󰂂 ",
-      "󰁹 "
-    ],
-    "tooltip-format": "{timeTo} | {capacity} % | {power} W"
+    "format": "{icon} {capacity}%",
+    "format-charging": "󰂄 {capacity}%",
+    "format-full": "󰁹",
+    "format-icons": ["󰁻", "󰁼", "󰁾", "󰂀", "󰂂", "󰁹"],
+    "tooltip": true,
+    "tooltip-format": "{timeTo}\nCapacity: {capacity}%\nPower: {power}W"
   },
+
   "clock": {
-    "format": "{:%H:%M}",
+    "format": "{:%Y-%m-%d %H:%M}",
+    "format-alt": "  {:%A %H:%M}",
     "tooltip-format": "<tt><small>{calendar}</small></tt>",
     "calendar": {
-      "mode": "month",
-      "mode-mon-col": 3,
-      "weeks-pos": "right",
-      "on-scroll": 1,
+      "mode"          : "year",
+      "mode-mon-col"  : 3,
+      "weeks-pos"     : "right",
+      "on-scroll"     : 1,
       "on-click-right": "mode",
       "format": {
-        "today": "<span color='#a6e3a1'><b><u>{}</u></b></span>"
+        //"months":     "<span color='#ffead3'><b>{}</b></span>",
+        //"days":       "<span color='#ecc6d9'><b>{}</b></span>",
+        //"weeks":      "<span color='#99ffdd'><b>W{}</b></span>",
+        //"weekdays":   "<span color='#ffcc66'><b>{}</b></span>",
+        "today":      "<span color='#ff3f3f'><b><u>{}</u></b></span>"
       }
+    },
+    "actions": {
+      "on-click-right": "mode",
+      "on-click-forward": "tz_up",
+      "on-click-backward": "tz_down",
+      "on-scroll-up": "shift_up",
+      "on-scroll-down": "shift_down"
     }
   },
-  "power-profiles-daemon": {
-    "format": "{icon}",
-    "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
-    "tooltip": true,
-    "format-icons": {
-      "default": "",
-      "performance": "<span color='#B37F34'><small></small></span>",
-      "balanced": "<span><small> </small></span>",
-      "power-saver": "<span color='#a6e3a1'><small></small></span>"
-    }
-  },
+
   "custom/notifications": {
-    "format": "<b>{}</b> ",
-    "exec": "noti-cycle -j",
-    "on-click": "noti-cycle",
-    "on-click-right": "noti-cycle rofi",
+    "exec": "~/.config/dunst/status.sh",
+    "interval": 2,
+    "on-click": "~/.config/dunst/toggle.sh",
     "return-type": "json",
-    "interval": "once",
-    "signal": 2
+    "tooltip": true,
+    "tooltip-format": "Toggle notifications"
   }
 }
