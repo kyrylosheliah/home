@@ -3,45 +3,39 @@
   "position": "bottom",
   "reload_style_on_change": false,
   "modules-left": [
-    "tray",
+    "hyprland/submap",
     "hyprland/workspaces",
-    "hyprland/window"
+    "custom/window_focus_title",
+    //"hyprland/window",
+    "custom/windows"
   ],
   "modules-center": [
-    "hyprland/submap",
-    "hyprland/language"
   ],
   "modules-right": [
-    "group/right_drawer",
-    "backlight",
+    "group/tray",
+    "group/right_more",
     "privacy",
-    "pulseaudio",
-    "pulseaudio#mic",
-    "battery",
-    "network",
-    "clock",
-    "custom/notifications"
+    "group/volume",
+    "group/laptop",
+    "group/connection",
+    "hyprland/language",
+    "clock"
   ],
 
-  "group/right_drawer": {
+  "group/tray": {
       "orientation": "inherit",
       "drawer": {
-          "transition-duration": 500,
+          "transition-duration": 0,
           "transition-left-to-right": false
       },
       "modules": [
-        "custom/right_mark",
-        "temperature",
-        "cpu",
-        "memory",
-        "disk",
-        "idle_inhibitor",
-        "custom/hyprkill"
+        "custom/tray_mark",
+        "tray"
       ]
   },
 
-  "custom/right_mark": {
-    "format": "[+]",
+  "custom/tray_mark": {
+    "format": "[T]",
     "tooltip": false
   },
 
@@ -50,27 +44,50 @@
     "spacing": 4
   },
 
+  "group/right_more": {
+      "orientation": "inherit",
+      "drawer": {
+          "transition-duration": 0,
+          "transition-left-to-right": false
+      },
+      "modules": [
+        "custom/right_more_mark",
+        "temperature",
+        "cpu",
+        "memory",
+        "disk",
+        "idle_inhibitor",
+        "custom/hyprkill",
+        "custom/notifications"
+      ]
+  },
+
+  "custom/right_more_mark": {
+    "format": "[?]",
+    "tooltip": false
+  },
+
   "hyprland/workspaces": {
     "orientation": "inherit",
-    "format": "[{name}]",
+    "format": "{name}:",
     "active-only": true,
     "show-special": true,
     "special-visible-only": true,
     "all-outputs": true,
     "expand": false,
-    "on-click": "activate",
-    "tooltip": true
+    "on-click": false,
+    "tooltip": false
   },
 
   "hyprland/submap": {
-    "format": "<b>󰇘</b>",
-    "max-length": 8,
-    "tooltip": true
+    "format": "{}",
+    "max-length": 32,
+    "tooltip": false
   },
 
   "hyprland/language": {
     "format": "{}",
-    "format-en": "",
+    "format-en": "EN",
     "format-uk": "UA",
     "format-ru": "RU"
   }, 
@@ -87,7 +104,7 @@
   },
 
   "memory": {
-    "format": "  {used}GB",
+    "format": "  {used}GB",
     "tooltip-format": "{used}GB / {total}GB",
     "tooltip": true
   },
@@ -101,14 +118,21 @@
   },
 
   "hyprland/window": {
+    "format": "{title}",
     "orientation": "inherit",
-    "tooltip": true
+    "tooltip": false
+  },
+
+  "custom/window_focus_title": {
+    "exec": "~/.arch/scripts/ui/window_focus_get_title.sh",
+    "interval": 1,
+    "format": "{}"
   },
 
   "idle_inhibitor": {
     "format": "{icon}",
-    "tooltip-format-activated": "󰅶 Idle Inhibitor is <b>active</b>",
-    "tooltip-format-deactivated": "󰾪 Idle Inhibitor is <b>not active</b>",
+    "tooltip-format-activated": "󰅶  Idle Inhibitor is <b>active</b>",
+    "tooltip-format-deactivated": "󰾪  Idle Inhibitor is <b>not active</b>",
     "format-icons": {
       "activated": "󰔡 ",
       "deactivated": "󰔢 "
@@ -121,6 +145,18 @@
     "tooltip": true,
     "tooltip-format": "Click to kill focused window using hyprctl",
     "on-click": "sleep 1 && hyprctl kill"
+  },
+
+  "group/connection": {
+      "orientation": "inherit",
+      "drawer": {
+          "transition-duration": 0,
+          "transition-left-to-right": false
+      },
+      "modules": [
+        "network",
+        "custom/bluetooth"
+      ]
   },
 
   "network": {
@@ -136,13 +172,10 @@
     "on-click": "pgrep -x rofi &>/dev/null && notify-send rofi || networkmanager_dmenu"
   },
 
-  "backlight": {
-    "format": "{icon} {percent}%",
-    "format-icons": ["", "", "", "", "", "", "", "", ""],
-    "tooltip": true,
-    "tooltip-format": "Brightness: {percent}%",
-    "on-scroll-up": "brightnessctl set 1%+",
-    "on-scroll-down": "brightnessctl set 1%-"
+  "custom/bluetooth": {
+      "exec": "~/.arch/scripts/ui/bluetooth_get_status.sh",
+      "interval": 5,
+      "return-type": "json"
   },
 
   "privacy": {
@@ -161,6 +194,18 @@
         "tooltip-icon-size": 16
       }
     ]
+  },
+
+  "group/volume": {
+      "orientation": "inherit",
+      "drawer": {
+          "transition-duration": 0,
+          "transition-left-to-right": false
+      },
+      "modules": [
+        "pulseaudio",
+        "pulseaudio#mic"
+      ]
   },
 
   "pulseaudio": {
@@ -195,6 +240,18 @@
     "on-scroll-up": "pactl set-source-volume 0 +1%"
   },
 
+  "group/laptop": {
+      "orientation": "inherit",
+      "drawer": {
+          "transition-duration": 0,
+          "transition-left-to-right": false
+      },
+      "modules": [
+        "battery",
+        "backlight"
+      ]
+  },
+
   "battery": {
     "states": {
       "good": 95,
@@ -207,6 +264,15 @@
     "format-icons": ["󰁻", "󰁼", "󰁾", "󰂀", "󰂂", "󰁹"],
     "tooltip": true,
     "tooltip-format": "{timeTo}\nCapacity: {capacity}%\nPower: {power}W"
+  },
+
+  "backlight": {
+    "format": "{icon} {percent}%",
+    "format-icons": ["", "", "", "", "", "", "", "", ""],
+    "tooltip": true,
+    "tooltip-format": "Brightness: {percent}%",
+    "on-scroll-up": "brightnessctl set 1%+",
+    "on-scroll-down": "brightnessctl set 1%-"
   },
 
   "clock": {
@@ -237,9 +303,9 @@
   },
 
   "custom/notifications": {
-    "exec": "~/.config/dunst/status.sh",
+    "exec": "~/.arch/scripts/ui/notifications_status.sh",
     "interval": 2,
-    "on-click": "~/.config/dunst/toggle.sh",
+    "on-click": "~/.arch/scripts/ui/notifications_toggle.sh",
     "return-type": "json",
     "tooltip": true,
     "tooltip-format": "Toggle notifications"

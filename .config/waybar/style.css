@@ -38,6 +38,13 @@ tooltip label {
   color: @foreground;
 }
 
+#workspaces button:hover {
+  box-shadow: none;
+  text-shadow: none;
+  background: none;
+  transition: none;
+}
+
 #submap,
 #tray>.needs-attention {
   animation-name: blink-active;

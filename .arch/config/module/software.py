@@ -66,6 +66,7 @@ blocks = [
         "waybar",
         "hicolor-icon-theme",
         "otf-font-awesome",
+        "jq",
         "dunst",
         "rofi-wayland",
         # dark theme
