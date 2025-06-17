@@ -1,6 +1,8 @@
 # Arch Linux Configuration
 
 ## TODOs:
+- A block for controlling (rewriting otherwise) contents and not ensuring a
+patch
 - firstinstall ensure user present with a password prompt
 - firstinstall secureboot
 - firstinstall partition

@@ -23,3 +23,15 @@
 #    "function": install_hy3,
 #    } },)
 
+
+
+# # Some GNOME settings apps exploration without GNOME DE itself
+#    { "ensure": file_content, "for": { "filename": "~/.config/xdg-desktop-portal/xdg-desktop-portal.conf", "content": """
+#[preferred]
+#default=gnome
+#        """ } },
+#    { "ensure": execution, "for": {
+#        "title": "Set gnome gtk-theme",
+#        "function": lambda: helpers.sh("[ \"$(gsettings get org.gnome.desktop.interface gtk-theme)\" != "'Adwaita-dark'" ] && gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'"),
+#        } },
+

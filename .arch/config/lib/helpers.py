@@ -2,6 +2,7 @@ import subprocess
 import sys
 from pathlib import Path
 from typing import List
+import shlex
 
 # https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
 class bcolors:
@@ -32,4 +33,11 @@ def sh(command: str) -> subprocess.CompletedProcess[str]:
 
 def file_exists(path: str) -> bool:
     return Path(path).is_file()
+
+def file_has_content(path: str, content: str) -> bool:
+    if not file_exists(path):
+        return False
+    grep_result = sh(
+        f"sudo grep -Fq -- {shlex.quote(content)} {shlex.quote(path)}")
+    return 0 == grep_result.returncode
 

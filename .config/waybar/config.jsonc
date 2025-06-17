@@ -25,7 +25,7 @@
   "group/tray": {
       "orientation": "inherit",
       "drawer": {
-          "transition-duration": 0,
+          "transition-duration": 250,
           "transition-left-to-right": false
       },
       "modules": [
@@ -47,7 +47,7 @@
   "group/right_more": {
       "orientation": "inherit",
       "drawer": {
-          "transition-duration": 0,
+          "transition-duration": 250,
           "transition-left-to-right": false
       },
       "modules": [
@@ -150,7 +150,7 @@
   "group/connection": {
       "orientation": "inherit",
       "drawer": {
-          "transition-duration": 0,
+          "transition-duration": 250,
           "transition-left-to-right": false
       },
       "modules": [
@@ -199,7 +199,7 @@
   "group/volume": {
       "orientation": "inherit",
       "drawer": {
-          "transition-duration": 0,
+          "transition-duration": 250,
           "transition-left-to-right": false
       },
       "modules": [
@@ -243,7 +243,7 @@
   "group/laptop": {
       "orientation": "inherit",
       "drawer": {
-          "transition-duration": 0,
+          "transition-duration": 250,
           "transition-left-to-right": false
       },
       "modules": [
@@ -258,6 +258,7 @@
       "warning": 30,
       "critical": 15
     },
+    "interval": 5,
     "format": "{icon} {capacity}%",
     "format-charging": "󰂄 {capacity}%",
     "format-full": "󰁹",

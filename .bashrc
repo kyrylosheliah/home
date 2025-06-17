@@ -25,3 +25,5 @@ alias list-security='sudo ~/.arch/scripts/list-security'
 alias update='~/.arch/scripts/update'
 #checkupdate # from pacman-contrib
 
+alias ui='Hyprland'
+

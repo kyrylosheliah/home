@@ -4,4 +4,6 @@
 
 [[ -f ~/.bashrc ]] && . ~/.bashrc
 
-export EDITOR "nvim"
+export EDITOR=nvim
+export TERMINAL=ghostty
+

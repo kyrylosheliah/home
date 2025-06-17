@@ -62,20 +62,21 @@ module = 0 # { "title": str, "for": Block | List[Block] }
 conditional_module = 1 # { "title": str, "condition": Lambda, "module": Module }
 conditional_error = 2 # { "title": str, "condition": Lambda }
 conditional_execution = 3 # { "title": str, "condition": Lambda, "function": Lambda }
-package_installed = 4 # str
-aur_package_installed = 5 # str
-user_service_active = 6 # str
-system_service_active = 7 # str
-file_content = 8 # { "filename": str, "content": str }
+execution = 4 # { "title": str, "function": Lambda }
+package_installed = 5 # str
+aur_package_installed = 6 # str
+user_service_active = 7 # str
+system_service_active = 8 # str
+file_content = 9 # { "filename": str, "content": str }
 
 operations = {}
 
 def ensure_module(module: Dict) -> bool:
     """Main function to ensure all configurations are applied sequentially"""
-    blocks = module["for"]
     ensure_aur_package_installed_raw("yay") # hard dependency
+    blocks = module["for"]
     if not isinstance(blocks, list):
-        blocks = [blocks]
+        blocks = [ blocks, ]
     for block in blocks:
         parameters = block["for"]
         if not isinstance(parameters, list):
@@ -114,6 +115,14 @@ def ensure_conditional_execution(block: Dict):
     return True
 
 operations[conditional_execution] = ensure_conditional_execution
+
+def ensure_execution(block: Dict):
+    if not block["function"]():
+        log_error(f"Unexpected conditional result for '{block["title"]}'")
+        return False
+    return True
+
+operations[execution] = ensure_execution
 
 def ensure_package_installed(package_name: str) -> bool:
     """Ensure a package is installed using pacman"""
@@ -176,13 +185,16 @@ operations[system_service_active] = ensure_system_service_active
 
 def ensure_file_content(file_config: Dict) -> bool:
     """Ensure a file contains specified text"""
+    # TODO: correct path resolution for `~/.config/...` with tilde present
     filename = file_config["filename"]
     content = file_config["content"]
-    grep_result = sh(
-        f"sudo grep -Fq -- {shlex.quote(content)} {shlex.quote(filename)}")
-    if 0 == grep_result.returncode:
+    if helpers.file_has_content(filename, content):
         return True
-    log_warning(f"File '{filename}' content missing")
+    path = Path(filename).parent
+    touch_result = sh(f"sudo mkdir -p {path} && sudo touch -a {filename}")
+    if 0 != touch_result.returncode:
+        log_error(f"Error ensuring '{filename}' exists if FS: {touch_result.stderr}")
+        return False
     newline_result = sh( # 0a = newline
         f"sudo tail -c1 {shlex.quote(filename)} | od -An -t x1 | grep -q '0a'")
     if 0 != newline_result.returncode:
