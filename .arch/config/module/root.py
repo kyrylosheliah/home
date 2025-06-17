@@ -107,7 +107,6 @@ blocks.append({ "ensure": package_installed, "for": [
     "rofi-wayland",
     # dark theme
     "xdg-desktop-portal-gtk",
-    "xdg-desktop-portal-hyprland",
     #"adw-gtk-theme", # gtk3 theme
     "breeze-gtk", # gtk3 theme
     "libadwaita", # gtk4
@@ -116,6 +115,10 @@ blocks.append({ "ensure": package_installed, "for": [
     "qt6ct",
     "kvantum",
     "breeze-icons",
+    # screen sharing: pipewire, wireplumber and
+    "xdg-desktop-portal-hyprland",
+    "grim",
+    "slurp",
     ]})
 
 blocks = blocks + [

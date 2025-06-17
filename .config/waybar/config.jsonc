@@ -12,9 +12,9 @@
   "modules-center": [
   ],
   "modules-right": [
+    "privacy",
     "group/tray",
     "group/right_more",
-    "privacy",
     "group/volume",
     "group/laptop",
     "group/connection",
