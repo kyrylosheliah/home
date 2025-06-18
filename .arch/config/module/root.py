@@ -26,6 +26,7 @@ blocks.append({ "ensure": package_installed, "for": [
     'curl',
     'unzip',
     'man-db',
+    "jq",
     # git and related
     'git',
     'less',
@@ -35,15 +36,13 @@ blocks.append({ "ensure": package_installed, "for": [
     "ttf-iosevka-nerd",
     # privilege excalation
     "hyprpolkitagent",
-    # a file manager
-    "yazi",
     ] })
 
 # network
 blocks.append({ "ensure": package_installed, "for": [
     "networkmanager",
-    "network-manager-applet",
-    "nm-connection-editor",
+    #"network-manager-applet",
+    #"nm-connection-editor",
     ] })
 if options.config["vpn"]:
     blocks.append({ "ensure": package_installed, "for": [
@@ -59,7 +58,7 @@ if options.config["bluetooth"]:
         { "ensure": package_installed, "for": [
             "bluez",
             "bluez-utils",
-            "blueman", # tray `blueman-applet`, app `blueman-manager`
+            #"blueman", # tray `blueman-applet`, app `blueman-manager`
             ] },
         { "ensure": system_service_active, "for": "bluetooth.service" },
         ]
@@ -98,34 +97,37 @@ blocks = blocks + [
 
 # desktop ui
 blocks.append({ "ensure": package_installed, "for": [
-    "hyprland",
-    "hyprpaper",
-    "waybar",
-    "hicolor-icon-theme",
-    "jq",
-    "dunst",
-    "rofi-wayland",
-    # dark theme
-    "xdg-desktop-portal-gtk",
-    #"adw-gtk-theme", # gtk3 theme
-    "breeze-gtk", # gtk3 theme
-    "libadwaita", # gtk4
-    # kde dark theme
-    "qt5ct",
-    "qt6ct",
+    "plasma-meta",
+    "ark",
+    "dolphin",
+    "gwenview",
+    "kcalc",
+    "kdeconnect",
+    "kinit",
+    "konsole",
+    "krunner",
     "kvantum",
-    "breeze-icons",
-    # screen sharing: pipewire, wireplumber and
-    "xdg-desktop-portal-hyprland",
-    "grim",
-    "slurp",
+    "kwrite",
+    "okular",
+    "packagekit-qt5",
+    "partitionmanager",
+    "vlc",
+    "xsettingsd",
+    # language switching via qdbus
+    "qt5-tools",
     ]})
+# plasma plugins
+blocks.append({ "ensure": aur_package_installed, "for": [
+    "plasma6-applets-window-title",
+    ] })
 
 blocks = blocks + [
     # development
     { "ensure": package_installed, "for": [
-        "neovim", # laptop kb baaaaad
-        "wl-clipboard", # neovim to linux and vice versa clipboard support
+        "ghostty",
+        "neovim",
+        "wl-clipboard",
+        "yazi",
         ] },
     { "ensure": aur_package_installed, "for": "code" },
 
@@ -136,7 +138,7 @@ blocks = blocks + [
         "discord",
         "firefox",
         ] },
-]
+    ]
 
 # graphics
 
