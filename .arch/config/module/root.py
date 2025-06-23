@@ -34,19 +34,16 @@ blocks.append({ "ensure": package_installed, "for": [
     "noto-fonts",
     "noto-fonts-emoji",
     "ttf-iosevka-nerd",
-    # privilege excalation
-    "hyprpolkitagent",
     ] })
 
 # network
 blocks.append({ "ensure": package_installed, "for": [
     "networkmanager",
-    #"network-manager-applet",
-    #"nm-connection-editor",
     ] })
 if options.config["vpn"]:
     blocks.append({ "ensure": package_installed, "for": [
         "networkmanager-openvpn",
+        "networkmanager-openconnect",
         "networkmanager-pptp",
         "networkmanager-l2tp",
         "networkmanager-vpnc",
@@ -93,7 +90,7 @@ blocks = blocks + [
         # ###
         # Add your user to the audio group (not always required with PipeWire): sudo usermod -aG audio $USER
         # For low-latency, tune /etc/security/limits.d/99-audio.conf (usually handled by realtime-privileges package).
-    ]
+        ]
 
 # desktop ui
 blocks.append({ "ensure": package_installed, "for": [
@@ -105,16 +102,20 @@ blocks.append({ "ensure": package_installed, "for": [
     "kdeconnect",
     "kinit",
     "konsole",
-    "krunner",
+    #"krunner",
     "kvantum",
     "kwrite",
     "okular",
     "packagekit-qt5",
     "partitionmanager",
-    "vlc",
     "xsettingsd",
     # language switching via qdbus
     "qt5-tools",
+    # keyring
+    "kwallet",
+    "kwalletmanager",
+    # ...
+    "vlc",
     ]})
 # plasma plugins
 blocks.append({ "ensure": aur_package_installed, "for": [
@@ -158,7 +159,7 @@ match options.config["gpu"]:
                 ] },
             { "ensure": aur_package_installed, "for": "lact" },
             { "ensure": system_service_active, "for": "lactd" },
-        ]
+            ]
     case "nvidia":
         blocks.append({ "ensure": package_installed, "for": [
             "nvidia",
@@ -212,7 +213,7 @@ ignored = [
         "mangohud", "lib32-mangohud",
         "vkbasalt", "lib32-vkbasalt"
         ] },
-]
+    ]
 
 root_module = { "title": "root", "for": blocks }
 

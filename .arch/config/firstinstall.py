@@ -21,3 +21,10 @@ if os.getuid() == 0:
 #
 #sys.exit(0 if root_result else 1)
 
+# TODO:
+
+# $ gpg --gen-key
+# then create 'default' wallet
+
+# unbind all plasma keybindings
+
