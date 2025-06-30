@@ -1,11 +1,11 @@
 import os
-import shlex
 from pathlib import Path
+import shlex
 from typing import List, Dict
-from lib.helpers import run, sh, bcolors
 import lib.helpers as helpers
+import lib.kconfig as kconfig
 
-log_prefix = f"{bcolors.DIM}lib.ensure:{bcolors.ENDC} "
+log_prefix = f"{helpers.bcolors.DIM}lib.ensure:{helpers.bcolors.ENDC} "
 
 def log_error(message: str):
     helpers.log_error(log_prefix, message)
@@ -20,7 +20,7 @@ def log_info(message: str):
     helpers.log_info(log_prefix, message)
 
 def package_is_installed(package_name: str) -> bool:
-    if 0 == run(['pacman', '-Q', package_name]).returncode:
+    if 0 == helpers.run(['pacman', '-Q', package_name]).returncode:
         return True
     log_warning(f"Package '{package_name}' is not installed")
     return False
@@ -35,13 +35,13 @@ def ensure_aur_package_installed_raw(package_name):
         os.chdir(temp_dir)
         package_dir = Path(temp_dir) / package_name
         if package_dir.exists():
-            run(['rm', 'rf', str(package_dir)])
-        clone_result = run(['git', 'clone', f'https://aur.archlinux.org/{package_name}.git'])
+            helpers.run(['rm', 'rf', str(package_dir)])
+        clone_result = helpers.run(['git', 'clone', f'https://aur.archlinux.org/{package_name}.git'])
         if 0 != clone_result.returncode:
             log_error(f"Failed to clone AUR package '{package_name}': {clone_result.stderr}")
             return False
         os.chdir(str(package_dir))
-        makepkg_result = run(['makepkg', '-si', '--noconfirm'])
+        makepkg_result = helpers.run(['makepkg', '-si', '--noconfirm'])
         if 0 != makepkg_result.returncode:
             log_error(f"Failed to build '{package_name}': {makepkg_result.stderr}")
             return False
@@ -54,22 +54,31 @@ def ensure_aur_package_installed_raw(package_name):
         os.chdir(original_cwd)
         package_dir = Path(temp_dir) / package_name
         if package_dir.exists():
-            run(['rm', '-rf', str(package_dir)])
+            helpers.run(['rm', '-rf', str(package_dir)])
+
+dispatchers_count = 0
+def inc():
+    global dispatchers_count
+    temp_count = dispatchers_count
+    dispatchers_count = dispatchers_count + 1
+    return temp_count
 
 # Lambda: Callable[[], bool]
-# Block: { "ensure": number, "for": <AnyFromBelow> | List[<AnyFromBelow>] }
-module = 0 # { "title": str, "for": Block | List[Block] }
-conditional_module = 1 # { "title": str, "condition": Lambda, "module": Module }
-conditional_error = 2 # { "title": str, "condition": Lambda }
-conditional_execution = 3 # { "title": str, "condition": Lambda, "function": Lambda }
-execution = 4 # { "title": str, "function": Lambda }
-package_installed = 5 # str
-aur_package_installed = 6 # str
-user_service_active = 7 # str
-system_service_active = 8 # str
-file_content = 9 # { "filename": str, "content": str }
+# Block: { "ensure": number, "for": List[<AnyFromBelow>] }
+module = inc() # { "title": str, "for": List[Block] }
+conditional_module = inc() # { "title": str, "condition": Lambda, "module": Module }
+conditional_error = inc() # { "title": str, "condition": Lambda }
+conditional_execution = inc() # { "title": str, "condition": Lambda, "function": Lambda }
+execution = inc() # { "title": str, "function": Lambda }
+package_installed = inc() # str
+aur_package_installed = inc() # str
+user_service_active = inc() # str
+system_service_active = inc() # str
+file_content = inc() # { "file": str, "content": str }
+# KConfig: { "group": str, "key": str, "value": str }
+kconfig_content = inc() # { "file": str, "config": List[KConfig] }
 
-operations = {}
+dispatchers = [None] * dispatchers_count
 
 def ensure_module(module: Dict) -> bool:
     """Main function to ensure all configurations are applied sequentially"""
@@ -81,7 +90,7 @@ def ensure_module(module: Dict) -> bool:
         parameters = block["for"]
         if not isinstance(parameters, list):
             parameters = [ parameters, ]
-        operation = operations[block["ensure"]]
+        operation = dispatchers[block["ensure"]]
         for parameter in parameters:
             if not operation(parameter):
                 log_error(f"Error in module {module["title"]}")
@@ -89,14 +98,14 @@ def ensure_module(module: Dict) -> bool:
     log_success(f"Module '{module['title']}' check success")
     return True
 
-operations[module] = ensure_module
+dispatchers[module] = ensure_module
 
 def ensure_conditional_module(block: Dict) -> bool:
     if block["condition"]():
         return ensure_module(block.module)
     return True
 
-operations[conditional_module] = ensure_conditional_module
+dispatchers[conditional_module] = ensure_conditional_module
 
 def ensure_conditional_error(block: Dict) -> bool:
     if not block["condition"]():
@@ -104,7 +113,7 @@ def ensure_conditional_error(block: Dict) -> bool:
         return False
     return True
 
-operations[conditional_error] = ensure_conditional_error
+dispatchers[conditional_error] = ensure_conditional_error
 
 def ensure_conditional_execution(block: Dict):
     if not block["condition"]():
@@ -114,7 +123,7 @@ def ensure_conditional_execution(block: Dict):
         return False
     return True
 
-operations[conditional_execution] = ensure_conditional_execution
+dispatchers[conditional_execution] = ensure_conditional_execution
 
 def ensure_execution(block: Dict):
     if not block["function"]():
@@ -122,90 +131,119 @@ def ensure_execution(block: Dict):
         return False
     return True
 
-operations[execution] = ensure_execution
+dispatchers[execution] = ensure_execution
 
 def ensure_package_installed(package_name: str) -> bool:
     """Ensure a package is installed using pacman"""
     if package_is_installed(package_name):
         return True
-    install_result = run(['sudo', 'pacman', '-S', '--noconfirm', package_name])
+    install_result = helpers.run(['sudo', 'pacman', '-S', '--noconfirm', package_name])
     if 0 != install_result.returncode:
         log_error(f"Failed to install pacman package '{package_name}': {install_result.stderr}")
         return False
     log_success(f"Installed pacman package '{package_name}'")
     return True
 
-operations[package_installed] = ensure_package_installed
+dispatchers[package_installed] = ensure_package_installed
 
 def ensure_aur_package_installed(package_name: str) -> bool:
     """Ensure an AUR package is installed using yay"""
     if package_is_installed(package_name):
         return True
-    install_result = run(['yay', '-S', '--noconfirm', package_name])
+    install_result = helpers.run(['yay', '-S', '--noconfirm', package_name])
     if 0 != install_result.returncode:
         log_error(f"Failed to install AUR package '{package_name}': {install_result.stderr}")
         return False
     log_success(f"Installed AUR package '{package_name}'")
     return True
 
-operations[aur_package_installed] = ensure_aur_package_installed
+dispatchers[aur_package_installed] = ensure_aur_package_installed
+
+def ensure_service_active(systemctl_prefix: List[str], service_name: str) -> bool:
+    """Ensure a service is enabled and active"""
+    if 'enabled' != helpers.run(systemctl_prefix + ['is-enabled', service_name]).stdout.strip():
+        log_warning(f"Service '{service_name}' is not enabled")
+        enable_result = helpers.run(systemctl_prefix + ['enable', service_name])
+        if 0 != enable_result.returncode:
+            log_error(f"Failed to enable service '{service_name}': {enable_result.stderr}")
+            return False
+        log_success(f"Service '{service_name}' is enabled")
+    if 'active' != helpers.run(systemctl_prefix + ['is-active', service_name]).stdout.strip():
+        log_warning(f"Service '{service_name}' is not started")
+        start_result = helpers.run(systemctl_prefix + ['start', service_name])
+        if 0 != start_result.returncode:
+            log_error(f"Failed to start service '{service_name}': {start_result.stderr}")
+            return False
+        log_success(f"Service '{service_name}' is active")
+    return True
 
 systemctl_prefixes = [
     [ "systemctl", "--user" ], # is_system = False or 0
     [ "sudo", "systemctl" ], # is_system = True or 1
 ]
 
-def ensure_service_active(systemctl_prefix: List[str], service_name: str) -> bool:
-    """Ensure a service is enabled and active"""
-    if 'enabled' != run(systemctl_prefix + ['is-enabled', service_name]).stdout.strip():
-        log_warning(f"Service '{service_name}' is not enabled")
-        enable_result = run(systemctl_prefix + ['enable', service_name])
-        if 0 != enable_result.returncode:
-            log_error(f"Failed to enable service '{service_name}': {enable_result.stderr}")
-            return False
-        log_success(f"Service '{service_name}' is enabled")
-    if 'active' != run(systemctl_prefix + ['is-active', service_name]).stdout.strip():
-        log_warning(f"Service '{service_name}' is not started")
-        start_result = run(systemctl_prefix + ['start', service_name])
-        if 0 != start_result.returncode:
-            print(f"Failed to start service '{service_name}': {start_result.stderr}")
-            return False
-        log_success(f"Service '{service_name}' is active")
-    return True
-
 def ensure_user_service_active(service_name: str) -> bool:
     return ensure_service_active(systemctl_prefixes[0], service_name)
 
-operations[user_service_active] = ensure_user_service_active
+dispatchers[user_service_active] = ensure_user_service_active
 
 def ensure_system_service_active(service_name: str) -> bool:
     return ensure_service_active(systemctl_prefixes[1], service_name)
 
-operations[system_service_active] = ensure_system_service_active
+dispatchers[system_service_active] = ensure_system_service_active
 
 def ensure_file_content(file_config: Dict) -> bool:
     """Ensure a file contains specified text"""
-    # TODO: correct path resolution for `~/.config/...` with tilde present
-    filename = file_config["filename"]
+    filename = file_config["file"]
+    touch_err = helpers.touch_file(filename)
+    if len(touch_err):
+        log_error(f"Error ensuring '{filename}' exists if FS: {touch_err}")
+        return False
     content = file_config["content"]
     if helpers.file_has_content(filename, content):
         return True
     path = Path(filename).parent
-    touch_result = sh(f"sudo mkdir -p {path} && sudo touch -a {filename}")
+    touch_result = helpers.sh(f"sudo mkdir -p {path} && sudo touch -a {filename}")
     if 0 != touch_result.returncode:
         log_error(f"Error ensuring '{filename}' exists if FS: {touch_result.stderr}")
         return False
-    newline_result = sh( # 0a = newline
+    newline_result = helpers.sh( # 0a = newline
         f"sudo tail -c1 {shlex.quote(filename)} | od -An -t x1 | grep -q '0a'")
     if 0 != newline_result.returncode:
         content = "\n" + content
-    write_result = sh(
+    write_result = helpers.sh(
         f"sudo echo {shlex.quote(content)} >> {shlex.quote(filename)}")
     if 0 != write_result.returncode:
         log_error(f"Error writing to '{filename}': {write_result.stderr}")
         return False
-    log_success(f"File '{filename}' content written")
+    log_success(f"Wrote '{filename}' content")
     return True
 
-operations[file_content] = ensure_file_content
+dispatchers[file_content] = ensure_file_content
+
+def ensure_kconfig_content(file_config: Dict) -> bool:
+    """Ensure a KDE config file has key and value pairs under corresponding groups"""
+    filename = file_config["file"]
+    touch_err = helpers.touch_file(filename)
+    if len(touch_err):
+        log_error(f"Error ensuring '{filename}' exists if FS: {touch_err}")
+        return False
+    entries = file_config["entries"]
+    if not isinstance(entries, list):
+        entries = [ entries, ]
+    for entry in entries:
+        group = entry["group"]
+        key = entry["key"]
+        value = entry["value"]
+        existing_value = kconfig.read_config_value(filename, group, key)
+        if value == existing_value:
+            continue
+        write_err = kconfig.write_config_value(filename, group, key, value)
+        if len(write_err):
+            log_error(f"Error writing to '{filename}': {write_err}")
+            return False
+        log_success(f"Wrote the '{key}' entry in '{filename}'")
+    return True
+
+dispatchers[kconfig_content] = ensure_kconfig_content
 

@@ -2,7 +2,7 @@
 !.gitignore
 !.bash_profile
 !.bashrc
-!.wezterm.lua
+!.gnupg/gpg-agent.conf
 !.config
 !.config/**
 !.arch

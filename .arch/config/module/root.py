@@ -8,9 +8,13 @@ from lib.ensure import (
     system_service_active,
     user_service_active,
     file_content,
+    kconfig_content,
 )
 import lib.helpers as helpers
 import module.options as options
+
+expanduser = os.path.expanduser
+#hostname = socket.gethostname()
 
 blocks = []
 
@@ -114,13 +118,83 @@ blocks.append({ "ensure": package_installed, "for": [
     # keyring
     "kwallet",
     "kwalletmanager",
-    # ...
-    "vlc",
     ]})
 # plasma plugins
-blocks.append({ "ensure": aur_package_installed, "for": [
-    "plasma6-applets-window-title",
-    ] })
+blocks.append({ "ensure": aur_package_installed, "for": "plasma6-applets-window-title" })
+# plasma configuration
+blocks.append({ "ensure": kconfig_content, "for": [
+    { "file": expanduser("~/.config/plasmashellrc"), "entries": [
+        { "group": "PlasmaViews][Panel 2", "key": "alignment", "value": "132" },
+        { "group": "PlasmaViews][Panel 2", "key": "floating", "value": "0" },
+        { "group": "PlasmaViews][Panel 2", "key": "panelLengthMode", "value": "0" },
+        { "group": "PlasmaViews][Panel 2", "key": "panelVisibility", "value": "1" },
+        { "group": "PlasmaViews][Panel 2][Defaults", "key": "thickness", "value": "32" },
+        ] },
+    { "file": expanduser("~/.config/plasma-org.kde.plasma.desktop-appletsrc"), "entries": [
+        { "group": "Containments][1", "key": "formfactor", "value": "0" },
+        { "group": "Containments][1", "key": "immutability", "value": "1" },
+        { "group": "Containments][1", "key": "location", "value": "0" },
+        { "group": "Containments][1", "key": "plugin", "value": "org.kde.plasma.folder" },
+        { "group": "Containments][1", "key": "wallpaperplugin", "value": "org.kde.image" },
+        # ...
+        { "group": "Containments][2", "key": "activityId", "value": "" },
+        { "group": "Containments][2", "key": "formfactor", "value": "2" },
+        { "group": "Containments][2", "key": "immutability", "value": "1" },
+        { "group": "Containments][2", "key": "location", "value": "4" },
+        { "group": "Containments][2", "key": "plugin", "value": "org.kde.panel" },
+        { "group": "Containments][2", "key": "wallpaperplugin", "value": "org.kde.image" },
+        { "group": "Containments][2][General", "key": "AppletOrder", "value": "29;42;40;26;7;15" },
+        # ...
+        { "group": "Containments][2][Applets][29", "key": "immutability", "value": "1" },
+        { "group": "Containments][2][Applets][29", "key": "plugin", "value": "org.kde.plasma.kicker" },
+        { "group": "Containments][2][Applets][29][Configuration][General", "key": "favoritesPortedToKAstats", "value": "true" },
+        { "group": "Containments][2][Applets][29][Configuration][General", "key": "showRecentDocs", "value": "false" },
+        # ...
+        { "group": "Containments][2][Applets][42", "key": "immutability", "value": "1" },
+        { "group": "Containments][2][Applets][42", "key": "plugin", "value": "org.kde.windowtitle" },
+        { "group": "Containments][2][Applets][42][Configuration][Appearance", "key": "customSize", "value": "18" },
+        # ...
+        { "group": "Containments][2][Applets][40", "key": "immutability", "value": "1" },
+        { "group": "Containments][2][Applets][40", "key": "plugin", "value": "org.kde.plasma.panelspacer" },
+        # ...
+        { "group": "Containments][2][Applets][26", "key": "immutability", "value": "1" },
+        { "group": "Containments][2][Applets][26", "key": "plugin", "value": "org.kde.plasma.windowlist" },
+        # ...
+        { "group": "Containments][2][Applets][7", "key": "immutability", "value": "1" },
+        { "group": "Containments][2][Applets][7", "key": "plugin", "value": "org.kde.plasma.systemtray" },
+        { "group": "Containments][2][Applets][7][Configuration", "key": "SystrayContainmentId", "value": "8" },
+        { "group": "Containments][8", "key": "activityId", "value": "" },
+        { "group": "Containments][8", "key": "formfactor", "value": "2" },
+        { "group": "Containments][8", "key": "immutability", "value": "1" },
+        { "group": "Containments][8", "key": "location", "value": "4" },
+        { "group": "Containments][8", "key": "plugin", "value": "org.kde.plasma.private.systemtray" },
+        { "group": "Containments][8", "key": "wallpaperplugin", "value": "org.kde.image" },
+        # ...
+        { "group": "Containments][2][Applets][15", "key": "immutability", "value": "1" },
+        { "group": "Containments][2][Applets][15", "key": "plugin", "value": "org.kde.plasma.digitalclock" },
+        { "group": "Containments][2][Applets][15][Configuration][Appearance", "key": "dateDisplayFormat", "value": "BesideTime" },
+        { "group": "Containments][2][Applets][15][Configuration][Appearance", "key": "dateFormat", "value": "isoDate" },
+        { "group": "Containments][2][Applets][15][Configuration][Appearance", "key": "use24hFormat", "value": "2" },
+        ] },
+    { "file": expanduser("~/.config/kxkbrc"), "entries": [
+        { "group": "Layout", "key": "DisplayNames", "value": ",," },
+        { "group": "Layout", "key": "LayoutList", "value": "us,ua,ru" },
+        { "group": "Layout", "key": "Use", "value": "true" },
+        { "group": "Layout", "key": "VariantList", "value": ",," },
+        ] },
+    { "file": expanduser("~/.config/kwinrc"), "entries": [
+        { "group": "Desktops", "key": "Number", "value": "5" },
+        { "group": "Desktops", "key": "Rows", "value": "1" },
+        ] },
+    { "file": expanduser("~/.config/kdeglobals"), "entries": [
+        { "group": "KDE", "key": "AnimationDurationFactor", "value": "0" },
+        { "group": "KDE", "key": "LookAndFeelPackage", "value": "org.kde.breezedark.desktop" },
+        ] },
+    { "file": expanduser("~/.config/kcminputrc"), "entries": [
+        { "group": "Keyboard", "key": "RepeatDelay", "value": "250" },
+        { "group": "Keyboard", "key": "RepeatRate", "value": "30" },
+        ] },
+    ]})
 
 blocks = blocks + [
     # development
@@ -132,19 +206,23 @@ blocks = blocks + [
         ] },
     { "ensure": aur_package_installed, "for": "code" },
 
+    { "ensure": package_installed, "for": "docker" },
+    { "ensure": system_service_active, "for": "docker.socket" },
+
     # apps
     { "ensure": package_installed, "for": [
         #"obs-studio",
         #"goverlay",
         "discord",
         "firefox",
+        "vlc",
         ] },
     ]
 
 # graphics
 
 # multilib 32bit repository
-blocks.append({ "ensure": file_content, "for": { "filename": "/etc/pacman.conf", "content": """
+blocks.append({ "ensure": file_content, "for": { "file": "/etc/pacman.conf", "content": """
 [multilib]
 Include = /etc/pacman.d/mirrorlist
     """ } })
