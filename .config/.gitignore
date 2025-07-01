@@ -2,11 +2,7 @@
 !.gitignore
 !Code
 !Code/**
-!hypr
-!hypr/**
 !nvim
 !nvim/**
-!waybar
-!waybar/**
-!rofi
-!rofi/**
+!ghostty
+!ghostty/**

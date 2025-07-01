@@ -7,15 +7,3 @@
 # qdbus-qt5 org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.refreshCurrentShell
 # qdbus-qt5 org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.reloadConfig
 # qdbus-qt5 org.kde.kglobalaccel /component/khotkeys org.kde.kglobalaccel.Hotkeys.reloadConfiguration
-
-# `plasmashellrc`
-#[PlasmaViews][Panel 2]
-#alignment=132
-#floating=0
-#panelLengthMode=0
-#panelVisibility=1
-
-# `plasmashellrc`
-#[PlasmaViews][Panel 2][Defaults]
-#thickness=32
-

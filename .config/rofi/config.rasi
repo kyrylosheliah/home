@@ -1,6 +1,0 @@
-configuration {
-	drun-display-format: "{name}";
-}
-
-@theme "theme.rasi"
-
