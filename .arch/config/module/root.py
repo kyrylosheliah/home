@@ -115,13 +115,21 @@ blocks.append({ "ensure": package_installed, "for": [
     "xsettingsd",
     # language switching via qdbus
     "qt5-tools",
-    # keyring
-    "kwallet",
-    "kwalletmanager",
     ]})
 
+# keyring, credential manager
+blocks.append({ "ensure": package_installed, "for": [
+    "kwallet",
+    "kwalletmanager",
+    "ksshaskpass",
+    ]})
+blocks.append({ "ensure": file_content, "for": [
+    { "file": expanduser("~/.config/environment.d/git_askpass.conf"),
+        "content": "GIT_ASKPASS=/usr/bin/ksshaskpass" },
+    ] })
+
 blocks.append({ "ensure": kconfig_content, "for": [
-    { "file": expanduser("~/.testconfig/plasmashellrc"), "for": [
+    { "file": expanduser("~/.config/plasmashellrc"), "for": [
         # expect `[Panel 2]` panel identifier on clean install
         # regeneration requires
         # `~/.config/plasmashellrc` and
@@ -134,7 +142,7 @@ blocks.append({ "ensure": kconfig_content, "for": [
             { "key": "panelVisibility", "value": "1" },
             ] },
         ] },
-    { "file": expanduser("~/.testconfig/kxkbrc"), "for": [
+    { "file": expanduser("~/.config/kxkbrc"), "for": [
         { "group": "[Layout]", "for": [
             { "key": "DisplayNames", "value": ",," },
             { "key": "LayoutList", "value": "us,ua,ru" },
@@ -142,19 +150,19 @@ blocks.append({ "ensure": kconfig_content, "for": [
             { "key": "VariantList", "value": ",," },
             ] },
         ] },
-    { "file": expanduser("~/.testconfig/kwinrc"), "for": [
+    { "file": expanduser("~/.config/kwinrc"), "for": [
         { "group": "[Desktops]", "for": [
             { "key": "Number", "value": "5" },
             { "key": "Rows", "value": "1" },
             ] },
         ] },
-    { "file": expanduser("~/.testconfig/kdeglobals"), "for": [
+    { "file": expanduser("~/.config/kdeglobals"), "for": [
         { "group": "[KDE]", "for": [
             { "key": "AnimationDurationFactor", "value": "0" },
             { "key": "LookAndFeelPackage", "value": "org.kde.breezedark.desktop" },
             ] },
         ] },
-    { "file": expanduser("~/.testconfig/kcminputrc"), "for": [
+    { "file": expanduser("~/.config/kcminputrc"), "for": [
         { "group": "[Keyboard]", "for": [
             { "key": "RepeatDelay", "value": "250" },
             { "key": "RepeatRate", "value": "30" },
