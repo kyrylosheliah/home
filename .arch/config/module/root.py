@@ -76,7 +76,7 @@ blocks = blocks + [
         "pipewire-pulse",
         "wireplumber",
         # CLI tools
-        "alsa-utils", # includes `alsamixer`, `aplay` `alsa-info.sh`
+        "alsa-utils", # includes `alsamixer` `aplay` `alsa-info.sh`
         "pavucontrol",
         "helvum",
         "easyeffects",
@@ -119,87 +119,53 @@ blocks.append({ "ensure": package_installed, "for": [
     "kwallet",
     "kwalletmanager",
     ]})
-# plasma plugins
-blocks.append({ "ensure": aur_package_installed, "for": "plasma6-applets-window-title" })
-# plasma configuration
+
 blocks.append({ "ensure": kconfig_content, "for": [
-    { "file": expanduser("~/.config/plasmashellrc"), "entries": [
-        { "group": "PlasmaViews][Panel 2", "key": "alignment", "value": "132" },
-        { "group": "PlasmaViews][Panel 2", "key": "floating", "value": "0" },
-        { "group": "PlasmaViews][Panel 2", "key": "panelLengthMode", "value": "0" },
-        { "group": "PlasmaViews][Panel 2", "key": "panelVisibility", "value": "1" },
-        { "group": "PlasmaViews][Panel 2][Defaults", "key": "thickness", "value": "32" },
+    { "file": expanduser("~/.testconfig/plasmashellrc"), "for": [
+        # expect `[Panel 2]` panel identifier on clean install
+        # regeneration requires
+        # `~/.config/plasmashellrc` and
+        # `~/.config/plasma-org.kde.plasma.desktop-appletsrc`
+        # files deletion
+        { "group": "[PlasmaViews][Panel 2]", "for": [
+            { "key": "floating", "value": "0" },
+            { "key": "panelLengthMode", "value": "0" },
+            { "key": "panelOpacity", "value": "1" },
+            { "key": "panelVisibility", "value": "1" },
+            ] },
         ] },
-    { "file": expanduser("~/.config/plasma-org.kde.plasma.desktop-appletsrc"), "entries": [
-        { "group": "Containments][1", "key": "formfactor", "value": "0" },
-        { "group": "Containments][1", "key": "immutability", "value": "1" },
-        { "group": "Containments][1", "key": "location", "value": "0" },
-        { "group": "Containments][1", "key": "plugin", "value": "org.kde.plasma.folder" },
-        { "group": "Containments][1", "key": "wallpaperplugin", "value": "org.kde.image" },
-        # ...
-        { "group": "Containments][2", "key": "activityId", "value": "" },
-        { "group": "Containments][2", "key": "formfactor", "value": "2" },
-        { "group": "Containments][2", "key": "immutability", "value": "1" },
-        { "group": "Containments][2", "key": "location", "value": "4" },
-        { "group": "Containments][2", "key": "plugin", "value": "org.kde.panel" },
-        { "group": "Containments][2", "key": "wallpaperplugin", "value": "org.kde.image" },
-        { "group": "Containments][2][General", "key": "AppletOrder", "value": "29;42;40;26;7;15" },
-        # ...
-        { "group": "Containments][2][Applets][29", "key": "immutability", "value": "1" },
-        { "group": "Containments][2][Applets][29", "key": "plugin", "value": "org.kde.plasma.kicker" },
-        { "group": "Containments][2][Applets][29][Configuration][General", "key": "favoritesPortedToKAstats", "value": "true" },
-        { "group": "Containments][2][Applets][29][Configuration][General", "key": "showRecentDocs", "value": "false" },
-        # ...
-        { "group": "Containments][2][Applets][42", "key": "immutability", "value": "1" },
-        { "group": "Containments][2][Applets][42", "key": "plugin", "value": "org.kde.windowtitle" },
-        { "group": "Containments][2][Applets][42][Configuration][Appearance", "key": "customSize", "value": "18" },
-        # ...
-        { "group": "Containments][2][Applets][40", "key": "immutability", "value": "1" },
-        { "group": "Containments][2][Applets][40", "key": "plugin", "value": "org.kde.plasma.panelspacer" },
-        # ...
-        { "group": "Containments][2][Applets][26", "key": "immutability", "value": "1" },
-        { "group": "Containments][2][Applets][26", "key": "plugin", "value": "org.kde.plasma.windowlist" },
-        # ...
-        { "group": "Containments][2][Applets][7", "key": "immutability", "value": "1" },
-        { "group": "Containments][2][Applets][7", "key": "plugin", "value": "org.kde.plasma.systemtray" },
-        { "group": "Containments][2][Applets][7][Configuration", "key": "SystrayContainmentId", "value": "8" },
-        { "group": "Containments][8", "key": "activityId", "value": "" },
-        { "group": "Containments][8", "key": "formfactor", "value": "2" },
-        { "group": "Containments][8", "key": "immutability", "value": "1" },
-        { "group": "Containments][8", "key": "location", "value": "4" },
-        { "group": "Containments][8", "key": "plugin", "value": "org.kde.plasma.private.systemtray" },
-        { "group": "Containments][8", "key": "wallpaperplugin", "value": "org.kde.image" },
-        # ...
-        { "group": "Containments][2][Applets][15", "key": "immutability", "value": "1" },
-        { "group": "Containments][2][Applets][15", "key": "plugin", "value": "org.kde.plasma.digitalclock" },
-        { "group": "Containments][2][Applets][15][Configuration][Appearance", "key": "dateDisplayFormat", "value": "BesideTime" },
-        { "group": "Containments][2][Applets][15][Configuration][Appearance", "key": "dateFormat", "value": "isoDate" },
-        { "group": "Containments][2][Applets][15][Configuration][Appearance", "key": "use24hFormat", "value": "2" },
+    { "file": expanduser("~/.testconfig/kxkbrc"), "for": [
+        { "group": "[Layout]", "for": [
+            { "key": "DisplayNames", "value": ",," },
+            { "key": "LayoutList", "value": "us,ua,ru" },
+            { "key": "Use", "value": "true" },
+            { "key": "VariantList", "value": ",," },
+            ] },
         ] },
-    { "file": expanduser("~/.config/kxkbrc"), "entries": [
-        { "group": "Layout", "key": "DisplayNames", "value": ",," },
-        { "group": "Layout", "key": "LayoutList", "value": "us,ua,ru" },
-        { "group": "Layout", "key": "Use", "value": "true" },
-        { "group": "Layout", "key": "VariantList", "value": ",," },
+    { "file": expanduser("~/.testconfig/kwinrc"), "for": [
+        { "group": "[Desktops]", "for": [
+            { "key": "Number", "value": "5" },
+            { "key": "Rows", "value": "1" },
+            ] },
         ] },
-    { "file": expanduser("~/.config/kwinrc"), "entries": [
-        { "group": "Desktops", "key": "Number", "value": "5" },
-        { "group": "Desktops", "key": "Rows", "value": "1" },
+    { "file": expanduser("~/.testconfig/kdeglobals"), "for": [
+        { "group": "[KDE]", "for": [
+            { "key": "AnimationDurationFactor", "value": "0" },
+            { "key": "LookAndFeelPackage", "value": "org.kde.breezedark.desktop" },
+            ] },
         ] },
-    { "file": expanduser("~/.config/kdeglobals"), "entries": [
-        { "group": "KDE", "key": "AnimationDurationFactor", "value": "0" },
-        { "group": "KDE", "key": "LookAndFeelPackage", "value": "org.kde.breezedark.desktop" },
-        ] },
-    { "file": expanduser("~/.config/kcminputrc"), "entries": [
-        { "group": "Keyboard", "key": "RepeatDelay", "value": "250" },
-        { "group": "Keyboard", "key": "RepeatRate", "value": "30" },
+    { "file": expanduser("~/.testconfig/kcminputrc"), "for": [
+        { "group": "[Keyboard]", "for": [
+            { "key": "RepeatDelay", "value": "250" },
+            { "key": "RepeatRate", "value": "30" },
+            ] },
         ] },
     ]})
 
 blocks = blocks + [
     # development
     { "ensure": package_installed, "for": [
-        "ghostty",
+        "kitty",
         "neovim",
         "wl-clipboard",
         "yazi",
@@ -294,4 +260,3 @@ ignored = [
     ]
 
 root_module = { "title": "root", "for": blocks }
-

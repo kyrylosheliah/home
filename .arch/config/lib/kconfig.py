@@ -1,88 +1,107 @@
-import os
-import shlex
-import tempfile
-import lib.helpers as helpers
-import subprocess
+def find_group_index(groups: list[dict[str, str | list[dict[str, str]]]], name: str):
+    for i in range(len(groups)):
+        if groups[i]["group"] == name:
+            return i
+    return -1
 
-def read_config_value(filename, group, key):
-    if not os.path.exists(filename):
-        return None
-    try:
-        output = subprocess.check_output(['sudo', 'cat', filename], encoding='utf-8')
-        lines = output.splitlines()
-    except subprocess.CalledProcessError:
-        return None
-    current_group = None
-    for line in lines:
-        stripped = line.strip()
-        if stripped.startswith('[') and stripped.endswith(']'):
-            current_group = stripped[1:-1]
-        elif current_group == group:
-            if '=' in stripped:
-                k, v = map(str.strip, stripped.split('=', 1))
-                if k == key:
-                    return v
-    return None
+def find_entry_index(entries: list[dict[str, str]], key: str):
+    for i in range(len(entries)):
+        if entries[i]["key"] == key:
+            return i
+    return -1
 
-def write_config_value(
-        filename: str,
-        group: str,
-        key: str,
-        value: str,
-        ) -> str:
-    if len(group) == 0 or len(key) == 0:
-        return "len(group) == 0 or len(key) == 0"
-    lines = []
-    if os.path.exists(filename):
-        file = open(filename, 'r', encoding='utf-8')
-        lines = file.readlines()
-        file.close()
-    output = []
-    current_group = None
-    key_written = False
-    for i in range(len(lines)):
-        line = lines[i].strip("\n").strip()
+def filter_groups_to_apply(
+    lines: list[str],
+    groups: list[dict[str, str | list[dict[str, str]]]],
+) -> dict[str, dict[str, str]]:
+    if not isinstance(groups, list):
+        groups = [ groups, ]
+    skip_group = False
+    i_group = -1
+    for i_line in range(len(lines)):
+        line = lines[i_line].strip("\n").strip()
         if line == "":
             continue
         if line.startswith('[') and line.endswith(']'):
-            if current_group == group and not key_written:
-                output.append(f"{key}={value}")
-                key_written = True
-                output.append("")
-                if (i + 1 < len(lines)):
-                    # inserting, include current line
-                    output.append(''.join(lines[i:]))
-                break
-            current_group = line[1:-1]
-            output.append("")
-        elif current_group == group:
-            if '=' in line:
-                k, _ = map(str.strip, line.split('=', 1))
-                if k == key:
-                    output.append(f"{key}={value}")
-                    key_written = True
-                    if (i + 2 < len(lines)):
-                        # replacing, exclude current line
-                        output.append(''.join(lines[i + 1:]))
-                    break
-        output.append(line)
-    # at the end of the file
-    if not key_written:
-        if current_group == group:
-            # at the end of the group
-            output.append(f"{key}={value}")
-        else:
-            # no matching group ever found
-            output += [f"[{group}]", f"{key}={value}"]
-    output = '\n'.join(output).strip('\n')
-    tmp = tempfile.NamedTemporaryFile('w', delete=False, encoding='utf-8')
-    tmp.write(output)
-    tmp_filename = tmp.name
-    tmp.close()
-    copy_result = helpers.sh(
-        f"sudo cp {shlex.quote(tmp_filename)} {shlex.quote(filename)}")
-    os.remove(tmp_filename)
-    if 0 != copy_result.returncode:
-        return copy_result.stderr
-    return ""
+            i_group = find_group_index(groups, line)
+            skip_group = i_group == -1
+            continue
+        elif skip_group:
+            continue
+        entries = groups[i_group]["for"]
+        if len(entries) == 0:
+            groups.pop(i_group)
+            i_group = -1
+            skip_group = True
+            continue
+        if '=' in line:
+            key, existing_value = map(str.strip, line.split('=', 1))
+            i_entry = find_entry_index(entries, key)
+            if i_entry == -1:
+                continue
+            value = entries[i_entry]["value"]
+            if existing_value == value:
+                entries.pop(i_entry)
+                if len(entries) == 0:
+                    groups.pop(i_group)
+                    i_group = -1
+                    skip_group = True
+                    continue
+    return groups
 
+def write_config_groups(
+    lines: list[str],
+    groups: dict[str, dict[str, str]],
+):
+    output = []
+    i_group = -1
+    for i_line in range(len(lines)):
+        line = lines[i_line].strip("\n").strip()
+        if line == "":
+            continue
+        if line.startswith('[') and line.endswith(']'):
+            if i_group != -1:
+                # reverse to keep the order when popping from the end
+                leftover_entries = groups[i_group]["for"]
+                for i_entry in range(len(leftover_entries)):
+                    entry = leftover_entries[i_entry]
+                    output.append(f"{entry["key"]}={entry["value"]}")
+                    #entries.pop(i_entry)
+                groups.pop(i_group)
+                #i_group = -1
+            output.append("")
+            i_group = find_group_index(groups, line)
+        elif i_group != -1:
+            entries = groups[i_group]["for"]
+            if '=' in line:
+                key = str.strip(line.split('=', 1)[0])
+                i_entry = find_entry_index(entries, key)
+                if i_entry != -1:
+                    value = entries[i_entry]["value"]
+                    output.append(f"{key}={value}")
+                    entries.pop(i_entry)
+                    if len(entries) == 0:
+                        groups.pop(i_group)
+                        i_group = -1
+                    continue
+        output.append(line)
+    if i_group != -1:
+        # reverse to keep the order when popping from the end
+        leftover_entries = groups[i_group]["for"]
+        for i_entry in range(len(leftover_entries)):
+            entry = leftover_entries[i_entry]
+            output.append(f"{entry["key"]}={entry["value"]}")
+            #entries.pop(i_entry)
+        groups.pop(i_group)
+        i_group = -1
+    # at the end of the file
+    for group in groups:
+        entries = group["for"]
+        #if not len(entries):
+        #    continue
+        output.append("")
+        output.append(group["group"])
+        for entry in entries:
+            output.append(f"{entry["key"]}={entry["value"]}")
+    output = '\n'.join(output).strip('\n')
+    return output

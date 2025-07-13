@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 import shlex
+import tempfile
 from typing import List, Dict
 import lib.helpers as helpers
 import lib.kconfig as kconfig
@@ -75,8 +76,7 @@ aur_package_installed = inc() # str
 user_service_active = inc() # str
 system_service_active = inc() # str
 file_content = inc() # { "file": str, "content": str }
-# KConfig: { "group": str, "key": str, "value": str }
-kconfig_content = inc() # { "file": str, "config": List[KConfig] }
+kconfig_content = inc() # { "file": str, "for": List[{ "group": str, "for": List[{ "key": str, "value": str }] }] }
 
 dispatchers = [None] * dispatchers_count
 
@@ -222,27 +222,31 @@ def ensure_file_content(file_config: Dict) -> bool:
 dispatchers[file_content] = ensure_file_content
 
 def ensure_kconfig_content(file_config: Dict) -> bool:
-    """Ensure a KDE config file has key and value pairs under corresponding groups"""
+    """Ensure a KDE config file has the keys and the values under the specified groups"""
     filename = file_config["file"]
+    groups = file_config["for"]
     touch_err = helpers.touch_file(filename)
     if len(touch_err):
         log_error(f"Error ensuring '{filename}' exists if FS: {touch_err}")
         return False
-    entries = file_config["entries"]
-    if not isinstance(entries, list):
-        entries = [ entries, ]
-    for entry in entries:
-        group = entry["group"]
-        key = entry["key"]
-        value = entry["value"]
-        existing_value = kconfig.read_config_value(filename, group, key)
-        if value == existing_value:
-            continue
-        write_err = kconfig.write_config_value(filename, group, key, value)
-        if len(write_err):
-            log_error(f"Error writing to '{filename}': {write_err}")
-            return False
-        log_success(f"Wrote the '{key}' entry in '{filename}'")
+    lines = []
+    with open(filename, 'r', encoding='utf-8') as file:
+        lines = file.readlines()
+    missing_groups = kconfig.filter_groups_to_apply(lines, groups)
+    if not len(missing_groups):
+        return True
+    output = kconfig.write_config_groups(lines, missing_groups)
+    tmp = tempfile.NamedTemporaryFile('w', delete=False, encoding='utf-8')
+    tmp.write(output)
+    tmp_filename = tmp.name
+    tmp.close()
+    copy_result = helpers.sh(
+        f"sudo cp {shlex.quote(tmp_filename)} {shlex.quote(filename)}")
+    os.remove(tmp_filename)
+    if 0 != copy_result.returncode:
+        log_error(f"Error copying the modified KDE config file '{filename}': {copy_result.stderr}")
+        return False
+    log_success(f"Wrote the KDE config in '{filename}'")
     return True
 
 dispatchers[kconfig_content] = ensure_kconfig_content

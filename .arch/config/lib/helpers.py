@@ -1,6 +1,5 @@
 import shlex
 import subprocess
-import sys
 from pathlib import Path
 from typing import List
 
@@ -36,13 +35,23 @@ def file_exists(path: str) -> bool:
 
 def touch_file(filename: str) -> str:
     filepath = Path(filename)
-    if not filepath.is_file():
-        parent_dirname = Path(filename).parent.as_posix()
+    if filepath.is_file():
+        return ""
+    parent = filepath.parent
+    try:
+        # touching the file as current user
+        parent.mkdir(parents=True, exist_ok=True)
+        filepath.touch(exist_ok=True)
+        return ""
+    except (PermissionError, OSError):
+        # fallback to sudo
+        parent = parent.as_posix()
+        filepath = filepath.as_posix()
         touch_result = sh(
-            f"sudo mkdir -p {shlex.quote(parent_dirname)} && sudo touch -a {shlex.quote(filename)}")
-        if 0 != touch_result.returncode:
+            f"sudo mkdir -p {shlex.quote(parent)} && sudo touch -a {shlex.quote(filepath)}")
+        if touch_result.returncode != 0:
             return touch_result.stderr
-    return ""
+        return ""
 
 def file_has_content(path: str, content: str) -> bool:
     if not file_exists(path):
