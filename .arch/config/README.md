@@ -5,7 +5,5 @@
 - firstinstall secureboot
 - firstinstall partition
 - Pull in archinstall config
-- Secrets storage?
 - Cardreader?
-- Text to speech?
 - hpfall?

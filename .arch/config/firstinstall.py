@@ -2,9 +2,13 @@
 
 import sys
 import os
+import lib.helpers as helpers
 from lib.ensure import (
     log_error,
     ensure_module,
+    conditional_error,
+    execution,
+    package_installed,
 )
 
 if __name__ != '__main__':
@@ -15,16 +19,23 @@ if os.getuid() == 0:
     log_error("This script should not be run as a root or with sudo")
     sys.exit(1)
 
-#from module.root import root_module
-#
-#root_result = ensure_module(root_module)
-#
-#sys.exit(0 if root_result else 1)
+blocks = [
+    { "ensure": package_installed, "for": [
+        "gnupg",
+        "kwallet",
+        ] },
+    { "ensure": conditional_error, "for": [
+        { "title": "wallet named 'kdewallet' is present",
+            "condition": lambda: 0 != helpers.sh("kwallet-query -l -d '' kdewallet").returncode },
+        ] },
+    { "ensure": execution, "for": [
+        { "title": "gpg key generated", "function": lambda: helpers.sh("gpg --gen-key") },
+        ] },
+    ]
 
-# TODO:
+root_module = { "title": "root", "for": blocks }
 
-# $ gpg --gen-key
-# then create 'default' wallet
+root_result = ensure_module(root_module)
 
-# unbind all plasma keybindings
+sys.exit(0 if root_result else 1)
 
