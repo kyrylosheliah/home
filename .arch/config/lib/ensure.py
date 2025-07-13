@@ -203,10 +203,6 @@ def ensure_file_content(file_config: Dict) -> bool:
     if helpers.file_has_content(filename, content):
         return True
     path = Path(filename).parent
-    touch_result = helpers.sh(f"sudo mkdir -p {path} && sudo touch -a {filename}")
-    if 0 != touch_result.returncode:
-        log_error(f"Error ensuring '{filename}' exists if FS: {touch_result.stderr}")
-        return False
     newline_result = helpers.sh( # 0a = newline
         f"sudo tail -c1 {shlex.quote(filename)} | od -An -t x1 | grep -q '0a'")
     if 0 != newline_result.returncode:

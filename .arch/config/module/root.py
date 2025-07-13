@@ -1,6 +1,7 @@
 import sys
 import os
 from lib.ensure import (
+    conditional_error,
     conditional_execution,
     execution,
     package_installed,
@@ -123,7 +124,19 @@ blocks = blocks + [
         "kwallet",
         "kwalletmanager",
         "ksshaskpass",
+        #"kwallet-pam",
         ]},
+    # # auto-unlock the default non-gpg wallet (!) named kdewallet
+    # { "ensure": conditional_error, "for": [
+    #     { "title": "kwallet auto unlock", "condition": lambda: helpers.file_has_content(
+    #         "/etc/pam.d/login",
+    #         "auth       optional     pam_kwallet5.so",
+    #         ) },
+    #     { "title": "kwallet auto unlock", "condition": lambda: helpers.file_has_content(
+    #         "/etc/pam.d/login",
+    #         "session    optional     pam_kwallet5.so auto_start force_run",
+    #         ) },
+    #     ]},
     { "ensure": file_content, "for": [
         { "file": expanduser("~/.gitconfig"),
             "content": "[credential]\n\thelper = cache" },
