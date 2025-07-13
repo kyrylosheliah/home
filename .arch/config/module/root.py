@@ -185,6 +185,38 @@ blocks.append({ "ensure": kconfig_content, "for": [
             { "key": "RepeatRate", "value": "30" },
             ] },
         ] },
+    { "file": expanduser("~/.config/kglobalshortcutsrc"), "for": [
+        { "group": "[KDE Keyboard Layout Switcher]", "for": [
+            { "key": "Switch to Next Keyboard Layout", "value": "Meta+Space,Meta+Alt+K,Switch to Next Keyboard Layout" },
+            ] },
+        { "group": "[kwin]", "for": [
+            { "key": "Overview", "value": "Meta+W,Meta+W,Toggle Overview" },
+            { "key": "Show Desktop", "value": "Meta+D,Meta+D,Peek at Desktop" },
+            { "key": "Switch One Desktop Down", "value": "Meta+Ctrl+Down,Meta+Ctrl+Down,Switch One Desktop Down" },
+            { "key": "Switch One Desktop Up", "value": "Meta+Ctrl+Up,Meta+Ctrl+Up,Switch One Desktop Up" },
+            { "key": "Switch One Desktop to the Left", "value": "Meta+Ctrl+Left,Meta+Ctrl+Left,Switch One Desktop to the Left" },
+            { "key": "Switch One Desktop to the Right", "value": "Meta+Ctrl+Right,Meta+Ctrl+Right,Switch One Desktop to the Right" },
+            { "key": "Switch Window Down", "value": "Meta+Alt+Down,Meta+Alt+Down,Switch to Window Below" },
+            { "key": "Switch Window Left", "value": "Meta+Alt+Left,Meta+Alt+Left,Switch to Window to the Left" },
+            { "key": "Switch Window Right", "value": "Meta+Alt+Right,Meta+Alt+Right,Switch to Window to the Right" },
+            { "key": "Switch Window Up", "value": "Meta+Alt+Up,Meta+Alt+Up,Switch to Window Above" },
+            { "key": "Switch to Desktop 1", "value": "Ctrl+F1\tMeta+1,Ctrl+F1,Switch to Desktop 1" },
+            { "key": "Switch to Desktop 2", "value": "Ctrl+F2\tMeta+2,Ctrl+F2,Switch to Desktop 2" },
+            { "key": "Switch to Desktop 3", "value": "Ctrl+F3\tMeta+3,Ctrl+F3,Switch to Desktop 3" },
+            { "key": "Switch to Desktop 4", "value": "Ctrl+F4\tMeta+4,Ctrl+F4,Switch to Desktop 4" },
+            { "key": "Switch to Desktop 5", "value": "Meta+5,,Switch to Desktop 5" },
+            { "key": "Window Maximize", "value": "Meta+PgUp,Meta+PgUp,Maximize Window" },
+            { "key": "Window Minimize", "value": "Meta+PgDown,Meta+PgDown,Minimize Window" },
+            { "key": "Window to Desktop 1", "value": "Meta+!,,Window to Desktop 1" },
+            { "key": "Window to Desktop 2", "value": "Meta+@,,Window to Desktop 2" },
+            { "key": "Window to Desktop 3", "value": "Meta+#,,Window to Desktop 3" },
+            { "key": "Window to Desktop 4", "value": "Meta+$,,Window to Desktop 4" },
+            { "key": "Window to Desktop 5", "value": "Meta+%,,Window to Desktop 5" },
+            ] },
+        { "group": "[plasmashell]", "for": [
+            { "key": "cycle-panels", "value": "Meta+Alt+P,Meta+Alt+P,Move keyboard focus between panels" },
+            ] },
+        ] },
     ]})
 
 blocks = blocks + [
