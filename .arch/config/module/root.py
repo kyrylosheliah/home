@@ -118,15 +118,19 @@ blocks.append({ "ensure": package_installed, "for": [
     ]})
 
 # keyring, credential manager
-blocks.append({ "ensure": package_installed, "for": [
-    "kwallet",
-    "kwalletmanager",
-    "ksshaskpass",
-    ]})
-blocks.append({ "ensure": file_content, "for": [
-    { "file": expanduser("~/.config/environment.d/git_askpass.conf"),
-        "content": "GIT_ASKPASS=/usr/bin/ksshaskpass" },
-    ] })
+blocks = blocks + [
+    { "ensure": package_installed, "for": [
+        "kwallet",
+        "kwalletmanager",
+        "ksshaskpass",
+        ]},
+    { "ensure": file_content, "for": [
+        { "file": expanduser("~/.gitconfig"),
+            "content": "[credential]\n\thelper = cache" },
+        { "file": expanduser("~/.config/environment.d/git_askpass.conf"),
+            "content": "GIT_ASKPASS=/usr/bin/ksshaskpass" },
+        ]},
+    ]
 
 blocks.append({ "ensure": kconfig_content, "for": [
     { "file": expanduser("~/.config/plasmashellrc"), "for": [
