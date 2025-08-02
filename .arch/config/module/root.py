@@ -145,13 +145,20 @@ blocks = blocks + [
         ]},
     ]
 
+# Plasma configuration files
+# - is equivalent to calling kreadconfig6 and kwriteconfig6, but with compound
+# nested sections support (such as `[section1][section2][section3]`)
+# - probably, could automatically reload configured DE subsystems with:
+# qdbus-qt5 org.kde.KWin /KWin reloadConfig
+# qdbus-qt5 org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.refreshCurrentShell
+# qdbus-qt5 org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.reloadConfig
+# qdbus-qt5 org.kde.kglobalaccel /component/khotkeys org.kde.kglobalaccel.Hotkeys.reloadConfiguration
 blocks.append({ "ensure": kconfig_content, "for": [
+    # expect `[Panel 2]` identifier on fresh install, regeneration requires
+    # `~/.config/plasmashellrc` and
+    # `~/.config/plasma-org.kde.plasma.desktop-appletsrc`
+    # files deletion
     { "file": expanduser("~/.config/plasmashellrc"), "for": [
-        # expect `[Panel 2]` panel identifier on clean install
-        # regeneration requires
-        # `~/.config/plasmashellrc` and
-        # `~/.config/plasma-org.kde.plasma.desktop-appletsrc`
-        # files deletion
         { "group": "[PlasmaViews][Panel 2]", "for": [
             { "key": "floating", "value": "0" },
             { "key": "panelLengthMode", "value": "0" },
@@ -200,10 +207,10 @@ blocks.append({ "ensure": kconfig_content, "for": [
             { "key": "Switch Window Left", "value": "Meta+Alt+Left,Meta+Alt+Left,Switch to Window to the Left" },
             { "key": "Switch Window Right", "value": "Meta+Alt+Right,Meta+Alt+Right,Switch to Window to the Right" },
             { "key": "Switch Window Up", "value": "Meta+Alt+Up,Meta+Alt+Up,Switch to Window Above" },
-            { "key": "Switch to Desktop 1", "value": "Ctrl+F1\tMeta+1,Ctrl+F1,Switch to Desktop 1" },
-            { "key": "Switch to Desktop 2", "value": "Ctrl+F2\tMeta+2,Ctrl+F2,Switch to Desktop 2" },
-            { "key": "Switch to Desktop 3", "value": "Ctrl+F3\tMeta+3,Ctrl+F3,Switch to Desktop 3" },
-            { "key": "Switch to Desktop 4", "value": "Ctrl+F4\tMeta+4,Ctrl+F4,Switch to Desktop 4" },
+            { "key": "Switch to Desktop 1", "value": r"Ctrl+F1\tMeta+1,Ctrl+F1,Switch to Desktop 1" },
+            { "key": "Switch to Desktop 2", "value": r"Ctrl+F2\tMeta+2,Ctrl+F2,Switch to Desktop 2" },
+            { "key": "Switch to Desktop 3", "value": r"Ctrl+F3\tMeta+3,Ctrl+F3,Switch to Desktop 3" },
+            { "key": "Switch to Desktop 4", "value": r"Ctrl+F4\tMeta+4,Ctrl+F4,Switch to Desktop 4" },
             { "key": "Switch to Desktop 5", "value": "Meta+5,,Switch to Desktop 5" },
             { "key": "Window Maximize", "value": "Meta+PgUp,Meta+PgUp,Maximize Window" },
             { "key": "Window Minimize", "value": "Meta+PgDown,Meta+PgDown,Minimize Window" },
@@ -216,13 +223,15 @@ blocks.append({ "ensure": kconfig_content, "for": [
         { "group": "[plasmashell]", "for": [
             { "key": "cycle-panels", "value": "Meta+Alt+P,Meta+Alt+P,Move keyboard focus between panels" },
             ] },
+        { "group": "[services][org.kde.krunner.desktop]", "for": [
+            { "key": "_launch", "value": r"Search\tAlt+F2\tAlt+Space" },
+            ] },
         ] },
     ]})
 
 blocks = blocks + [
     # development
     { "ensure": package_installed, "for": [
-        "kitty",
         "neovim",
         "wl-clipboard",
         "yazi",

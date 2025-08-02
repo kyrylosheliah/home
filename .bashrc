@@ -25,6 +25,5 @@ alias list-security='sudo ~/.arch/scripts/list-security'
 alias update='~/.arch/scripts/update'
 #checkupdate # from pacman-contrib
 
-# kwalletd6 & /usr/share/libpam-kwallet-common/pam_kwallet_init &
 alias ui='/usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland'
 

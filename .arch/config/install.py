@@ -2,8 +2,10 @@
 
 import sys
 import os
-from lib.ensure import (
+from lib.helpers import (
     log_error,
+)
+from lib.ensure import (
     ensure_module,
 )
 

@@ -5,20 +5,12 @@ import tempfile
 from typing import List, Dict
 import lib.helpers as helpers
 import lib.kconfig as kconfig
-
-log_prefix = f"{helpers.bcolors.DIM}lib.ensure:{helpers.bcolors.ENDC} "
-
-def log_error(message: str):
-    helpers.log_error(log_prefix, message)
-
-def log_success(message: str):
-    helpers.log_success(log_prefix, message)
-
-def log_warning(message: str):
-    helpers.log_warning(log_prefix, message)
-
-def log_info(message: str):
-    helpers.log_info(log_prefix, message)
+from lib.helpers import (
+    log_error,
+    log_success,
+    log_warning,
+    log_info,
+)
 
 def package_is_installed(package_name: str) -> bool:
     if 0 == helpers.run(['pacman', '-Q', package_name]).returncode:
@@ -77,6 +69,7 @@ user_service_active = inc() # str
 system_service_active = inc() # str
 file_content = inc() # { "file": str, "content": str }
 kconfig_content = inc() # { "file": str, "for": List[{ "group": str, "for": List[{ "key": str, "value": str }] }] }
+choise = inc() # { "title": str, "options": List[{ "name": str, "description": str, "function": Lambda }] }
 
 dispatchers = [None] * dispatchers_count
 
@@ -246,4 +239,40 @@ def ensure_kconfig_content(file_config: Dict) -> bool:
     return True
 
 dispatchers[kconfig_content] = ensure_kconfig_content
+
+def ensure_choise(block: Dict):
+    title = block["title"]
+    prompt = "Choose an action (or type 'none' to exit):"
+    options = block["options"]
+    if not isinstance(options, list):
+        options = [ options, ]
+    for i in range(len(options)):
+        option = options[i]
+        name = option["name"]
+        description = option["description"]
+        prompt = f"{prompt}\n- '{name}': {description}"
+    prompt = f"{prompt}\n> "
+    choise = ""
+    while True:
+        choise = input(prompt).strip().lower()
+        if "none" == choise:
+            log_warning(f"Skipping the choise in '{title}'")
+            return True
+        found_function = None
+        for i in range(len(options)):
+            option = options[i]
+            name = option["name"]
+            if choise == name.lower():
+                found_function = option["function"]
+                break
+        if None == found_function:
+            print("Error: Such choise doesn't exist")
+            continue
+        break
+    if not found_function():
+        log_error(f"Unexpected conditional result for option '{option["name"]}' in '{title}'")
+        return False
+    return True
+
+dispatchers[choise] = ensure_choise
 
