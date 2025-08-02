@@ -2,7 +2,8 @@
 !.gitignore
 !.bash_profile
 !.bashrc
-!.gnupg/gpg-agent.conf
+!.gnupg
+!.gnupg/**
 !.config
 !.config/**
 !.arch
