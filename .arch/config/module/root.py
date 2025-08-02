@@ -254,29 +254,29 @@ blocks = blocks + [
 # graphics
 
 # multilib 32bit repository
-blocks.append({ "ensure": file_content, "for": { "file": "/etc/pacman.conf", "content": """
-[multilib]
-Include = /etc/pacman.d/mirrorlist
-    """ } })
+blocks.append({ "ensure": file_content, "for": [
+    { "file": "/etc/pacman.conf",
+      "content": "[multilib]\nInclude = /etc/pacman.d/mirrorlist" },
+    })
 
-match options.config["gpu"]:
-    case "amd":
-        blocks = blocks + [
-            { "ensure": package_installed, "for": [
-                "mesa", "lib32-mesa",
-                "vulkan-radeon", "lib32-vulkan-radeon",
-                "vulkan-icd-loader", "lib32-vulkan-icd-loader",
-                ] },
-            { "ensure": aur_package_installed, "for": "lact" },
-            { "ensure": system_service_active, "for": "lactd" },
-            ]
-    case "nvidia":
-        blocks.append({ "ensure": package_installed, "for": [
-            "nvidia",
-            "nvidia-utils", "lib32-nvidia-utils",
-            "nvidia-settings",
-            "opencl-nvidia",
-            ] })
+#match options.config["gpu"]:
+#    case "amd":
+#        blocks = blocks + [
+#            { "ensure": package_installed, "for": [
+#                "mesa", "lib32-mesa",
+#                "vulkan-radeon", "lib32-vulkan-radeon",
+#                "vulkan-icd-loader", "lib32-vulkan-icd-loader",
+#                ] },
+#            { "ensure": aur_package_installed, "for": "lact" },
+#            { "ensure": system_service_active, "for": "lactd" },
+#            ]
+#    case "nvidia":
+#        blocks.append({ "ensure": package_installed, "for": [
+#            "nvidia",
+#            "nvidia-utils", "lib32-nvidia-utils",
+#            "nvidia-settings",
+#            "opencl-nvidia",
+#            ] })
 
 ignored = [
     # gaming

@@ -5,5 +5,4 @@
 [[ -f ~/.bashrc ]] && . ~/.bashrc
 
 export EDITOR=nvim
-export TERMINAL=ghostty
 
