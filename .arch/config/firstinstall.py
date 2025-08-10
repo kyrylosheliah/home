@@ -35,7 +35,7 @@ def setup_secure_boot(microsoft: bool = False, uki: bool = False):
     if 0 != result.returncode:
         log_error(f"Error enrolling secure boot keys: {result.stderr}")
         return False
-     ...
+    # ...
     if uki:
         target = "/efi/EFI/Linux/arch-linux.efi"
         result = helpers.sh(f"sudo sbctl sign -s {target}")

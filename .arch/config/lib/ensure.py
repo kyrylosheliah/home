@@ -74,7 +74,7 @@ choise = inc() # { "title": str, "options": List[{ "name": str, "description": s
 dispatchers = [None] * dispatchers_count
 
 def ensure_module(module: Dict) -> bool:
-    """Main function to ensure all configurations are applied sequentially"""
+    """Ensure all configuration blocks are applied sequentially"""
     ensure_aur_package_installed_raw("yay") # hard dependency
     blocks = module["for"]
     if not isinstance(blocks, list):
@@ -186,7 +186,7 @@ def ensure_system_service_active(service_name: str) -> bool:
 dispatchers[system_service_active] = ensure_system_service_active
 
 def ensure_file_content(file_config: Dict) -> bool:
-    """Ensure a file contains specified text"""
+    """Ensure a file contains the text"""
     filename = file_config["file"]
     touch_err = helpers.touch_file(filename)
     if len(touch_err):
@@ -241,6 +241,7 @@ def ensure_kconfig_content(file_config: Dict) -> bool:
 dispatchers[kconfig_content] = ensure_kconfig_content
 
 def ensure_choise(block: Dict):
+    """Ensure a KDE config file has the keys and the values under the specified groups"""
     title = block["title"]
     prompt = "Choose an action (or type 'none' to exit):"
     options = block["options"]

@@ -106,7 +106,6 @@ blocks.append({ "ensure": package_installed, "for": [
     "kcalc",
     "kdeconnect",
     "kinit",
-    "konsole",
     #"krunner",
     "kvantum",
     "kwrite",
@@ -232,6 +231,7 @@ blocks.append({ "ensure": kconfig_content, "for": [
 blocks = blocks + [
     # development
     { "ensure": package_installed, "for": [
+        "foot",
         "neovim",
         "wl-clipboard",
         "yazi",
@@ -257,7 +257,7 @@ blocks = blocks + [
 blocks.append({ "ensure": file_content, "for": [
     { "file": "/etc/pacman.conf",
       "content": "[multilib]\nInclude = /etc/pacman.d/mirrorlist" },
-    })
+    ] })
 
 #match options.config["gpu"]:
 #    case "amd":
