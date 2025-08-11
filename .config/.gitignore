@@ -6,3 +6,5 @@
 !nvim/**
 !foot
 !foot/**
+!tmux
+!tmux/**

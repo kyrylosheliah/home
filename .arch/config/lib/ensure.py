@@ -152,8 +152,12 @@ def ensure_aur_package_installed(package_name: str) -> bool:
 
 dispatchers[aur_package_installed] = ensure_aur_package_installed
 
-def ensure_service_active(systemctl_prefix: List[str], service_name: str) -> bool:
-    """Ensure a service is enabled and active"""
+systemctl_prefixes = [
+    [ "systemctl", "--user" ], # is_system = False or 0
+    [ "sudo", "systemctl" ], # is_system = True or 1
+]
+
+def enable_service(systemctl_prefix: List[str], service_name: str) -> bool:
     if 'enabled' != helpers.run(systemctl_prefix + ['is-enabled', service_name]).stdout.strip():
         log_warning(f"Service '{service_name}' is not enabled")
         enable_result = helpers.run(systemctl_prefix + ['enable', service_name])
@@ -161,6 +165,9 @@ def ensure_service_active(systemctl_prefix: List[str], service_name: str) -> boo
             log_error(f"Failed to enable service '{service_name}': {enable_result.stderr}")
             return False
         log_success(f"Service '{service_name}' is enabled")
+    return True
+
+def activate_service(systemctl_prefix: List[str], service_name: str) -> bool:
     if 'active' != helpers.run(systemctl_prefix + ['is-active', service_name]).stdout.strip():
         log_warning(f"Service '{service_name}' is not started")
         start_result = helpers.run(systemctl_prefix + ['start', service_name])
@@ -170,10 +177,13 @@ def ensure_service_active(systemctl_prefix: List[str], service_name: str) -> boo
         log_success(f"Service '{service_name}' is active")
     return True
 
-systemctl_prefixes = [
-    [ "systemctl", "--user" ], # is_system = False or 0
-    [ "sudo", "systemctl" ], # is_system = True or 1
-]
+def ensure_service_active(systemctl_prefix: List[str], service_name: str) -> bool:
+    """Ensure a service is enabled and active"""
+    if not enable_service(systemctl_prefix, service_name):
+        return False
+    if not activate_service(systemctl_prefix, service_name):
+        return False
+    return True
 
 def ensure_user_service_active(service_name: str) -> bool:
     return ensure_service_active(systemctl_prefixes[0], service_name)

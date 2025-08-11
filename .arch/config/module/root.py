@@ -105,16 +105,11 @@ blocks.append({ "ensure": package_installed, "for": [
     "gwenview",
     "kcalc",
     "kdeconnect",
-    "kinit",
-    #"krunner",
     "kvantum",
     "kwrite",
     "okular",
-    "packagekit-qt5",
     "partitionmanager",
     "xsettingsd",
-    # language switching via qdbus
-    "qt5-tools",
     ]})
 
 # keyring, credential manager
@@ -123,7 +118,6 @@ blocks = blocks + [
         "kwallet",
         "kwalletmanager",
         "ksshaskpass",
-        #"kwallet-pam",
         ]},
     # # auto-unlock the default non-gpg wallet (!) named kdewallet
     # { "ensure": conditional_error, "for": [
@@ -144,6 +138,18 @@ blocks = blocks + [
         ]},
     ]
 
+# Prevent things to autostart at this point
+#blocks.append({ "ensure": conditional_error, "for": [
+#    { "title": "prevent autostart for baloo_file.desktop",
+#      "condition": lambda: not helpers.file_exists("/etc/xdg/autostart/baloo_file.desktop") },
+#    { "title": "prevent autostart for kaccess.desktop",
+#      "condition": lambda: not helpers.file_exists("/etc/xdg/autostart/kaccess.desktop") },
+#    { "title": "prevent autostart for org.kde.discover.notifier.desktop",
+#      "condition": lambda: not helpers.file_exists("/etc/xdg/autostart/org.kde.discover.notifier.desktop") },
+#    { "title": "prevent autostart for org.kde.kdeconnect.daemon.desktop",
+#      "condition": lambda: not helpers.file_exists("/etc/xdg/autostart/org.kde.kdeconnect.daemon.desktop") },
+#    ]})
+
 # Plasma configuration files
 # - is equivalent to calling kreadconfig6 and kwriteconfig6, but with compound
 # nested sections support (such as `[section1][section2][section3]`)
@@ -153,6 +159,12 @@ blocks = blocks + [
 # qdbus-qt5 org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.reloadConfig
 # qdbus-qt5 org.kde.kglobalaccel /component/khotkeys org.kde.kglobalaccel.Hotkeys.reloadConfiguration
 blocks.append({ "ensure": kconfig_content, "for": [
+    # balooctl6 suspend, balooctl6 disable, balooctl6 purge
+    { "file": expanduser("~/.config/baloofilerc"), "for": [
+        { "group": "[Basic Settings]", "for": [
+            { "key": "Indexing-Enabled", "value": "false" },
+            ] },
+        ] },
     # expect `[Panel 2]` identifier on fresh install, regeneration requires
     # `~/.config/plasmashellrc` and
     # `~/.config/plasma-org.kde.plasma.desktop-appletsrc`
@@ -163,6 +175,11 @@ blocks.append({ "ensure": kconfig_content, "for": [
             { "key": "panelLengthMode", "value": "0" },
             { "key": "panelOpacity", "value": "1" },
             { "key": "panelVisibility", "value": "1" },
+            ] },
+        ] },
+    { "file": expanduser("~/.config/ksmserverrc"), "for": [
+        { "group": "[General]", "for": [
+            { "key": "loginMode", "value": "emptySession" },
             ] },
         ] },
     { "file": expanduser("~/.config/kxkbrc"), "for": [
@@ -223,7 +240,10 @@ blocks.append({ "ensure": kconfig_content, "for": [
             { "key": "cycle-panels", "value": "Meta+Alt+P,Meta+Alt+P,Move keyboard focus between panels" },
             ] },
         { "group": "[services][org.kde.krunner.desktop]", "for": [
-            { "key": "_launch", "value": r"Search\tAlt+F2\tAlt+Space" },
+            #{ "key": "_launch", "value": r"Search\tAlt+F2\tAlt+Space" },
+            # disable krunner, so it won't spawn a process at startup
+            { "key": "RunClipboard", "value": "none" },
+            { "key": "_launch", "value": "none" },
             ] },
         ] },
     ]})
@@ -232,6 +252,7 @@ blocks = blocks + [
     # development
     { "ensure": package_installed, "for": [
         "foot",
+        "tmux",
         "neovim",
         "wl-clipboard",
         "yazi",
