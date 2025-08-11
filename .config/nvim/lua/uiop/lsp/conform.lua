@@ -1,9 +1,7 @@
 return {
-
-  {
-    "stevearc/conform.nvim",
-    opts = {},
-    --[[formatters_by_ft = {
+  "stevearc/conform.nvim",
+  opts = {},
+  --[[formatters_by_ft = {
       --markdown = { "inject" }, -- makes format python codeblocks inside a markdown file
       javascript = { "prettierd", "prettier", stop_after_first = true },
       format_on_save = {
@@ -12,10 +10,8 @@ return {
         lsp_format = "fallback",
       },
     }]]
-    config = function(_, opts)
-      require("conform").setup(opts)
-      vim.api.nvim_set_option_value("formatexpr", 'v:lua.require("conform").formatexpr()', {})
-    end,
-  },
-
+  config = function(_, opts)
+    require("conform").setup(opts)
+    vim.api.nvim_set_option_value("formatexpr", 'v:lua.require("conform").formatexpr()', {})
+  end,
 }

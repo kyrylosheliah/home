@@ -5,7 +5,7 @@ vim.g.debug = true
 vim.g.transparent = true
 --vim.g.highlight_table_name = "visual_studio"
 --vim.g.highlight_table_name = "rgb"
-vim.g.highlight_table_name = "white"
+--vim.g.highlight_table_name = "white"
 vim.o.background = 'dark'
 
 local M = {}
@@ -16,7 +16,7 @@ M.apply_highlight = function(hl_tbl)
   end
 end
 
-M.highlight_location = vim.g.username .. ".base.highlight_table_" .. vim.g.highlight_table_name
+M.highlight_location = vim.g.username .. ".base.highlight_table"--_" .. vim.g.highlight_table_name
 M.highlight_table = require(M.highlight_location)
 M.reload = function()
   package.loaded[M.highlight_location] = nil

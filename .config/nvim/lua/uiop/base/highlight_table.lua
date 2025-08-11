@@ -1,4 +1,4 @@
-local def = require(vim.g.username .. ".base.highlight_defaults")
+local def = require(vim.g.username .. ".base.highlight_palette")
 local shade = def.shade
 
 M = {}
@@ -117,7 +117,7 @@ local highlight = {
   ["CurSearch"] = { fg = c.black, bg = c.pure_green }, -- 'cursearch' highlighting; also used for the text replaced with ":s///c"
   ["LineNr"] = { fg = c.sub_white, bg = vim.g.transparent and c.none or nil }, -- Line number for " =number" and ":#" commands, and when 'number' or 'relativenumber' option is set.
   ["CursorLineNr"] = { fg = c.white, bg = c.sub_gray }, -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
-  ["MatchParen"] = { fg = c.pure_black, bg = c.pure_purple }, -- The character under the cursor or just before it, if it is a paired bracket, and its match.
+  ["MatchParen"] = { fg = c.pure_purple }, -- The character under the cursor or just before it, if it is a paired bracket, and its match.
   ["ModeMsg"] = { fg = c.gray, bold = true }, --' showmode' message (e.g., "-- INSERT --")
   ["MoreMsg"] = { fg = c.pure_purple }, -- more-prompt
   ["NonText"] = { fg = c.sub_gray }, -- characters from 'showbreak' and other characters that do not really exist in the text (e.g., ">" displayed when a double-wide character doesn't fit at the end of the line).
@@ -152,6 +152,15 @@ local highlight = {
   ["WildMenu"] = { fg = c.black, bg = c.blue }, -- current match in 'wildmenu' completion
   ["Winbar"] = { fg = c.white, bg = c.sub_gray }, -- Winbar
   ["WinbarNC"] = { fg = c.gray, bg = c.black }, -- Winbar non-current windows.
+
+  -- multicursors
+  ["MultiCursorCursor"] = { bg = c.pure_green, fg = c.pure_black },
+  ["MultiCursorVisual"] = { link = "Visual" },
+  ["MultiCursorSign"] = { link = "SignColumn"},
+  ["MultiCursorMatchPreview"] = { link = "Search" },
+  ["MultiCursorDisabledCursor"] = { reverse = true },
+  ["MultiCursorDisabledVisual"] = { link = "Visual" },
+  ["MultiCursorDisabledSign"] = { link = "SignColumn"},
 
   -- HTML
   ["htmlArg"] = { fg = c.green, italic = true }, -- attributes
@@ -302,14 +311,6 @@ local highlight = {
   ["diffLine"] = { fg = c.cyan },
   ["diffIndexLine"] = { fg = c.purple },
 
-  -- Hop
-  ["HopNextKey"] = { fg = c.pure_yellow },
-  ["HopNextKey1"] = { fg = c.pure_blue },
-  ["HopNextKey2"] = { fg = c.pure_cyan },
-  ["HopUnmatched"] = { fg = c.gray },
-  ["HopCursor"] = { fg = c.pure_cyan },
-  ["HopPreview"] = { fg = c.pure_blue },
-
   -- Cmp
   ["CmpItemAbbrDeprecated"] = { fg = c.gray, strikethrough = true },
   ["CmpItemAbbrMatch"] = { fg = c.blue, bold = true },
@@ -320,37 +321,6 @@ local highlight = {
   ["CmpItemKindVariable"] = { fg = c.white },
   ["CmpItemKindEnum"] = { fg = c.white },
   ["CmpItemKindSnippet"] = { fg = c.yellow },
-
-  -- Navic
-  ["NavicIconsFile"] = { fg = c.white, bg = c.none },
-  ["NavicIconsModule"] = { fg = c.yellow, bg = c.none },
-  ["NavicIconsNamespace"] = { fg = c.white, bg = c.none },
-  ["NavicIconsPackage"] = { fg = c.white, bg = c.none },
-  ["NavicIconsClass"] = { fg = c.cyan, bg = c.none },
-  ["NavicIconsMethod"] = { fg = c.blue, bg = c.none },
-  ["NavicIconsProperty"] = { fg = c.green, bg = c.none },
-  ["NavicIconsField"] = { fg = c.green, bg = c.none },
-  ["NavicIconsConstructor"] = { fg = c.cyan, bg = c.none },
-  ["NavicIconsEnum"] = { fg = c.cyan, bg = c.none },
-  ["NavicIconsInterface"] = { fg = c.cyan, bg = c.none },
-  ["NavicIconsFunction"] = { fg = c.blue, bg = c.none },
-  ["NavicIconsVariable"] = { fg = c.purple, bg = c.none },
-  ["NavicIconsConstant"] = { fg = c.purple, bg = c.none },
-  ["NavicIconsString"] = { fg = c.green, bg = c.none },
-  ["NavicIconsNumber"] = { fg = c.cyan, bg = c.none },
-  ["NavicIconsBoolean"] = { fg = c.yellow, bg = c.none },
-  ["NavicIconsArray"] = { fg = c.pure_gray, bg = c.none },
-  ["NavicIconsObject"] = { fg = c.pure_gray, bg = c.none },
-  ["NavicIconsKey"] = { fg = c.blue, bg = c.none },
-  ["NavicIconsKeyword"] = { fg = c.blue, bg = c.none },
-  ["NavicIconsNull"] = { fg = c.cyan, bg = c.none },
-  ["NavicIconsEnumMember"] = { fg = c.green, bg = c.none },
-  ["NavicIconsStruct"] = { fg = c.cyan, bg = c.none },
-  ["NavicIconsEvent"] = { fg = c.cyan, bg = c.none },
-  ["NavicIconsOperator"] = { fg = c.white, bg = c.none },
-  ["NavicIconsTypeParameter"] = { fg = c.green, bg = c.none },
-  ["NavicText"] = { fg = c.white, bg = c.none },
-  ["NavicSeparator"] = { fg = c.pure_gray, bg = c.none },
 
   -- Notify
   ["NotifyBackground"] = { fg = c.white, bg = c.bg },
@@ -374,11 +344,6 @@ local highlight = {
   ["NotifyINFOBody"] = { fg = c.white, bg = vim.g.transparent and c.none or c.bg },
   ["NotifyDEBUGBody"] = { fg = c.white, bg = vim.g.transparent and c.none or c.bg },
   ["NotifyTRACEBody"] = { fg = c.white, bg = vim.g.transparent and c.none or c.bg },
-
-  -- NeoTree
-  ["NeoTreeFloatBorder"] = { fg = c.gray, bg = c.black },
-  ["NeoTreeFloatTitle"] = { fg = c.gray, bg = c.pure_gray },
-  ["NeoTreeTitleBar"] = { fg = c.gray, bg = c.sub_gray },
 
   -- Telescope
   ["TelescopeBorder"] = { fg = c.white, bg = c.black },
@@ -425,15 +390,6 @@ local highlight = {
   ["DapUIUnavailable"] = { fg = c.gray },
   ["DapUIWinSelect"] = { fg = c.cyan, bold = true },
   ["DapUIEndofBuffer"] = { link = "EndofBuffer" },
-
-  -- Flash
-  ["FlashBackdrop"] = { link = "Comment" },
-  ["FlashCurrent"] = { link = "IncSearch" },
-  ["FlashCursor"] = { bg = c.pure_blue, fg = c.black , bold = true },
-  ["FlashLabel"] = { bg = c.cyan, bold = true, fg = c.black },
-  ["FlashMatch"] = { link = "Search" },
-  ["FlashPrompt"] = { link = "MsgArea" },
-  ["FlashPromptIcon"] = { link = "Special" },
 
 }
 

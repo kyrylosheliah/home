@@ -1,11 +1,9 @@
 return {
+
   {
     "nvim-telescope/telescope.nvim",
     tag = "0.1.8",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      --"BurntSushi/ripgrep",
-    },
+    dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
       defaults = {
         color_devicons = false,
@@ -23,9 +21,10 @@ return {
       },
       pickers = {
         find_files = {
+          hidden = true,
           repgrep_arguments = {
             'rg',
-            --'--hidden',
+            '--hidden',
             '--no-heading',
             '--with-filename',
             '--line-number',
@@ -99,7 +98,7 @@ return {
 
   {
     "nvim-telescope/telescope-fzf-native.nvim",
-    build = "make",
+    build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release',
     dependencies = {
       {
         "nvim-telescope/telescope.nvim",
@@ -116,47 +115,22 @@ return {
       },
     },
     config = function()
-      require("telescope").load_extension("fzf")
+      local telescope = require("telescope")
+      telescope.load_extension("fzf")
     end,
   },
 
-  -- TODO make trouble.nvim access fuzzy-findable
   {
-    "folke/trouble.nvim",
-    cmd = { "Trouble" },
-    opts = function(_, opts)
-      local user_command = vim.api.nvim_create_user_command
-      user_command("TroubleWorkspaceDiagnosticToggle", function()
-        require("trouble").toggle()
-      end, {})
-      user_command("TroubleFileDiagnosticToggle", function()
-        require("trouble").toggle({ filter = { buf = 0 } })
-      end, {})
-      user_command("TroubleQuickfixToggle", function()
-        require("trouble").toggle()
-      end, {})
-      user_command("TroubleLoclistToggle", function()
-        require("trouble").toggle(opts)
-      end, {})
-      user_command("TroubleTodoToggle", function()
-        require("trouble").toggle(opts)
-      end, {})
-      return {
-        focus = true,
-        modes = {
-          lsp = {
-            win = { position = "right" },
-          },
-        },
-      }
+    'Ajnasz/telescope-runcmd.nvim',
+    event = 'VeryLazy',
+    dependencies = { 'nvim-telescope/telescope.nvim' },
+    keys = {
+      { mode = "n", "<leader>f", ":Telescope runcmd<cr>", {buffer = false} },
+    },
+    config = function()
+      local telescope = require("telescope")
+      telescope.load_extension("runcmd")
     end,
-    --[[  keys = {
-    { "<leader>xw", "<cmd>Trouble diagnostics toggle<CR>", desc = "Open trouble workspace diagnostics" },
-    { "<leader>xd", "<cmd>Trouble diagnostics toggle filter.buf=0<CR>", desc = "Open trouble document diagnostics" },
-    { "<leader>xq", "<cmd>Trouble quickfix toggle<CR>", desc = "Open trouble quickfix list" },
-    { "<leader>xl", "<cmd>Trouble loclist toggle<CR>", desc = "Open trouble location list" },
-    { "<leader>xt", "<cmd>Trouble todo toggle<CR>", desc = "Open todos in trouble" },
-  },]]
   },
 
 }

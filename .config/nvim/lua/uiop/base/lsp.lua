@@ -1,3 +1,5 @@
+vim.o.pumheight = 10
+
 vim.diagnostic.config({
   --[[virtual_text = {
     prefix = "█",--"💢",--"",

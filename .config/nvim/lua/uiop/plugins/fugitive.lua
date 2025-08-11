@@ -1,12 +1,8 @@
 return {
   'tpope/vim-fugitive',
-  keys = {
-    { "<leader>g", "", desc = "+git" },
-    {
-      "<leader>gs",
-      vim.cmd.Git,
-      mode = "n",
-      desc = "git status",
-    },
-  },
+  config = function()
+    vim.g.add_commands({
+      { name = "git status", cmd = vim.cmd.Git },
+    })
+  end,
 }

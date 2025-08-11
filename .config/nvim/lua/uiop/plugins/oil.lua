@@ -17,6 +17,9 @@ return {
         --"size",
         --"mtime",
       },
+      view_options = {
+        show_hidden = true,
+      },
       git = {
         add = function(path)
           return is_in_git_repo()
@@ -36,16 +39,16 @@ return {
       { "<leader>-", vim.cmd.Oil, mode = "n", desc = "parent (directory) (oil)" },
     },
   },
+
   {
-    "SirZenith/oil-vcs-status",
-    dependencies = {
-      "stevearc/oil.nvim",
-    },
-    setup = function(_)
-      --[[local vsc_status= require("oil-vcs-status")
-      local status_const = require("oil-vcs-status.constant.status")
-      local StatusType = status_const.StatusType]]
-      require("oil-vcs-status").setup({})
-    end,
+    "refractalize/oil-git-status.nvim",
+    dependencies = { "stevearc/oil.nvim" },
+    config = true,
+  },
+
+  {
+    "JezerM/oil-lsp-diagnostics.nvim",
+    dependencies = { "stevearc/oil.nvim" },
+    opts = {}
   },
 }

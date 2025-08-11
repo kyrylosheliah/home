@@ -61,7 +61,7 @@ end
 
 -- nvim --clean<CR>:redir file<CR>:highlightjjjjjjjjjjjjjjjjjjjj<CR>:redir END<CR>
 
-M.hl = {
+M.default_hl = {
   ["SpecialKey"] = { guifg = "NvimDarkGrey4" },
   ["EndOfBuffer"] = { link = "NonText" },
   ["TermCursor"] = { cterm = "reverse", gui = "reverse" },

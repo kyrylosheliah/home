@@ -22,21 +22,4 @@ return {
     opts = {},
   },
 
-  {
-    "jay-babu/mason-nvim-dap.nvim",
-    dependencies = {
-      "williamboman/mason.nvim",
-      "mfussenegger/nvim-dap",
-      "nvim-lua/plenary.nvim",
-    },
-    opts = {
-      handlers = {
-        function(config) -- default handler
-          -- all sources with no handler get passed here
-          require("mason-nvim-dap").default_setup(config)
-        end,
-      },
-    },
-  },
-
 }

@@ -254,6 +254,7 @@ blocks = blocks + [
         "foot",
         "tmux",
         "neovim",
+        "ripgrep",
         "wl-clipboard",
         "yazi",
         ] },

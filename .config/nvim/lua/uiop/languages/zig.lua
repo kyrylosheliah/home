@@ -38,83 +38,10 @@ return {
   },
 
   {
-    "WhoIsSethDaniel/mason-tool-installer.nvim",
-    opts = {
-      ensure_installed = {
-        "codelldb",
-      },
-    },
-  },
-
-  {
     "stevearc/conform.nvim",
     opts = {
       formatters_by_ft = {
         zig = { "zig fmt" },
-      },
-    },
-  },
-
-  {
-    "mfussenegger/nvim-dap",
-    opts = {
-      adapters = {
-        lldb = {
-          type = 'executable',
-          command = 'C:\\Program Files\\LLVM\\bin\\lldb-vscode.exe', -- adjust as needed, must be absolute path
-        },
-      },
-      configurations = {
-        {
-          type = 'lldb',
-          name = 'Launch asdl;fjkasl;dfjal;sdfj',
-          request = 'launch',
-          program = '${workspaceFolder}/zig-out/bin/zig_hello_world.exe',
-          cwd = '${workspaceFolder}',
-          stopOnEntry = false,
-          args = {},
-        },
-      },
-    },
-  },
-
-  {
-    "jay-babu/mason-nvim-dap.nvim",
-    opts = {
-      ensure_installed = {
-        "codelldb",
-      },
-      --[[handlers = {
-        zig = function(config)
-          config.adapters = {
-            type = 'executable',
-            command = 'C:\\Program Files\\LLVM\\bin\\lldb-vscode.exe', -- adjust as needed, must be absolute path
-            name = 'lldb'
-          }
-          config.configurations = {
-            {
-              name = 'Launch',
-              type = 'lldb',
-              request = 'launch',
-              program = '${workspaceFolder}/zig-out/bin/zig_hello_world.exe',
-              cwd = '${workspaceFolder}',
-              stopOnEntry = false,
-              args = {},
-            },
-          }
-        end,
-      },]]
-    },
-  },
-
-  {
-    "nvim-neotest/neotest",
-    dependencies = {
-      "lawrence-laz/neotest-zig",
-    },
-    opts = {
-      adapters = {
-        ["neotest-zig"] = {},
       },
     },
   },
