@@ -1,0 +1,6 @@
+require("base.opt")
+require("base.keymap")
+require("base.status")
+require("base.lsp")
+require("base.highlight")
+require("base.command")

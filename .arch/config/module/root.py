@@ -255,13 +255,18 @@ blocks = blocks + [
         "tmux",
         "neovim",
         "ripgrep",
+        "fd",
         "wl-clipboard",
         "yazi",
+        "fzf",
         ] },
     { "ensure": aur_package_installed, "for": "code" },
 
     { "ensure": package_installed, "for": "docker" },
     { "ensure": system_service_active, "for": "docker.socket" },
+
+    # curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash    
+    # pip install uv
 
     # apps
     { "ensure": package_installed, "for": [

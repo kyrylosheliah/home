@@ -49,6 +49,13 @@ return {
   {
     "JezerM/oil-lsp-diagnostics.nvim",
     dependencies = { "stevearc/oil.nvim" },
-    opts = {}
+    opts = {
+      diagnostic_symbols = {
+        error = "E",
+        warn = "W",
+        info = "I",
+        hint = "H",
+      },
+    },
   },
 }

@@ -9,8 +9,7 @@ vim.g.runcmd_commands = {
   {
     name = "Lsp ->",
     cmd = function()
-      local picker = require('runcmd.picker')
-      picker.open({
+      require('runcmd.picker').open({
         results = require('runcmd.commands.lsp'),
       })
     end,

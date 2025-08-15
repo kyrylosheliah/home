@@ -28,10 +28,10 @@ def log_warning(message: str):
 def log_info(message: str):
     print(f"{bcolors.DIM}{message}{bcolors.ENDC}")
 
-def run(command: List[str]) -> subprocess.CompletedProcess[str]:
+def run(command: List[str] | str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(command, capture_output=True, text=True)
 
-def sh(command: List[str]) -> subprocess.CompletedProcess[str]:
+def sh(command: List[str] | str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(command, shell=True, capture_output=True, text=True)
 
 def file_exists(path: str) -> bool:

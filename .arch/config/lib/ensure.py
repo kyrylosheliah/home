@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 import shlex
 import tempfile
-from typing import List, Dict
+from typing import List, Dict, Callable, Any
 import lib.helpers as helpers
 import lib.kconfig as kconfig
 from lib.helpers import (
@@ -71,7 +71,7 @@ file_content = inc() # { "file": str, "content": str }
 kconfig_content = inc() # { "file": str, "for": List[{ "group": str, "for": List[{ "key": str, "value": str }] }] }
 choise = inc() # { "title": str, "options": List[{ "name": str, "description": str, "function": Lambda }] }
 
-dispatchers = [None] * dispatchers_count
+dispatchers : List[Callable[..., Any]] = [None] * dispatchers_count
 
 def ensure_module(module: Dict) -> bool:
     """Ensure all configuration blocks are applied sequentially"""

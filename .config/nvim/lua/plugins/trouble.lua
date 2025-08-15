@@ -1,7 +1,7 @@
 return {
   'folke/trouble.nvim',
   opts = {
-    icons = false,
+    --icons = false,
     focus = true,
     modes = {
       lsp = {

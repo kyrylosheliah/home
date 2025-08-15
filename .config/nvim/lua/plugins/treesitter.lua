@@ -2,9 +2,9 @@ return {
 
   {
     "nvim-treesitter/nvim-treesitter",
-    version = false, -- last release is way too old and doesn't work on Windows
+    branch = "master",
+    lazy = false,
     build = ":TSUpdate",
-    lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
     init = function(plugin)
       -- PERF: add nvim-treesitter queries to the rtp and it's custom query predicates early
       -- This is needed because a bunch of plugins no longer `require("nvim-treesitter")`, which
@@ -19,8 +19,6 @@ return {
       highlight = { enable = true },
       indent = { enable = true },
       ensure_installed = {
-        "c",
-        "cpp",
         "printf",
         "diff",
         "html",
@@ -28,13 +26,6 @@ return {
         "vimdoc",
         "xml",
         "yaml",
-        -- WEB
-        "javascript",
-        "jsdoc",
-        "json",
-        "jsonc",
-        "tsx",
-        "typescript",
       },
       incremental_selection = {
         enable = true,

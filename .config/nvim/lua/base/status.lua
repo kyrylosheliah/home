@@ -20,7 +20,7 @@ M.stbufnr = function()
   return vim.api.nvim_win_get_buf(vim.g.statusline_winid or 0)
 end
 
-M.is_activewin = function()
+M.is_active_win = function()
   return vim.api.nvim_get_current_win() == vim.g.statusline_winid
 end
 
@@ -176,32 +176,32 @@ M.getreg = function(register)
   return content
 end
 
-M.macros_recording_lambda = function()
+M.macros_recording_function = function()
   local reg = vim.fn.reg_recording()
+  -- Doesn't get updated when a macro is being recorded or reset beforehand, so
+  -- will show the register's old contents
   --local content = M.getreg(reg)
-  --vim.cmd.redrawstatus() -- unfortunately isn't happening
-  --The memory buffer in which your keystrokes go during a recording is not exposed at runtime so no, it is not possible. As an alternative to recording, you can use :normal iNowImRecording. – romainl
   return '@' .. reg .. '<'
 end
-M.macros_hidden_lambda = function() return "" end
-M.macros_recorded_lambda = function()
+M.macros_hidden_function = function() return "" end
+M.macros_recorded_function = function()
   local recorded_register = vim.fn.reg_recorded()
   local recorded_content = M.getreg(recorded_register)
   local recorded_message = '@' .. recorded_register .. '>' .. recorded_content
-  M.macros_recording = M.macros_hidden_lambda
+  M.macros_recording = M.macros_hidden_function
   return recorded_message
 end
-M.macros_recording = M.macros_hidden_lambda
+M.macros_recording = M.macros_hidden_function
 vim.api.nvim_create_autocmd("RecordingEnter", {
   group = M.augroup,
   callback = function()
-    M.macros_recording = M.macros_recording_lambda
+    M.macros_recording = M.macros_recording_function
   end,
 })
 vim.api.nvim_create_autocmd("RecordingLeave", {
   group = M.augroup,
   callback = function()
-    M.macros_recording = M.macros_recorded_lambda
+    M.macros_recording = M.macros_recorded_function
   end,
 })
 
@@ -338,38 +338,32 @@ M.status_toggle = function()
 end
 
 M.render_active = function()
-  local left = {
-    M.cursor_position(),
-  }
-  local right = {
-    " ",
-  }
-  local search_pagination = M.search_pagination()
   local macros_recording = M.macros_recording()
-  local middle = nil
   if macros_recording ~= "" then
-    middle = { macros_recording }
-  elseif search_pagination ~= "" then
-    middle = { search_pagination }
-  end
-  if middle ~= nil then
     return M.list_concat({
-      left,
-      middle,
-      right,
+      { M.cursor_position(), },
+      { macros_recording },
+      { " ", },
     })
-  else
-    return M.render_active_handle()
   end
+  local search_pagination = M.search_pagination()
+  if search_pagination ~= "" then
+    return M.list_concat({
+      { M.cursor_position(), },
+      { search_pagination },
+      { " ", },
+    })
+  end
+  return M.render_active_handle()
 end
 
 M.render_statusline = function()
-  return M.is_activewin() and
+  return M.is_active_win() and
     M.render_active() or
     M.render_inactive()
 end
 
-vim.opt.statusline = "%!v:lua.require('"..vim.g.username..".base.status').render_statusline()"
+vim.opt.statusline = "%!v:lua.require('base.status').render_statusline()"
 
 --[[vim.api.nvim_create_user_command('StatusToggle', function()
   --pcall(vim.fn.)
@@ -378,26 +372,6 @@ end,{})]]
 vim.keymap.set("n", "<leader>;", M.status_toggle, {desc="Toggle statusline content"})
 
 return M
-
---[[
-  if count["errors"] ~= 0 then
-    errors = " %#LspDiagnosticsSignError# " .. count["errors"]
-  end
-  if count["warnings"] ~= 0 then
-    warnings = " %#LspDiagnosticsSignWarning# " .. count["warnings"]
-  end
-  if count["hints"] ~= 0 then
-    hints = " %#LspDiagnosticsSignHint# " .. count["hints"]
-  end
-  if count["info"] ~= 0 then
-    info = " %#LspDiagnosticsSignInformation# " .. count["info"]
-  end
-  return errors .. warnings .. hints .. info .. "%#Normal#"
-
-  local added = git_info.added and ("%#GitSignsAdd#+" .. git_info.added .. " ") or ""
-  local changed = git_info.changed and ("%#GitSignsChange#~" .. git_info.changed .. " ") or ""
-  local removed = git_info.removed and ("%#GitSignsDelete#-" .. git_info.removed .. " ") or ""
---]]
 
 --[[ MEMO
 "%3L:%l|%c",
@@ -418,7 +392,7 @@ return M
 "%m%r%h", -- modified, ro, help flags
 "%<",                                -- truncate
 "%{fnamemodify(expand('%'), ':.')}", -- file path inside never falls back to full
-"%= ", -- separate equally 
+"%= ", -- separate equally
 "%P ", -- verbose position
 "%bd ", -- decimal byte
 "x%02B ", -- hexadecimal byte

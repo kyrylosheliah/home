@@ -1,15 +1,15 @@
-local def = require(vim.g.username .. ".base.highlight_palette")
+local def = require("base.highlight_palette")
 local shade = def.shade
 
 M = {}
 
 local c = {}
 -- Tint
-c.tin = 0.0
-c.tint = def.c["Yellow"]
+c.tin = 0.1
+c.tint = def.c["Chocolate4"]
 -- Primary color saturation
-c.pri = 0.1--0.08
-c.primary = def.c["Magenta"]
+c.pri = 0.1
+c.primary = def.c["Green"]
 -- Saturation
 c.sat = 1.0
 -- Subtleness

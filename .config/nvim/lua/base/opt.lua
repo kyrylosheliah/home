@@ -81,7 +81,7 @@ vim.opt.inccommand = "split"
 
 vim.opt.updatetime = 250
 -- Decrease mapped sequence wait time
-vim.opt.timeoutlen = 300
+--vim.opt.timeoutlen = 300 -- the default was 1000 that time
 
 -- Disable nvim intro
 --vim.opt.shortmess:append("sI")
