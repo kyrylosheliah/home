@@ -16,10 +16,9 @@ set("v", "<", "<gv")
 set("v", ">", ">gv")
 
 -- Clear search with <esc>
---set({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and Clear hlsearch" })
 local esc_key_code = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
-set({ "i", "n" }, "<esc>", function() --"<cmd>noh<cr><esc>"
-  vim.cmd("nohlsearch")
+set({ "i", "n" }, "<esc>", function()
+  vim.cmd("nohlsearch") --"<cmd>noh<cr><esc>"
   vim.cmd.redrawstatus()
   vim.api.nvim_feedkeys(esc_key_code, 'n', false)
 end, { desc = "Escape and Clear hlsearch" })
@@ -33,7 +32,7 @@ set("n", "Q", "<nop>") -- unmap
 -- :tabnext or gt or Ctrl+PageUp
 -- :tabprev or gT or Ctrl+PageDown
 -- :tabfirst, :tablast, :tabrewind
--- {i}gt
+-- {i}g[tT]
 -- :tabmove {N}, :tabmove +{N}, :tabmove -{N}
 
 -- Move to window using the <ctrl> hjkl keys

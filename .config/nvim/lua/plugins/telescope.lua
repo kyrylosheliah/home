@@ -77,19 +77,19 @@ return {
       vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "... search existing buffers" })
       vim.keymap.set("n", "<leader>sb", builtin.buffers, { desc = "... search existing buffers" })
       vim.keymap.set("n", "<leader>sg", builtin.git_files, { desc = "search git ... files" })
-      --[[vim.keymap.set('n', '<leader>/', function()
-            -- You can pass additional configuration to Telescope to change the theme, layout, etc.
-            builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-              winblend = 10,
-              previewer = false,
-            })
-          end, { desc = '[/] Fuzzily search in current buffer' })]]
-      --[[vim.keymap.set('n', '<leader>s/', function()
+      vim.keymap.set('n', '<leader>/', function()
+        -- You can pass additional configuration to Telescope to change the theme, layout, etc.
+        builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+          winblend = 10,
+          previewer = false,
+        })
+      end, { desc = '[/] Fuzzily search in current buffer' })
+      vim.keymap.set('n', '<leader>s/', function()
             builtin.live_grep {
               grep_open_files = true,
               prompt_title = 'Live Grep in Open Files',
             }
-          end, { desc = 'search [/] in Open Files' })]]
+          end, { desc = 'search [/] in Open Files' })
       vim.keymap.set("n", "<leader>sc", function()
         builtin.find_files({ cwd = vim.fn.stdpath("config") })
       end, { desc = "search config" })
@@ -125,7 +125,9 @@ return {
     event = 'VeryLazy',
     dependencies = { 'nvim-telescope/telescope.nvim' },
     keys = {
-      { mode = "n", "<leader>f", ":Telescope runcmd<cr>", {buffer = false} },
+      { mode = { "n", "x" }, "<leader>c", function()
+        require("runcmd.picker").open({ results = require("base.command").runcmd_commands, })
+      end, { buffer = false }, desc = "run command" },
     },
     config = function()
       local telescope = require("telescope")

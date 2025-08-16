@@ -4,14 +4,6 @@ return {
   event = "VeryLazy",
   init = function()
   end,
-  --opts_extend = { "spec" },
-  --opts = {
-  --  spec = {
-  --    { "<BS>", desc = "Decrement Selection", mode = "x" },
-  --    { "<c-space>", desc = "Increment Selection", mode = { "x", "n" } },
-  --  },
-  --  defaults = {},
-  --},
   keys = {
     {
       "<leader>?",

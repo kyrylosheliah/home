@@ -113,8 +113,8 @@ local highlight = {
   ["Folded"] = { fg = c.gray }, -- line used for closed folds
   ["FoldColumn"] = { fg = c.gray, bg = vim.g.transparent and c.none or c.black }, -- column where folds are displayed
   ["SignColumn"] = { fg = c.white, bg = vim.g.transparent and c.none or nil }, -- column where signs are displayed
-  ["IncSearch"] = { fg = c.black, bg = c.pure_green }, -- 'incsearch' highlighting; also used for the text replaced with ":s///c"
-  ["CurSearch"] = { fg = c.black, bg = c.pure_green }, -- 'cursearch' highlighting; also used for the text replaced with ":s///c"
+  ["IncSearch"] = { fg = c.pure_green, --[[c.black, bg = c.pure_green]] }, -- 'incsearch' highlighting; also used for the text replaced with ":s///c"
+  ["CurSearch"] = { fg = c.pure_green, --[[bg = c.black]] }, -- 'cursearch' highlighting; also used for the text replaced with ":s///c"
   ["LineNr"] = { fg = c.sub_white, bg = vim.g.transparent and c.none or nil }, -- Line number for " =number" and ":#" commands, and when 'number' or 'relativenumber' option is set.
   ["CursorLineNr"] = { fg = c.white, bg = c.sub_gray }, -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
   ["MatchParen"] = { fg = c.pure_purple }, -- The character under the cursor or just before it, if it is a paired bracket, and its match.
@@ -131,7 +131,7 @@ local highlight = {
   ["PmenuThumb"] = { bg = c.gray }, -- Popup menu: Thumb of the scrollbar.
   ["Question"] = { fg = c.blue }, -- hit-enter prompt and yes/no questions
   ["QuickFixLine"] = { fg = c.cyan, bg = c.sub_gray }, -- Current quickfix item in the quickfix window.
-  ["Search"] = { fg = c.black, bg = c.pure_purple }, -- Last search pattern highlighting (see 'hlsearch'). Also used for similar items that need to stand out.
+  ["Search"] = { fg = c.pure_purple, --[[bg = c.black]] }, -- Last search pattern highlighting (see 'hlsearch'). Also used for similar items that need to stand out.
   ["SpecialKey"] = { fg = c.special_grey }, -- Meta and special keys listed with " =map", also for text used to show unprintable characters in the text, 'listchars'. Generally: text that is displayed differently from what it really is.
   ["SpellBad"] = { fg = c.red, undercurl = true }, -- Word that is not recognized by the spellchecker. This will be combined with the highlighting used otherwise.
   ["SpellCap"] = { fg = c.yellow }, -- Word that should start with a capital. This will be combined with the highlighting used otherwise.
@@ -148,6 +148,7 @@ local highlight = {
   ["Title"] = { fg = c.green }, -- titles for output from " =set all", ":autocmd" etc.
   ["Visual"] = { bg = c.sub_blue }, -- Visual mode selection
   ["VisualNOS"] = { fg = c.pure_purple, bg = c.sub_blue }, -- Visual mode selection when vim is "Not Owning the Selection". Only X11 Gui's gui-x11 and xterm-clipboard supports this.
+  --["VisualMatch"] = { bg = c.sub_blue },
   ["WarningMsg"] = { fg = c.pure_yellow }, -- warning messages
   ["WildMenu"] = { fg = c.black, bg = c.blue }, -- current match in 'wildmenu' completion
   ["Winbar"] = { fg = c.white, bg = c.sub_gray }, -- Winbar

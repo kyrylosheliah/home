@@ -1,20 +1,12 @@
 return {
   "lewis6991/gitsigns.nvim",
   event = { "BufReadPost", "BufNewFile", "BufWritePre" },
-  --opts = {
-  --  on_attach = function(buffer)
-  --    local gitsigns = require('gitsigns')
-  --    local function map(mode, l, r, opts)
-  --      opts = opts or {}
-  --      opts.buffer = vim.api.nvim_win_get_buf(vim.g.statusline_winid or 0)
-  --      vim.keymap.set(mode, l, r, opts)
-  --    end
-  --    -- ...
-  --  end,
-  --},
   config = function(_, opts)
     local gitsigns = require('gitsigns')
-    vim.g.add_commands({
+    if opts ~= nil then
+      gitsigns.setup(opts)
+    end
+    require("base.command").add_submenu_commands("git", {
       {
         name = "next git diff hunk", description = "Git Signs: jump to the next hunk",
         cmd = function()
@@ -26,7 +18,7 @@ return {
         end,
       },
       {
-        name = "prev git diff hunk", description = "Git Signs: jump to the previous hunk",
+        name = "previous git diff hunk", description = "Git Signs: jump to the previous hunk",
         cmd = function()
           if vim.wo.diff then
             vim.cmd.normal({'[c', bang = true})

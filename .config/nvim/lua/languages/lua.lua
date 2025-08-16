@@ -43,4 +43,23 @@ return {
     },
   },
 
+  {
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    opts = {
+      ensure_installed = {
+        "lua_ls",
+        "stylua",
+      },
+    },
+  },
+
+  {
+    "stevearc/conform.nvim",
+    opts = {
+      formatters_by_ft = {
+        lua = { "stylua" },
+      },
+    },
+  },
+
 }

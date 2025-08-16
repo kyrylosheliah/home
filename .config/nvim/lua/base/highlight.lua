@@ -20,12 +20,12 @@ M.reload = function()
   M.apply_highlight(M.highlight_table)
 end
 
+vim.keymap.set("n", "<leader>`", M.reload)
+
 if not vim.g.debug then
   M.reload()
   return M
 end
-
-vim.keymap.set("n", "<leader>`", M.reload)
 
 M.extract_highlight = function()
   local tbl = {}

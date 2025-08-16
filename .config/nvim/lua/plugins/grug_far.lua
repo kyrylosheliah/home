@@ -1,31 +1,21 @@
 return {
   "MagicDuck/grug-far.nvim",
   cmd = "GrugFar",
-  opts = function(_, opts)
-    -- TODO:
-    --Launch with the current word under the cursor as the search string
-    --:lua require('grug-far').open({ prefills = { search = vim.fn.expand("<cword>") } })
-    --Launch with ast-grep engine
-    --:lua require('grug-far').open({ engine = 'astgrep' })
-    --Launch as a transient buffer which is both unlisted and fully deletes itself when not in use
-    --:lua require('grug-far').open({ transient = true })
-    --Launch, limiting search/replace to current file
-    --:lua require('grug-far').open({ prefills = { paths = vim.fn.expand("%") } })
-    --Launch with the current visual selection, searching only current file
-    --:<C-u>lua require('grug-far').with_visual_selection({ prefills = { paths = vim.fn.expand("%") } })
-    --Launch, limiting search to the current buffer visual selection range
-    --:GrugFarWithin
-    --or as a keymap if you want to go fully lua:
-    --vim.keymap.set({ 'n', 'x' }, '<leader>si', function()
-    --  require('grug-far').open({ visualSelectionUsage = 'operate-within-range' })
-    --end, { desc = 'grug-far: Search within range' })
-
-    -- TODO: figure out binding commands for lazily unloaded plugins
+  lazy = false,
+  opts = {
+    headerMaxWidth = 80,
+  },
+  config = function(_, opts)
     local grug_far = require('grug-far')
-    vim.g.add_commands({
-      { name = "grug far", cmd = grug_far.open, },
+    grug_far.setup(opts)
+    require("base.command").add_submenu_commands("search", {
+      { name = "open grug far", cmd = grug_far.open, },
+      { name = "grug far | word", cmd = function() grug_far.open({ prefills = { search = vim.fn.expand("<cword>") } }) end, },
+      { name = "grug far | ast-grep engine", cmd = function() grug_far.open({ engine = 'astgrep' }) end, },
+      { name = "grug far | transient buffer", cmd = function() grug_far.open({ transient = true }) end, },
+      { name = "grug far | within current file", cmd = function() grug_far.open({ prefills = { paths = vim.fn.expand("%") } }) end, },
+      { name = "grug far | selection", cmd = function() grug_far.with_visual_selection({ prefills = { paths = vim.fn.expand("%") } }) end, },
+      { name = "grug far | within selection", cmd = function() grug_far.open({ visualSelectionUsage = 'operate-within-range' }) end, },
     })
-
-    return { headerMaxWidth = 80 }
   end,
 }

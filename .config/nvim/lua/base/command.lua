@@ -1,19 +1,11 @@
--- a global variable for the list of commands
+local M = {}
 
-vim.g.runcmd_commands = {
+M.runcmd_submenus = {}
+
+M.runcmd_commands = {
   {
     name = "Example", description = "Run example print function command",
     cmd = function() print("ANONYMOUS LUA FUNCTION") end,
-  },
-  { name = "Git", cmd = "Git", description = "Open Git" },
-  {
-    name = "Lsp ->",
-    cmd = function()
-      require('runcmd.picker').open({
-        results = require('runcmd.commands.lsp'),
-      })
-    end,
-    description = "Language Server commands",
   },
 }
 
@@ -28,7 +20,26 @@ local function mergeTables(table1, table2)
   return result
 end
 
-vim.g.add_commands = function(items)
-  vim.g.runcmd_commands = mergeTables(vim.g.runcmd_commands, items)
+M.add_commands = function(items)
+  M.runcmd_commands = mergeTables(M.runcmd_commands, items)
 end
 
+M.add_submenu_commands = function(menu_name, items)
+  local menu = M.runcmd_submenus[menu_name]
+  if menu == nil then
+    M.runcmd_submenus[menu_name] = items
+    table.insert(M.runcmd_commands, {
+      name = menu_name .. " ->",
+      cmd = function() require("runcmd.picker").open({ results = M.runcmd_submenus[menu_name], }) end,
+    })
+  else
+    M.runcmd_submenus[menu_name] = mergeTables(menu, items)
+  end
+end
+
+---- example
+--require("base.command").add_submenu_commands("ababab git", {
+--  { name = "open", cmd = "Git", description = ":Git" },
+--})
+
+return M

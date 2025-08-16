@@ -1,7 +1,7 @@
 return {
   'tpope/vim-fugitive',
   config = function()
-    vim.g.add_commands({
+    require("base.command").add_submenu_commands("git", {
       { name = "git status", cmd = vim.cmd.Git },
     })
   end,

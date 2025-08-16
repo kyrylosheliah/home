@@ -39,7 +39,7 @@ return {
     },
     config = function(_, opts)
       require("nvim-treesitter.configs").setup(opts)
-      vim.g.add_commands({
+      require("base.command").add_commands({
         { name = "inspect syntax tree", cmd = vim.cmd.InspectTree, },
       })
     end,

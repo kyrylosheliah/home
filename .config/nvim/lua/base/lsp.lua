@@ -6,9 +6,6 @@ local M = {}
 vim.o.pumheight = 10
 
 vim.diagnostic.config({
-  --[[virtual_text = {
-    prefix = "█",--"💢",--"",
-  },]]
   update_in_insert = false,
   underline = true,
   severity_sort = true,
@@ -29,7 +26,6 @@ vim.diagnostic.config({
   },
 })
 
-
 -- indent
 
 vim.opt.autoindent = true
@@ -46,14 +42,15 @@ local spacing = "·"
 local empty = " "
 local space = "␣"
 local indent = "│"
-local block = "█"
+-- local block = "█"
 local focus = "×"
-vim.opt.showbreak = block
-vim.opt.fillchars = {
-  lastline = block,
-  --eob = block,
-}
+--vim.opt.showbreak = block
+--vim.opt.fillchars = {
+--  lastline = block,
+--  --eob = block,
+--}
 vim.opt.list = true
+
 local function create_listchars(tab, leadmultispace)
   return {
     eol = "↲",

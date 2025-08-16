@@ -70,6 +70,7 @@ vim.opt.laststatus = 2 -- Set global statusline
 vim.opt.hidden = true -- Enable background buffers
 
 vim.opt.swapfile = false
+vim.opt.updatetime = 250
 vim.opt.backup = false
 
 vim.opt.undodir = vim.fn.stdpath("data") .. "/.undo/"
@@ -79,9 +80,8 @@ vim.opt.hlsearch = true
 vim.opt.incsearch = true -- Preview substitutions live, as you type!
 vim.opt.inccommand = "split"
 
-vim.opt.updatetime = 250
 -- Decrease mapped sequence wait time
---vim.opt.timeoutlen = 300 -- the default was 1000 that time
+--vim.opt.timeoutlen = 300 -- the default was 1000 at that time
 
 -- Disable nvim intro
 --vim.opt.shortmess:append("sI")
