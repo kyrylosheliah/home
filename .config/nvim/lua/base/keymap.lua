@@ -3,25 +3,26 @@ vim.g.maplocalleader = " "
 
 local set = vim.keymap.set
 
-set("n", "<leader>w", '<cmd>w<cr>', { desc = "Write" })
-set("n", "<leader>q", '<cmd>q<cr>', { desc = "Quit" })
-set("n", "<leader>x", "<cmd>:bd<cr>", { desc = "Delete Buffer and Window" })
+set("n", "<leader>w", "<cmd>w<cr>", { desc = "Write" })
+set("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
+--set("n", "<leader>x", "<cmd>:bd<cr>", { desc = "Delete Buffer and Window" })
 --set("n", "<leader>x", '<cmd>x<cr>', { desc = "Write or Exit" })
 
 -- greatest remap ever indeed
 set("x", "<leader>p", "\"_dP")
+-- Interferes with telescope command palette menu
+--set("x", "<leader>c", "\"_c")
 
 -- better indenting
 set("v", "<", "<gv")
 set("v", ">", ">gv")
 
--- Clear search with <esc>
 local esc_key_code = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
 set({ "i", "n" }, "<esc>", function()
   vim.cmd("nohlsearch") --"<cmd>noh<cr><esc>"
   vim.cmd.redrawstatus()
-  vim.api.nvim_feedkeys(esc_key_code, 'n', false)
-end, { desc = "Escape and Clear hlsearch" })
+  vim.api.nvim_feedkeys(esc_key_code, "n", false)
+end, { desc = "Clear hlsearch, redraw statusline and feed <esc>" })
 
 set("n", "Q", "<nop>") -- unmap
 
@@ -36,41 +37,30 @@ set("n", "Q", "<nop>") -- unmap
 -- :tabmove {N}, :tabmove +{N}, :tabmove -{N}
 
 -- Move to window using the <ctrl> hjkl keys
-set("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window", remap = true })
-set("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
-set("n", "<C-h>", "<C-w>h", { desc = "Go to Left Window", remap = true })
-set("n", "<C-l>", "<C-w>l", { desc = "Go to Right Window", remap = true })
+set("n", "<C-Up>", "<C-w>j", { desc = "Go to Lower Window", remap = true })
+set("n", "<C-Down>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
+set("n", "<C-Left>", "<C-w>h", { desc = "Go to Left Window", remap = true })
+set("n", "<C-Right>", "<C-w>l", { desc = "Go to Right Window", remap = true })
 
 -- Resize window using <ctrl> arrow keys
-set("n", "<A-Up>", "<cmd>resize +1<cr>", { desc = "Increase Window Height" })
-set("n", "<A-Down>", "<cmd>resize -1<cr>", { desc = "Decrease Window Height" })
-set("n", "<A-Left>", "<cmd>vertical resize -1<cr>", { desc = "Decrease Window Width" })
-set("n", "<A-Right>", "<cmd>vertical resize +1<cr>", { desc = "Increase Window Width" })
+set("n", "<C-S-Up>", "<cmd>resize +1<cr>", { desc = "Increase Window Height" })
+set("n", "<C-S-Down>", "<cmd>resize -1<cr>", { desc = "Decrease Window Height" })
+set("n", "<C-S-Left>", "<cmd>vertical resize -1<cr>", { desc = "Decrease Window Width" })
+set("n", "<C-S-Right>", "<cmd>vertical resize +1<cr>", { desc = "Increase Window Width" })
 --[[
-
--- Move Lines
-set("v", "J", ":m '>+1<CR>gv=gv", { desc = 'Move selected lines down' })
-set("v", "K", ":m '<-2<CR>gv=gv", { desc = 'Move selected lines up' })
-set("n", "<A-j>", "<cmd>m .+1<cr>==", { desc = "Move Down" })
-set("n", "<A-k>", "<cmd>m .-2<cr>==", { desc = "Move Up" })
-set("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
-set("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
-set("v", "<A-j>", ":m '>+1<cr>gv=gv", { desc = "Move Down" })
-set("v", "<A-k>", ":m '<-2<cr>gv=gv", { desc = "Move Up" })
 
 -- quickfix
 set("n", "[q", vim.cmd.cprev, { desc = "Previous Quickfix" })
 set("n", "]q", vim.cmd.cnext, { desc = "Next Quickfix" })
-vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz", { desc = "Next Quickfix" })
-vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz", { desc = "Previous Quickfix" })
-vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
-vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
+set("n", "<C-k>", "<cmd>cnext<CR>zz", { desc = "Next Quickfix" })
+set("n", "<C-j>", "<cmd>cprev<CR>zz", { desc = "Previous Quickfix" })
+set("n", "<leader>k", "<cmd>lnext<CR>zz")
+set("n", "<leader>j", "<cmd>lprev<CR>zz")
 
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
 set("n", "<leader>xl", "<cmd>lopen<cr>", { desc = "Location List" })
 set("n", "<leader>xq", "<cmd>copen<cr>", { desc = "Quickfix List" })
-
 
 - better up/down
 set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })

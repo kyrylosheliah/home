@@ -6,7 +6,7 @@ return {
     if opts ~= nil then
       gitsigns.setup(opts)
     end
-    require("base.command").add_submenu_commands("git", {
+    require("base.command").add_menu_commands("git", {
       {
         name = "next git diff hunk", description = "Git Signs: jump to the next hunk",
         cmd = function()

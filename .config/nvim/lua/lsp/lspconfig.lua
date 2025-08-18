@@ -38,8 +38,9 @@ return {
     end
     local telescope_builtin = require('telescope.builtin')
     local conform = require("conform")
-    vim.keymap.set({ "i", "v", "x" }, "<leader>f", function() conform.format({ async = true, lsp_fallback = true }) end, { desc = "format file or selection" })
-    require("base.command").add_submenu_commands("lsp", {
+    local menu_key = "lsp"
+    vim.keymap.set({ "n", "x" }, "<leader>l", function() require("base.command").open_menu(menu_key) end, { desc = "run lsp command" })
+    require("base.command").add_menu_commands(menu_key, {
       { name = "hover symbol", cmd = vim.lsp.buf.hover, },
       { name = "rename symbol", cmd = vim.lsp.buf.rename, },
       { name = "execute code action", cmd = vim.lsp.buf.code_action, },

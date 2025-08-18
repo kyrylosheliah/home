@@ -47,16 +47,11 @@ return {
       },
     },
     keys = {
-      { "<leader>s", "", desc = "+search" },
-      --{ "<leader>f", "", desc = "+find" },
+      { "<leader>f", "", desc = "+find" },
     },
     config = function(_, opts)
       local layout = require("telescope.actions.layout")
       opts.defaults.mappings = {
-        --[[i = {
-          ["<C-[>"] = layout.cycle_layout_prev,
-          ["<C-]>"] = layout.cycle_layout_next,
-        },]]
         n = {
           [">"] = layout.cycle_layout_next,
           ["<"] = layout.cycle_layout_prev,
@@ -65,34 +60,51 @@ return {
       require("telescope").setup(opts)
 
       local builtin = require("telescope.builtin")
-      vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "search help" })
-      vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "search keymaps" })
-      vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "search files" })
-      vim.keymap.set("n", "<leader>ss", builtin.builtin, { desc = "search symbols" })
-      vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "search word ... under the cursor" })
-      vim.keymap.set("n", "<leader>st", builtin.live_grep, { desc = "search text" })
-      vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "search diagnostics" })
-      vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "search: resume" })
-      vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = 'search ... recent files' })
-      vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "... search existing buffers" })
-      vim.keymap.set("n", "<leader>sb", builtin.buffers, { desc = "... search existing buffers" })
-      vim.keymap.set("n", "<leader>sg", builtin.git_files, { desc = "search git ... files" })
-      vim.keymap.set('n', '<leader>/', function()
-        -- You can pass additional configuration to Telescope to change the theme, layout, etc.
-        builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-          winblend = 10,
-          previewer = false,
-        })
-      end, { desc = '[/] Fuzzily search in current buffer' })
-      vim.keymap.set('n', '<leader>s/', function()
-            builtin.live_grep {
+      local themes = require("telescope.themes")
+      vim.keymap.set("n", "<leader>f", builtin.find_files, { desc = "find files" })
+      vim.keymap.set("n", "<leader>t", builtin.live_grep, { desc = "find text" })
+      vim.keymap.set("n", "<leader>r", builtin.resume, { desc = "find : resume" })
+      vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "find existing buffers" })
+      require("base.command").add_menu_commands("find", {
+        { name = "help", cmd = builtin.help_tags, description = "find help" },
+        { name = "keymap", cmd = builtin.keymaps, description = "find keymaps" },
+        { name = "symbols", cmd = builtin.builtin, description = "find symbols" },
+        { name = "diagnostics", cmd = builtin.diagnostics, description = "find diagnostics" },
+        { name = "recent files", cmd = builtin.oldfiles, description = "find recent files" },
+        { name = "buffers", cmd = builtin.buffers, description = "find existing buffers" },
+        { name = "git files", cmd = builtin.git_files, description = "find gitfiles" },
+        {
+          name = "themes",
+          cmd = function()
+            builtin.current_buffer_fuzzy_find(themes.get_dropdown({
+              winblend = 10,
+              previewer = false,
+            }))
+          end,
+          description = "fuzzily find in current buffer",
+        },
+        { name = "files", cmd = builtin.find_files, description = "find files" },
+        { name = "files | grep", cmd = builtin.live_grep, description = "find text" },
+        { name = "resume", cmd = builtin.resume, description = "find : resume" },
+        { name = "files | grep | word", cmd = builtin.grep_string, description = "find word under the cursor" },
+        {
+          name = "open files | grep",
+          cmd = function()
+            builtin.live_grep({
               grep_open_files = true,
               prompt_title = 'Live Grep in Open Files',
-            }
-          end, { desc = 'search [/] in Open Files' })
-      vim.keymap.set("n", "<leader>sc", function()
-        builtin.find_files({ cwd = vim.fn.stdpath("config") })
-      end, { desc = "search config" })
+            })
+          end,
+          desc = "grep Open Files"
+        },
+        {
+          name = "config files",
+          cmd = function()
+            builtin.find_files({ cwd = vim.fn.stdpath("config") })
+          end,
+          description = "find config",
+        },
+      })
     end,
   },
 
@@ -121,13 +133,11 @@ return {
   },
 
   {
-    'Ajnasz/telescope-runcmd.nvim',
-    event = 'VeryLazy',
-    dependencies = { 'nvim-telescope/telescope.nvim' },
+    "Ajnasz/telescope-runcmd.nvim",
+    event = "VeryLazy",
+    dependencies = { "nvim-telescope/telescope.nvim" },
     keys = {
-      { mode = { "n", "x" }, "<leader>c", function()
-        require("runcmd.picker").open({ results = require("base.command").runcmd_commands, })
-      end, { buffer = false }, desc = "run command" },
+      { mode = { "n", "x" }, "<leader>c", require("base.command").open, { buffer = false }, desc = "run command" },
     },
     config = function()
       local telescope = require("telescope")

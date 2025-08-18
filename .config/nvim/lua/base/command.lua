@@ -1,6 +1,15 @@
 local M = {}
 
-M.runcmd_submenus = {}
+M.runcmd_menus = {}
+
+M.open_menu = function(menu)
+  local menu_value = M.runcmd_menus[menu]
+  if menu_value == nil then
+    vim.notify("Menu '" .. menu .. "' doesn't exist")
+    return
+  end
+  require("runcmd.picker").open({ results = menu_value, })
+end
 
 M.runcmd_commands = {
   {
@@ -8,6 +17,10 @@ M.runcmd_commands = {
     cmd = function() print("ANONYMOUS LUA FUNCTION") end,
   },
 }
+
+M.open = function()
+  require("runcmd.picker").open({ results = M.runcmd_commands, })
+end
 
 local function mergeTables(table1, table2)
   local result = {}
@@ -24,21 +37,21 @@ M.add_commands = function(items)
   M.runcmd_commands = mergeTables(M.runcmd_commands, items)
 end
 
-M.add_submenu_commands = function(menu_name, items)
-  local menu = M.runcmd_submenus[menu_name]
+M.add_menu_commands = function(menu_name, items)
+  local menu = M.runcmd_menus[menu_name]
   if menu == nil then
-    M.runcmd_submenus[menu_name] = items
+    M.runcmd_menus[menu_name] = items
     table.insert(M.runcmd_commands, {
       name = menu_name .. " ->",
-      cmd = function() require("runcmd.picker").open({ results = M.runcmd_submenus[menu_name], }) end,
+      cmd = function() require("runcmd.picker").open({ results = M.runcmd_menus[menu_name], }) end,
     })
   else
-    M.runcmd_submenus[menu_name] = mergeTables(menu, items)
+    M.runcmd_menus[menu_name] = mergeTables(menu, items)
   end
 end
 
 ---- example
---require("base.command").add_submenu_commands("ababab git", {
+--require("base.command").add_menu_commands("ababab git", {
 --  { name = "open", cmd = "Git", description = ":Git" },
 --})
 

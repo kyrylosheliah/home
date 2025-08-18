@@ -12,7 +12,7 @@ return {
   config = function(_, opts)
     local trouble = require('trouble')
     trouble.setup(opts)
-    require("base.command").add_submenu_commands("diagnostics", {
+    require("base.command").add_menu_commands("diagnostics", {
       { name = "toggle trouble workspace diagnostics", cmd = trouble.toggle, },
       { name = "toggle trouble document diagnostics", cmd = function() trouble.toggle({ filter = { buf = 0 } }) end, },
       { name = "toggle trouble quickfix", cmd = function() trouble.toggle('quickfix') end, },
