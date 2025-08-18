@@ -6,6 +6,7 @@ vim.opt.laststatus = 2 -- the last window will have a status line ... 2: always
 --vim.opt.cmdheight = 0
 
 local sysname = vim.uv.os_uname().sysname
+-- vim.fn.has("win32") == 1
 local is_windows = sysname == "Windows_NT"
 local is_mac = sysname == "Darwin"
 local is_linux = not (is_windows or is_mac)
