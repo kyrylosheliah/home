@@ -8,6 +8,15 @@ set("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
 --set("n", "<leader>x", "<cmd>:bd<cr>", { desc = "Delete Buffer and Window" })
 --set("n", "<leader>x", '<cmd>x<cr>', { desc = "Write or Exit" })
 
+-- Reminder:
+-- mz : mark cursor location
+-- `z : go to `z` location
+
+-- the opposite of `<S-j>` or `J` or "join", "break"
+set("n", "<leader>b", "i<CR><ESC>dv0", { desc = "Break the line before the cursor" })
+set("n", "<leader>B", "a<CR><ESC>dv0", { desc = "Break the line after the cursor" })
+set("x", "<leader>b", "\"_di<CR><ESC>dv0", { desc = "Break the line outside selection" })
+
 -- greatest remap ever indeed
 set("x", "<leader>p", "\"_dP")
 -- Interferes with telescope command palette menu
