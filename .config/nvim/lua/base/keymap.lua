@@ -13,6 +13,10 @@ set("x", "<leader>p", "\"_dP")
 -- Interferes with telescope command palette menu
 --set("x", "<leader>c", "\"_c")
 
+-- Reminder: jumplist with `:jumps`
+-- <C-o> : jump back
+-- <C-i> : jump forward
+
 -- better indenting
 set("v", "<", "<gv")
 set("v", ">", ">gv")
@@ -37,8 +41,8 @@ set("n", "Q", "<nop>") -- unmap
 -- :tabmove {N}, :tabmove +{N}, :tabmove -{N}
 
 -- Move to window using the <ctrl> hjkl keys
-set("n", "<C-Up>", "<C-w>j", { desc = "Go to Lower Window", remap = true })
-set("n", "<C-Down>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
+set("n", "<C-Down>", "<C-w>j", { desc = "Go to Lower Window", remap = true })
+set("n", "<C-Up>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
 set("n", "<C-Left>", "<C-w>h", { desc = "Go to Left Window", remap = true })
 set("n", "<C-Right>", "<C-w>l", { desc = "Go to Right Window", remap = true })
 
