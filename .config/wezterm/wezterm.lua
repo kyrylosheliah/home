@@ -3,6 +3,9 @@
 local wezterm = require("wezterm")
 local act = wezterm.action
 -- local mux = wezterm.mux
+
+local is_windows = wezterm.target_triple:find("windows")
+
 local config = wezterm.config_builder()
 
 config.default_cursor_style = "BlinkingBlock"
@@ -18,8 +21,8 @@ config.adjust_window_size_when_changing_font_size = false
 
 -- local gpus = wezterm.gui.enumerate_gpus()
 -- config.webgpu_preferred_adapter = gpus[1]
---config.front_end = "OpenGL"
-config.front_end = "Software"
+config.front_end = "OpenGL"
+--config.front_end = "Software"
 --config.front_end = "WebGpu"
 config.prefer_egl = true -- prefer opengl gpu api
 config.max_fps = 60
@@ -47,14 +50,17 @@ config.font_rules = {
   },
 }
 --config.cell_width = 0.9
-local opacity = 0.5
-config.window_background_opacity = opacity
-config.win32_system_backdrop = "Acrylic"
---"Auto" - the system chooses. In practice, this is the same as "Disable". Is default.
---"Disable" - disable backdrop effects.
---"Acrylic" - enable the Acrylic blur-behind-window effect. Available on Windows 10 and 11.
---"Mica" - enable the Mica effect, available on Windows 11 build 22621 and later.
---"Tabbed" - enable the Tabbed effect, available on Windows 11 build 22621 and later.
+
+if is_windows then
+  local opacity = 0.5
+  config.window_background_opacity = opacity
+  config.win32_system_backdrop = "Acrylic"
+  --"Auto" - the system chooses. In practice, this is the same as "Disable". Is default.
+  --"Disable" - disable backdrop effects.
+  --"Acrylic" - enable the Acrylic blur-behind-window effect. Available on Windows 10 and 11.
+  --"Mica" - enable the Mica effect, available on Windows 11 build 22621 and later.
+  --"Tabbed" - enable the Tabbed effect, available on Windows 11 build 22621 and later.
+end
 
 config.window_padding = {
   left = 0,
@@ -81,7 +87,11 @@ config.inactive_pane_hsb = {
 config.window_decorations = "INTEGRATED_BUTTONS | RESIZE"
 --config.window_decorations = "RESIZE" --"NONE | RESIZE"
 --config.window_decorations = "TITLE | RESIZE"
-config.default_prog = { "pwsh.exe", "-NoLogo" }
+if is_windows then
+  config.default_prog = { "pwsh.exe", "-NoLogo" }
+else
+  config.default_prog = { "/bin/bash" }
+end
 config.initial_cols = 120
 
 -- wezterm.on("gui-startup", function(cmd)
@@ -269,7 +279,7 @@ end
 table.insert(config.keys, {
   key = "0",
   mods = "SHIFT|ALT",
-  action = wezterm.action.MoveTab(-1),
+  action = wezterm.action.MoveTab(999),
 })
 
 --[[
