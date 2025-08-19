@@ -11,62 +11,53 @@ vim.diagnostic.config({
   severity_sort = true,
   signs = false,
   float = {
-    focusable = false,
-    style = "minimal",
-    --source = "always", -- "if_many",
-    --header = "",
-    --prefix = "",
+    focusable = true,
+    source = "if_many",
   },
-  virtual_text = {
-    format = function(diagnostic)
-      -- Replace newline and tab characters with space for more compact diagnostics
-      local message = diagnostic.message:gsub("\n", " "):gsub("\t", " "):gsub("%s+", " "):gsub("^%s+", "")
-      return message
-    end,
-  },
+  virtual_text = true,
+  --virtual_lines = { current_line = true },
 })
 
 -- indent
 
-vim.opt.autoindent = true
-vim.opt.smartindent = true
-vim.opt.smarttab = true
---vim.opt.expandtab = false
---vim.opt.shiftwidth = 4
---vim.opt.tabstop = 4
---vim.opt.softtabstop = 4
-
 -- ↳ ↲ ↵ ↴ ▏ ␣ · ╎ │ ▶ ◀
-local tabchar = "↹"
-local spacing = "·"
-local empty = " "
-local space = "␣"
-local indent = "│"
--- local block = "█"
-local focus = "×"
---vim.opt.showbreak = block
---vim.opt.fillchars = {
---  lastline = block,
---  --eob = block,
---}
-vim.opt.list = true
+local chars = {
+  tab = "↹",
+  spacing = "·",
+  empty = " ",
+  space = "␣",
+  indent = "│",
+  block = "█",
+  --vim.opt.showbreak = block
+  --vim.opt.fillchars = {
+  --  lastline = block,
+  --  --eob = block,
+  --}
+  focus = "×",
+}
 
-local function create_listchars(tab, leadmultispace)
+local function create_listchars(params)
+  params = params or {}
+  local tab = params.tab or ""
+  local leadmultispace = params.leadmultispace or ""
   return {
     eol = "↲",
     tab = tab,
-    nbsp = space,
+    nbsp = chars.space,
     --extends = block,
     --precedes = block,
-    trail = focus,
-    space = empty,
-    multispace = spacing,
+    trail = chars.focus,
+    space = chars.empty,
+    multispace = chars.spacing,
     leadmultispace = leadmultispace,
   }
 end
 
-M.apply_indent = function(use_tabs, space_count)
-  --local editorconfig_exists = editorconfig ~= nil and editorconfig ~= false
+M.apply_indent = function(params)
+  params = params or {}
+  local default = params.default == true
+  local use_tabs = default or (params.use_tabs == true)
+  local space_count = default and 4 or (params.space_count or 4)
   local editorconfig_exists = vim.fn.filereadable(vim.fn.getcwd() .. "/.editorconfig")
   local padding_len = 0
   local opt = vim.opt_local
@@ -75,27 +66,32 @@ M.apply_indent = function(use_tabs, space_count)
     use_tabs = editorconfig.indent_style ~= "space"
     padding_len = editorconfig.indent_size - 1
   else
+    if default == true then
+      opt.autoindent = true
+      opt.smartindent = true
+      opt.smarttab = true
+      opt.expandtab = false
+    else
+      opt.autoindent = false
+      opt.smartindent = false
+      opt.smarttab = false
+      opt.expandtab = not use_tabs
+    end
     padding_len = space_count - 1
-    opt.autoindent = false
-    opt.expandtab = not use_tabs
     opt.shiftwidth = space_count
     opt.tabstop = space_count
     opt.softtabstop = space_count
   end
-  local tab = ""
-  local leadmultispace = ""
-  if use_tabs then
-    tab = indent .. empty
-    leadmultispace = space .. string.rep(spacing, padding_len)
-  else
-    tab = tabchar .. empty
-    leadmultispace = indent .. string.rep(spacing, padding_len)
-  end
-  opt.listchars = create_listchars(tab, leadmultispace)
+  local tab = use_tabs and chars.indent or chars.tab
+  opt.list = true
+  opt.listchars = create_listchars({
+    tab = tab .. chars.empty,
+    leadmultispace = chars.indent .. string.rep(chars.spacing, padding_len)
+  })
 end
 
 -- default indent and non-text symbols
-M.apply_indent(true, 4)
+M.apply_indent()
 
 -- lsp
 

@@ -86,11 +86,10 @@ return {
       { name = "outgoing calls", cmd = vim.lsp.buf.outgoing_calls, },
       --
       { name = "find diagnostics", cmd = telescope_builtin.diagnostics, },
-          { name = "open diagnostics", cmd = vim.diagnostic.open_float, },
-          { name = "next diagnostics", cmd = function() vim.diagnostic.jump({ count = 1, }) end, },
-          { name = "prev diagnostics", cmd = function() vim.diagnostic.jump({ count = -1, }) end, },
-      { name         =
-        "next diagnostics error", cmd = function() goto_next("ERROR") end, },
+      { name = "hover diagnostics, open float", cmd = vim.diagnostic.open_float, },
+      { name = "next diagnostics", cmd = function() vim.diagnostic.jump({ count = 1, }) end, },
+      { name = "prev diagnostics", cmd = function() vim.diagnostic.jump({ count = -1, }) end, },
+      { name = "next diagnostics error", cmd = function() goto_next("ERROR") end, },
       { name = "prev diagnostics error", cmd = function() goto_prev("ERROR") end, },
       { name = "next diagnostics warning", cmd = function() goto_next("WARN") end, },
       { name = "prev diagnostics warning", cmd = function() goto_prev("WARN") end, },

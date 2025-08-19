@@ -8,7 +8,7 @@ return {
     end
     require("base.command").add_menu_commands("git", {
       {
-        name = "next git diff hunk", description = "Git Signs: jump to the next hunk",
+        name = "next hunk", description = "Git Signs: jump to the next hunk",
         cmd = function()
           if vim.wo.diff then
             vim.cmd.normal({']c', bang = true})
@@ -18,7 +18,7 @@ return {
         end,
       },
       {
-        name = "previous git diff hunk", description = "Git Signs: jump to the previous hunk",
+        name = "previous hunk", description = "Git Signs: jump to the previous hunk",
         cmd = function()
           if vim.wo.diff then
             vim.cmd.normal({'[c', bang = true})
@@ -27,25 +27,25 @@ return {
           end
         end,
       },
-      { name = "stage git diff hunk", cmd = gitsigns.stage_hunk, },
-      { name = "reset git diff hunk", cmd = gitsigns.reset_hunk, },
+      { name = "stage hunk", cmd = gitsigns.stage_hunk, },
+      { name = "reset hunk", cmd = gitsigns.reset_hunk, },
       {
-        name = "stage git diff hunk block",
+        name = "stage hunk",
         cmd = function() gitsigns.stage_hunk {vim.fn.line('.'), vim.fn.line('v')} end,
       },
       {
-        name = "reset git diff hunk block",
+        name = "reset hunk",
         cmd = function() gitsigns.reset_hunk {vim.fn.line('.'), vim.fn.line('v')} end,
       },
-      { name = "stage git buffer", cmd = gitsigns.stage_buffer, },
-      { name = "undo git hunk staging", cmd = gitsigns.undo_stage_hunk, },
-      { name = "reset git buffer", cmd = gitsigns.reset_buffer, },
+      { name = "stage buffer", cmd = gitsigns.stage_buffer, },
+      { name = "undo hunk staging", cmd = gitsigns.reset_hunk, },
+      { name = "reset buffer", cmd = gitsigns.reset_buffer, },
       { name = "preview hunk", cmd = gitsigns.preview_hunk, },
-      { name = "blame line", cmd = function() gitsigns.blame_line() end, },
+      { name = "blame line", cmd = gitsigns.blame_line, },
       { name = "toggle line blame", cmd = gitsigns.toggle_current_line_blame, },
-      --{ name = "diff line", cmd = gitsigns.diffthis, },
+      { name = "diff line", cmd = gitsigns.diffthis, },
       --{ name = "diff file", cmd = function() gitsigns.diffthis('~') end, },
-      { name = "toggle deleted diff", cmd = gitsigns.toggle_deleted, },
+      { name = "toggle hunk", cmd = gitsigns.preview_hunk_inline, },
       { name = "select hunk", cmd = gitsigns.select_hunk, },
     })
   end,

@@ -1,13 +1,11 @@
 local lsp = require("base.lsp")
 lsp.configure("zls", {
   on_attach = function(client, bufnr)
-    lsp.apply_indent(false, 4)
+    lsp.apply_indent({
+      use_tabs = false,
+      space_count = 4,
+    })
   end,
-  settings = {
-    zls = {
-      enable_argument_placeholders = false,
-    },
-  },
 })
 
 return {

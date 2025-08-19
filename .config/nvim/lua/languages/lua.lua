@@ -1,7 +1,10 @@
 local lsp = require("base.lsp")
 lsp.configure("lua_ls", {
   on_attach = function(client, bufnr)
-    lsp.apply_indent(false, 2)
+    lsp.apply_indent({
+      use_tabs = false,
+      space_count = 2,
+    })
   end,
   settings = {
     Lua = {

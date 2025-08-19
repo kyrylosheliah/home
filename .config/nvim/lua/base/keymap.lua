@@ -11,6 +11,10 @@ set("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
 --set("n", "<leader>x", '<cmd>x<cr>', { desc = "Write or Exit" })
 
 -- Reminder:
+-- <C-w>d : hover diagnostics
+-- <C-w>w : step into floating window
+
+-- Reminder:
 -- mz : mark cursor location
 -- `z : go to `z` location
 
