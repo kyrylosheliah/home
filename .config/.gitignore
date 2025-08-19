@@ -2,9 +2,11 @@
 !.gitignore
 !Code
 !Code/**
-!nvim
-!nvim/**
 !foot
 !foot/**
+!nvim
+!nvim/**
 !tmux
 !tmux/**
+!wezterm
+!wezterm/**
