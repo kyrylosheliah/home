@@ -31,19 +31,21 @@ config.harfbuzz_features = { 'calt=0' } -- disable font ligatures
 local font_size = 15.0
 config.font_size = font_size
 --config.font = wezterm.font(font_name)
-local font_1_name = "Iosevka Nerd Font"
-local font_2_name = "Iosevka Fixed"
+local font_name = ""
+if is_windows then
+  font_name = "Iosevka Fixed"
+else
+  font_name = "Iosevka Nerd Font"
+end
 config.font = wezterm.font_with_fallback({
-  { family = font_1_name, weight = 400 },
-  { family = font_2_name, weight = 400 },
+  { family = font_name, weight = 400 },
   { family = "Consolas" },
   { family = "Ubuntu" },
 })
 config.font_rules = {
   {
     intensity = "Bold", font = wezterm.font_with_fallback({
-      { family = font_1_name, weight = 900 },
-      { family = font_2_name, weight = 900 },
+      { family = font_name, weight = 900 },
       { family = "Consolas" },
       { family = "Ubuntu" },
     })
@@ -79,10 +81,10 @@ config.inactive_pane_hsb = {
   brightness = 0.5,
 }
 
--- config.window_frame = {
---   font = wezterm.font({ family = font_name, weight = 500 }),
---   font_size = font_size,
--- }
+config.window_frame = {
+  font = wezterm.font({ family = font_name, weight = 900 }),
+  font_size = font_size,
+}
 
 config.window_decorations = "INTEGRATED_BUTTONS | RESIZE"
 --config.window_decorations = "RESIZE" --"NONE | RESIZE"
