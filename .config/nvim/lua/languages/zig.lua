@@ -6,6 +6,11 @@ lsp.configure("zls", {
       space_count = 4,
     })
   end,
+  settings = {
+    zls = {
+      enable_argument_placeholders = false,
+    },
+  },
 })
 
 return {
