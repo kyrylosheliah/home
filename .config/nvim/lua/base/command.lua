@@ -8,18 +8,24 @@ M.open_menu = function(menu)
     vim.notify("Menu '" .. menu .. "' doesn't exist")
     return
   end
-  require("runcmd.picker").open({ results = menu_value, })
+  require("runcmd.picker").open({
+    prompt_title = "Run '" .. menu .. "' commands",
+    results = menu_value,
+  })
 end
 
 M.runcmd_commands = {
-  {
-    name = "Example", description = "Run example print function command",
-    cmd = function() print("ANONYMOUS LUA FUNCTION") end,
-  },
+  -- {
+  --   name = "Example", description = "Run example print function command",
+  --   cmd = function() print("ANONYMOUS LUA FUNCTION") end,
+  -- },
 }
 
 M.open = function()
-  require("runcmd.picker").open({ results = M.runcmd_commands, })
+  require("runcmd.picker").open({
+    prompt_title = "All commands",
+    results = M.runcmd_commands,
+  })
 end
 
 local function mergeTables(table1, table2)
@@ -43,7 +49,10 @@ M.add_menu_commands = function(menu_name, items)
     M.runcmd_menus[menu_name] = items
     table.insert(M.runcmd_commands, {
       name = menu_name .. " ->",
-      cmd = function() require("runcmd.picker").open({ results = M.runcmd_menus[menu_name], }) end,
+      cmd = function() require("runcmd.picker").open({
+        prompt_title = "Run '" .. menu_name .. "' commands",
+        results = M.runcmd_menus[menu_name],
+      }) end,
     })
   else
     M.runcmd_menus[menu_name] = mergeTables(menu, items)
