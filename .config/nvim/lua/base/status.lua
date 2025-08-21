@@ -161,7 +161,10 @@ M.cursor_position = function()
 end
 
 M.search_pagination = function()
-  local search = vim.fn.searchcount({ maxcount = 0 })
+  local ok, search = pcall(vim.fn.searchcount, { maxcount = 0 })
+  if not ok then
+    return ""
+  end
   if next(search) ~= nil then
     if search.current > 0 and vim.v.hlsearch ~= 0 then
       return '[' .. search.current .. '/' ..search.total .. ']'

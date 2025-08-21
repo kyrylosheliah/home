@@ -46,4 +46,46 @@ return {
       lsp_doc_border = false, -- add a border to hover docs and signature help
     },
   },
+  config = function(_, opts)
+    local noice = require("noice")
+    noice.setup(opts)
+
+    -- disable icons
+    noice.setup({
+      cmdline = {
+        format = {
+          cmdline = { icon = ":" },
+          search_down = { icon = "/" },
+          search_up = { icon = "?" },
+          filter = { icon = "$" },
+          lua = { icon = "lua" },
+          help = { icon = "h" },
+        },
+      },
+      format = {
+        level = {
+          icons = {
+            error = "X",
+            warn = "W",
+            info = "I",
+          },
+        },
+      },
+      popupmenu = {
+        kind_icons = false,
+      },
+    })
+
+    -- require("base.command").add_commands({
+    --   { name = "SHOW ERROR", cmd = function()
+    --     vim.notify("TEST ERROR", vim.log.levels.ERROR, { title = "ERROR TITLE" })
+    --   end, description = "Test out the `opt.format.level.icons` noice.nvim values" },
+    --   { name = "SHOW WARN", cmd = function()
+    --     vim.notify("TEST WARN", vim.log.levels.WARN, { title = "WARN TITLE" })
+    --   end, description = "Test out the `opt.format.level.icons` noice.nvim values" },
+    --   { name = "SHOW INFO", cmd = function()
+    --     vim.notify("TEST INFO", vim.log.levels.INFO, { title = "INFO TITLE" })
+    --   end, description = "Test out the `opt.format.level.icons` noice.nvim values" },
+    -- })
+  end,
 }
