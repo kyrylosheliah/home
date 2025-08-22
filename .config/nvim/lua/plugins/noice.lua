@@ -48,18 +48,17 @@ return {
   },
   config = function(_, opts)
     local noice = require("noice")
-    noice.setup(opts)
 
     -- disable icons
-    noice.setup({
+    local icon_opts = {
       cmdline = {
         format = {
-          cmdline = { icon = ":" },
-          search_down = { icon = "/" },
-          search_up = { icon = "?" },
-          filter = { icon = "$" },
-          lua = { icon = "lua" },
-          help = { icon = "h" },
+          cmdline = { icon = " :" },
+          search_down = { icon = " /" },
+          search_up = { icon = " ?" },
+          filter = { icon = " $" },
+          lua = { icon = " lua" },
+          help = { icon = " h" },
         },
       },
       format = {
@@ -74,7 +73,11 @@ return {
       popupmenu = {
         kind_icons = false,
       },
-    })
+    }
+
+    opts = vim.tbl_deep_extend("force", opts, icon_opts)
+
+    noice.setup(opts)
 
     -- require("base.command").add_commands({
     --   { name = "SHOW ERROR", cmd = function()
