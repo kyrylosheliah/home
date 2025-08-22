@@ -139,7 +139,7 @@ return {
     event = "VeryLazy",
     dependencies = { "nvim-telescope/telescope.nvim" },
     keys = {
-      { mode = { "n", "x" }, "<leader>c", require("base.command").open, { buffer = false }, desc = "run command" },
+      { mode = { "n", "x" }, "<leader>;", require("base.command").open, { buffer = false }, desc = "run command" },
     },
     config = function()
       local telescope = require("telescope")

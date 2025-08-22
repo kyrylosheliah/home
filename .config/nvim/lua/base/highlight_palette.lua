@@ -1,5 +1,6 @@
+local M = {}
 
-local RGB_hex_to_number = function(value)
+M.RGB_hex_to_number = function(value)
   --assert(string.sub(value, 1, 1) == "#")
   value = string.sub(value, 2)
   local r = tonumber("0x" .. string.sub(value, 1, 2))
@@ -8,14 +9,28 @@ local RGB_hex_to_number = function(value)
   return { r, g, b }
 end
 
-M = {}
+M.RGB_number_to_hex = function(value)
+  local b = string.format("%x", (bit.band(value, tonumber("0xFF"))))
+  local g = string.format("%x", (bit.rshift(bit.band(value, tonumber("0xFF00")), 8)))
+  local r = string.format("%x", (bit.rshift(bit.band(value, tonumber("0xFF0000")), 16)))
+  while #(r) < 2 do
+    r = "0" .. r
+  end
+  while #(g) < 2 do
+    g = "0" .. g
+  end
+  while #(b) < 2 do
+    b = "0" .. b
+  end
+  return '#' .. r .. g .. b
+end
 
 M.shade = function(fg, alpha, bg)
   if bg == nil then
     bg = vim.o.background == 'light' and '#000000' or '#ffffff'
   end
-  fg = RGB_hex_to_number(fg)
-  bg = RGB_hex_to_number(bg)
+  fg = M.RGB_hex_to_number(fg)
+  bg = M.RGB_hex_to_number(bg)
   local blendChannel = function(i)
     local ret = (alpha * fg[i] + ((1 - alpha) * bg[i]))
     return math.floor(math.min(math.max(0, ret), 255) + 0.5)
@@ -31,8 +46,8 @@ M.combo = function(fg, alpha, bg)
   if bg == nil then
     bg = vim.o.background == 'light' and '#000000' or '#ffffff'
   end
-  fg = RGB_hex_to_number(fg)
-  bg = RGB_hex_to_number(bg)
+  fg = M.RGB_hex_to_number(fg)
+  bg = M.RGB_hex_to_number(bg)
   local max_diff = 0
   local diff = { 0, 0, 0 }
   local get_max = function(i)

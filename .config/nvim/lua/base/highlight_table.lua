@@ -1,8 +1,6 @@
 local def = require("base.highlight_palette")
 local shade = def.shade
 
-M = {}
-
 local c = {}
 -- Tint
 c.tin = 0.1

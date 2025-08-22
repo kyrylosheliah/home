@@ -3,6 +3,9 @@
 
 local M = {}
 
+-- blink.cmp state variable
+M.show_automatically = true;
+
 vim.o.pumheight = 10
 
 vim.diagnostic.config({
@@ -89,9 +92,6 @@ M.apply_indent = function(params)
     leadmultispace = chars.indent .. string.rep(chars.spacing, padding_len)
   })
 end
-
--- default indent and non-text symbols
-M.apply_indent()
 
 -- lsp
 
