@@ -49,17 +49,23 @@ set("n", "<leader>b", BreakLine, { desc = "Break the line before the cursor" })
 set("n", "<leader>B", function() BreakLine({ after = true }) end, { desc = "Break the line after the cursor" })
 set("x", "<leader>b", function() BreakLine({ visual = true }) end, { desc = "Break the line outside selection" })
 
--- local function load_yank()
---   local reg = '0'
---   local val = vim.fn.getreg(reg, true)
---   local typ = vim.fn.getregtype(reg)
---   vim.fn.setreg('+', val, typ)
--- end
+local function save_clipboard()
+  local reg = '+'
+  local val = vim.fn.getreg(reg, true)
+  local typ = vim.fn.getregtype(reg)
+  vim.fn.setreg('0', val, typ)
+end
+local function load_clipboard()
+  local reg = '0'
+  local val = vim.fn.getreg(reg, true)
+  local typ = vim.fn.getregtype(reg)
+  vim.fn.setreg('+', val, typ)
+end
+-- "<CMD>let @+ = getreg(\'0\')<CR>"
 --set("x", "<leader>p", "\"_dP")
-set("n", "<leader>y", "<CMD>let @+ = getreg(\'0\')<CR>")
-set("x", "<leader>y", "<CMD>let @+ = getreg(\'0\')<CR>")
-set("n", "<leader>p", "\"0p")
-set("x", "<leader>p", "\"0p")
+set({ "n", "x" }, "<leader>y", save_clipboard)
+set({ "n", "x" }, "<leader>Y", load_clipboard)
+set({ "n", "x" }, "<leader>p", "\"0p")
 
 -- better indenting
 set("v", "<", "<gv")
