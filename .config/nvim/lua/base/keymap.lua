@@ -56,16 +56,17 @@ local function save_clipboard()
   vim.fn.setreg('0', val, typ)
 end
 local function load_clipboard()
+  -- "<CMD>let @+ = getreg(\'0\')<CR>"
   local reg = '0'
   local val = vim.fn.getreg(reg, true)
   local typ = vim.fn.getregtype(reg)
   vim.fn.setreg('+', val, typ)
 end
--- "<CMD>let @+ = getreg(\'0\')<CR>"
---set("x", "<leader>p", "\"_dP")
 set({ "n", "x" }, "<leader>y", save_clipboard)
 set({ "n", "x" }, "<leader>Y", load_clipboard)
-set({ "n", "x" }, "<leader>p", "\"0p")
+set("n", "<leader>p", "\"0p")
+set("x", "<leader>p", "\"_d\"0P")
+set("x", "<leader>P", "\"_dP")
 
 -- better indenting
 set("v", "<", "<gv")
