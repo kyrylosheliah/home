@@ -1,6 +1,6 @@
 local set = vim.keymap.set
 local esc_key_code = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
-local cr_key_code = vim.api.nvim_replace_termcodes("<CR>", true, false, true)
+-- local cr_key_code = vim.api.nvim_replace_termcodes("<CR>", true, false, true)
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
@@ -11,6 +11,7 @@ set("n", "Q", "<nop>") -- unmap
 set("n", "<leader>w", "<cmd>w<cr>", { desc = "Write" })
 set("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
 set("n", "<leader>x", "<cmd>:bd<cr>", { desc = "Delete Buffer and Window" })
+--set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
 -- Reminder:
 -- <C-w>d : hover diagnostics
@@ -23,31 +24,6 @@ set("n", "<leader>x", "<cmd>:bd<cr>", { desc = "Delete Buffer and Window" })
 -- Reminder: jumplist with `:jumps`
 -- <C-o> : jump back
 -- <C-i> : jump forward
-
--- the opposite of `<S-j>` or `J` or "join", "break"
-local BreakLine = function(args)
-  args = args or {}
-  local after = args.after or false
-  local visual = args.visual or false
-  if visual then
-    vim.api.nvim_feedkeys("\"_d", "n", false)
-  end
-  if after then
-    vim.api.nvim_feedkeys("a", "n", false)
-  else
-    vim.api.nvim_feedkeys("i", "n", false)
-  end
-  vim.api.nvim_feedkeys(cr_key_code, "n", false)
-  vim.api.nvim_feedkeys(esc_key_code, "n", false)
-  if after or vim.fn.col(".") ~= 1 then
-    vim.api.nvim_feedkeys("d", "n", false)
-    vim.api.nvim_feedkeys("v", "n", false)
-    vim.api.nvim_feedkeys("0", "n", false)
-  end
-end
-set("n", "<leader>b", BreakLine, { desc = "Break the line before the cursor" })
-set("n", "<leader>B", function() BreakLine({ after = true }) end, { desc = "Break the line after the cursor" })
-set("x", "<leader>b", function() BreakLine({ visual = true }) end, { desc = "Break the line outside selection" })
 
 local function save_clipboard()
   local reg = '+'
@@ -64,9 +40,18 @@ local function load_clipboard()
 end
 set({ "n", "x" }, "<leader>y", save_clipboard)
 set({ "n", "x" }, "<leader>Y", load_clipboard)
-set("n", "<leader>p", "\"0p")
-set("x", "<leader>p", "\"_d\"0P")
-set("x", "<leader>P", "\"_dP")
+set("n", "<leader>p", '\"0p')
+set("n", "<leader>P", '\"0P')
+set("x", "<leader>p", '\"_d\"0P')
+set("x", "<leader>P", '\"_dP')
+
+-- better scroll
+set("n", "<C-d>", "<C-d>zz")
+set("n", "<C-u>", "<C-u>zz")
+set("n", "<C-f>", "<C-f>zz")
+set("n", "<C-b>", "<C-b>zz")
+set("n", "<C-i>", "<C-i>zz")
+set("n", "<C-o>", "<C-o>zz")
 
 -- better indenting
 set("v", "<", "<gv")
@@ -87,6 +72,4 @@ set("n", "<C-w><C-j>", "<cmd>resize -4<cr>", { desc = "Decrease Window Height" }
 set("n", "<C-w><C-k>", "<cmd>resize +4<cr>", { desc = "Increase Window Height" })
 set("n", "<C-w><C-h>", "<cmd>vertical resize -4<cr>", { desc = "Decrease Window Width" })
 set("n", "<C-w><C-l>", "<cmd>vertical resize +4<cr>", { desc = "Increase Window Width" })
-
--- vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
