@@ -30,32 +30,41 @@ c.pure_black = "#000000"
 c.pure_gray = def.c["Gray60"]
 c.pure_white = "#ffffff"
 
-local palette = {
-  red = def.c["LightCoral"],
-  green = def.c["LightGreen"], --"SpringGreen" --"PaleGreen2"
-  blue = def.c["DeepSkyBlue"], --"DeepSkyBlue" --"DodgerBlue" --"LightSkyBlue"
-  yellow = def.c["LightGoldenrod"], --"Peru" --"Khaki" --"Wheat"
-  purple = def.c["LightMagenta"],
-  cyan = shade(def.c["Cyan"], 0.5, c.white),
-  brown = def.c["Peru"],
-}
-for key, value in pairs(palette) do
-  --c[key] = value
-  -- Apply saturation by multiplying with the maximum brightness
-  c[key] = shade(value, c.sat, c.white)
-  -- Apply subtleness relative to the background brightness
-  c["sub_" .. key] = shade(c[key], c.sub, c.black)
-  --c["sub_" .. key] = shade(c[key], (1-c.sub), c.black)
-end
--- Special
-c.none = "NONE"
 -- Bright and pure
 c.pure_red = "#ff0000"
 c.pure_green = "#00ff00"
 c.pure_blue = "#0000ff"
 c.pure_yellow = "#ffff00"
+c.pure_orange = "#ff7f00"
 c.pure_purple = "#ff00ff"
 c.pure_cyan = "#00ffff"
+c.pure_brown = def.c["Brown"]
+
+-- Special
+c.none = "NONE"
+
+local palette = {
+  red = def.c["LightCoral"],
+  green = def.c["LightGreen"], --"SpringGreen" --"PaleGreen2"
+  blue = def.c["DeepSkyBlue"], --"DeepSkyBlue" --"DodgerBlue" --"LightSkyBlue"
+  yellow = def.c["Khaki1"], --"Khaki" --"Wheat"
+  orange = def.c["Orange1"], --"LightSalmon"
+  purple = def.c["LightMagenta"],
+  cyan = shade(def.c["Cyan"], 0.5, c.white),
+  brown = def.c["LightSalmon4"],
+}
+for key, value in pairs(palette) do
+  --c[key] = value
+  -- Apply saturation by multiplying with the maximum brightness
+  -- Direct mapping
+  c[key] = shade(value, c.sat, c.white)
+  -- Apply subtleness relative to the background brightness
+  -- Unsaturated and faded (SUBtle)
+  c["sub_" .. key] = shade(c[key], c.sub, c.black)
+  --c["sub_" .. key] = shade(c[key], (1-c.sub), c.black)
+  -- Saturated and faded
+  c["dim_" .. key] = shade(c["pure_" .. key], c.sub, c.sub_gray)
+end
 
 local highlight = {
   ["Comment"] = { fg = c.red }, -- any comment
@@ -111,8 +120,8 @@ local highlight = {
   ["Folded"] = { fg = c.gray }, -- line used for closed folds
   ["FoldColumn"] = { fg = c.gray, bg = vim.g.transparent and c.none or c.black }, -- column where folds are displayed
   ["SignColumn"] = { fg = c.white, bg = vim.g.transparent and c.none or nil }, -- column where signs are displayed
-  ["IncSearch"] = { fg = c.pure_green, --[[c.black, bg = c.pure_green]] }, -- 'incsearch' highlighting; also used for the text replaced with ":s///c"
-  ["CurSearch"] = { fg = c.pure_green, --[[bg = c.black]] }, -- 'cursearch' highlighting; also used for the text replaced with ":s///c"
+  ["IncSearch"] = { fg = c.pure_yellow, bg = c.black, --[[ bg = c.pure_green]] }, -- 'incsearch' highlighting; also used for the text replaced with ":s///c"
+  ["CurSearch"] = { fg = c.black, bg = c.pure_yellow, --[[bg = c.black]] }, -- 'cursearch' highlighting; also used for the text replaced with ":s///c"
   ["LineNr"] = { fg = c.sub_white, bg = vim.g.transparent and c.none or nil }, -- Line number for " =number" and ":#" commands, and when 'number' or 'relativenumber' option is set.
   ["CursorLineNr"] = { fg = c.white, bg = c.sub_gray }, -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
   ["MatchParen"] = { fg = c.pure_purple }, -- The character under the cursor or just before it, if it is a paired bracket, and its match.
@@ -129,8 +138,8 @@ local highlight = {
   ["PmenuThumb"] = { bg = c.gray }, -- Popup menu: Thumb of the scrollbar.
   ["Question"] = { fg = c.blue }, -- hit-enter prompt and yes/no questions
   ["QuickFixLine"] = { fg = c.cyan, bg = c.sub_gray }, -- Current quickfix item in the quickfix window.
-  ["Search"] = { fg = c.pure_purple, --[[bg = c.black]] }, -- Last search pattern highlighting (see 'hlsearch'). Also used for similar items that need to stand out.
-  ["SpecialKey"] = { fg = c.special_grey }, -- Meta and special keys listed with " =map", also for text used to show unprintable characters in the text, 'listchars'. Generally: text that is displayed differently from what it really is.
+  ["Search"] = { fg = c.black, bg = c.dim_yellow }, -- Last search pattern highlighting (see 'hlsearch'). Also used for similar items that need to stand out.
+  ["SpecialKey"] = { underline = true, fg = c.special_grey }, -- Meta and special keys listed with " =map", also for text used to show unprintable characters in the text, 'listchars'. Generally: text that is displayed differently from what it really is.
   ["SpellBad"] = { fg = c.red, undercurl = true }, -- Word that is not recognized by the spellchecker. This will be combined with the highlighting used otherwise.
   ["SpellCap"] = { fg = c.yellow }, -- Word that should start with a capital. This will be combined with the highlighting used otherwise.
   ["SpellLocal"] = { fg = c.yellow }, -- Word that is recognized by the spellchecker as one that is used in another region. This will be combined with the highlighting used otherwise.
@@ -145,7 +154,7 @@ local highlight = {
   ["Terminal"] = { fg = c.white, bg = c.black }, -- terminal window (see terminal-size-color)
   ["Title"] = { fg = c.green }, -- titles for output from " =set all", ":autocmd" etc.
   ["Visual"] = { bg = c.sub_blue }, -- Visual mode selection
-  ["VisualNOS"] = { fg = c.pure_purple, bg = c.sub_blue }, -- Visual mode selection when vim is "Not Owning the Selection". Only X11 Gui's gui-x11 and xterm-clipboard supports this.
+  ["VisualNOS"] = { bg = c.dim_purple }, -- Visual mode selection when vim is "Not Owning the Selection". Only X11 Gui's gui-x11 and xterm-clipboard supports this.
   --["VisualMatch"] = { bg = c.sub_blue },
   ["WarningMsg"] = { fg = c.pure_yellow }, -- warning messages
   ["WildMenu"] = { fg = c.black, bg = c.blue }, -- current match in 'wildmenu' completion
